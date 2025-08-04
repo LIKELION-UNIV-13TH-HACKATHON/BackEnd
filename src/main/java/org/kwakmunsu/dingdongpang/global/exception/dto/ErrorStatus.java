@@ -16,6 +16,7 @@ public enum ErrorStatus {
     BAD_REQUEST_MEMBER (400, "ERROR - 잘못된 회원 요청"),
     NOT_FOUND_MEMBER   (404, "ERROR - 회원을 찾을 수 없습니다."),
     DUPLICATE_NICKNAME (409, "ERROR - 중복되는 닉네임입니다."),
+    DUPLICATE_CUSTOMER (409, "ERROR - 이미 존재하는 고객 계정입니다."),
 
     // NOTIFICATION
     NOT_FOUND_NOTIFICATION (404, "ERROR - 존재하지 않은 알림입니다."),
