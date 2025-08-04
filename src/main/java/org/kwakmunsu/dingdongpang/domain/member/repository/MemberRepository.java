@@ -4,6 +4,8 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Role;
+import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
+import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -16,8 +18,17 @@ public class MemberRepository {
         return memberJpaRepository.findBySocialIdAndRole(socialId, role);
     }
 
-    public void save(Member guest) {
-        memberJpaRepository.save(guest);
+    public void save(Member member) {
+        memberJpaRepository.save(member);
+    }
+
+    public Member findById(Long id) {
+        return memberJpaRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_MEMBER));
+    }
+
+    public boolean existsByNickname(String nickname) {
+        return memberJpaRepository.existsByNickname(nickname);
     }
 
 }

@@ -3,16 +3,19 @@ package org.kwakmunsu.dingdongpang;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kwakmunsu.dingdongpang.domain.auth.controller.AuthController;
 import org.kwakmunsu.dingdongpang.domain.auth.service.AuthCommandService;
+import org.kwakmunsu.dingdongpang.domain.member.controller.MemberController;
+import org.kwakmunsu.dingdongpang.domain.member.service.MemberCommandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
-@Import(TestSecurityConfig.class)
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(
         controllers = {
                 AuthController.class,
+                MemberController.class,
         })
 public abstract class ControllerTestSupport {
 
@@ -24,5 +27,8 @@ public abstract class ControllerTestSupport {
 
     @MockitoBean
     protected AuthCommandService authCommandService;
+
+    @MockitoBean
+    protected MemberCommandService memberCommandService;
 
 }
