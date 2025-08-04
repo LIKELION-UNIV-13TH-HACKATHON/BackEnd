@@ -2,7 +2,7 @@ package org.kwakmunsu.dingdongpang.global.jwt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.kwakmunsu.dingdongpang.domain.member.entity.Role.ROLE_MEMBER;
 
 import io.jsonwebtoken.MalformedJwtException;
 import org.junit.jupiter.api.BeforeEach;
