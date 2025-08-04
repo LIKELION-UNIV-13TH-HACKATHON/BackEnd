@@ -1,0 +1,52 @@
+package org.kwakmunsu.dingdongpang.domain.auth.service;
+
+import static org.kwakmunsu.dingdongpang.domain.member.entity.Role.ROLE_MEMBER;
+
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInResponse;
+import org.kwakmunsu.dingdongpang.domain.auth.service.kakao.KakaoOauthManager;
+import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
+import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
+import org.kwakmunsu.dingdongpang.global.jwt.JwtProvider;
+import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@RequiredArgsConstructor
+@Service
+public class AuthCommandService {
+
+    private final KakaoOauthManager kakaoOauthManager;
+    private final MemberRepository memberRepository;
+    private final JwtProvider jwtProvider;
+
+    @Transactional
+    public SignInResponse signIn(String socialAccessToken) {
+        OAuth2UserInfo oAuth2UserInfo = kakaoOauthManager.getOAuth2UserInfo(socialAccessToken);
+        Optional<Member> optionalMember = memberRepository.findBySocialIdAndRole(oAuth2UserInfo.getSocialId(), ROLE_MEMBER);
+        // 기존 사용자가 로그인 할 경우 정보 업데이트 후 jwt 발급, 첫 사용자 일 경우 Guest 권한의 회원 생성.
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            return signInAsExistingMember(member, oAuth2UserInfo);
+        }
+
+        return registerNewGuestMember(oAuth2UserInfo);
+    }
+
+    private SignInResponse signInAsExistingMember(Member member, OAuth2UserInfo oAuth2UserInfo) {
+        member.updateEmail(oAuth2UserInfo.getEmail());
+        TokenResponse tokenResponse = jwtProvider.createTokens(member.getId(), member.getRole());
+
+        return new SignInResponse(false /*isNewMember*/, tokenResponse);
+    }
+
+    private SignInResponse registerNewGuestMember(OAuth2UserInfo oAuth2UserInfo) {
+        Member guest = Member.createGuest(oAuth2UserInfo.getEmail(), oAuth2UserInfo.getName(), oAuth2UserInfo.getSocialId());
+        memberRepository.save(guest);
+        TokenResponse tokenResponse = jwtProvider.createTokens(guest.getId(), guest.getRole());
+
+        return new SignInResponse(true /*isNewMember*/, tokenResponse);
+    }
+
+}

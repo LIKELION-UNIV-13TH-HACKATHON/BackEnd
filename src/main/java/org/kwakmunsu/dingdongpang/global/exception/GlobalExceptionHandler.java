@@ -8,6 +8,7 @@ import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.kwakmunsu.dingdongpang.global.exception.dto.response.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,6 +17,19 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(RootException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(RootException e) {
+        ErrorStatus errorStatus = e.getErrorStatus();
+        log.error("커스텀 예외: 상태코드 - {}, 메세지 - {}", errorStatus.getStatusCode(), errorStatus.getMessage());
+
+        ErrorResponse response = ErrorResponse.builder()
+                .statusCode(errorStatus.getStatusCode())
+                .message(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(errorStatus.getStatusCode()).body(response);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
@@ -65,7 +79,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+    public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(
+            MissingServletRequestParameterException e) {
         int statusCode = BAD_REQUEST.value();
         String paramName = e.getParameterName();
         String paramType = e.getParameterType();
@@ -79,17 +94,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(statusCode).body(response);
     }
 
-    @ExceptionHandler(RootException.class)
-    public ResponseEntity<ErrorResponse> handleCustomException(RootException e) {
-        ErrorStatus errorStatus = e.getErrorStatus();
-        log.error("커스텀 예외: 상태코드 - {}, 메세지 - {}", errorStatus.getStatusCode(), errorStatus.getMessage());
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<ErrorResponse> handleMissingRequestHeader(MissingRequestHeaderException ex) {
+        int statusCode = BAD_REQUEST.value();
+        String headerName = ex.getHeaderName();
+        String message = headerName + " 헤더가 요청에 포함되어야 합니다.";
 
-        ErrorResponse response = ErrorResponse.builder()
-                .statusCode(errorStatus.getStatusCode())
-                .message(e.getMessage())
+        ErrorResponse error = ErrorResponse.builder()
+                .statusCode(statusCode)
+                .message(message)
                 .build();
 
-        return ResponseEntity.status(errorStatus.getStatusCode()).body(response);
+        return ResponseEntity.status(statusCode).body(error);
     }
 
 }
