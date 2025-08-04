@@ -7,12 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.kwakmunsu.dingdongpang.global.exception.dto.response.ErrorResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 @Slf4j
 @RestControllerAdvice
@@ -99,6 +101,19 @@ public class GlobalExceptionHandler {
         int statusCode = BAD_REQUEST.value();
         String headerName = ex.getHeaderName();
         String message = headerName + " 헤더가 요청에 포함되어야 합니다.";
+
+        ErrorResponse error = ErrorResponse.builder()
+                .statusCode(statusCode)
+                .message(message)
+                .build();
+
+        return ResponseEntity.status(statusCode).body(error);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleRequestBodyMissing(HttpMessageNotReadableException ex) {
+        int statusCode = BAD_REQUEST.value();
+        String message = "요청 바디가 올바르지 않거나 누락되었습니다: " + ex.getMessage();
 
         ErrorResponse error = ErrorResponse.builder()
                 .statusCode(statusCode)
