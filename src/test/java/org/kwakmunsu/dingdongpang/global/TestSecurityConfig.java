@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang;
+package org.kwakmunsu.dingdongpang.global;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

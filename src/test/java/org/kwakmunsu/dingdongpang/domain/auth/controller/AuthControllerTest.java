@@ -12,10 +12,8 @@ import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInResponse;
 import org.kwakmunsu.dingdongpang.global.exception.UnAuthenticationException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 
-@WebMvcTest(AuthController.class)
 class AuthControllerTest extends ControllerTestSupport {
 
     @DisplayName("카카오 서버에서 발급 받은 accessToken과 함께 로그인 요청 시 JWT를 발급한다.")
