@@ -1,9 +1,63 @@
 package org.kwakmunsu.dingdongpang.domain.member.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.BaseEntity;
 
+@Builder
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Member extends BaseEntity {
+
+    @Column(nullable = false, unique = true)
+    String email;
+
+    @Column(nullable = false, unique = true)
+    String nickName;
+
+    @Column(nullable = false)
+    String socialId;
+
+    String refreshToken;
+
+    String profileUrl;
+
+    @Enumerated(EnumType.STRING)
+    Role role;
+
+    public static Member createGuest(String email, String nickName, String socialId) {
+        return Member.builder()
+                .email(email)
+                .nickName(nickName)
+                .socialId(socialId)
+                .role(Role.ROLE_GUEST)
+                .build();
+    }
+
+    public static Member createMember(String email, String nickName, String socialId) {
+        return Member.builder()
+                .email(email)
+                .nickName(nickName)
+                .socialId(socialId)
+                .role(Role.ROLE_MEMBER)
+                .build();
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+    
+    public void updateEmail(String email) {
+        this.email = email;
+    }
 
 }
