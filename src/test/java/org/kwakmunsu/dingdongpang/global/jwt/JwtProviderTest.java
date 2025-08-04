@@ -2,7 +2,6 @@ package org.kwakmunsu.dingdongpang.global.jwt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.kwakmunsu.dingdongpang.domain.member.entity.Role.ROLE_MEMBER;
 
 import io.jsonwebtoken.MalformedJwtException;
@@ -15,9 +14,9 @@ import org.springframework.security.core.Authentication;
 
 class JwtProviderTest {
 
-    private JwtProvider jwtProvider;
-    private Long memberId;
-    private Role role;
+    JwtProvider jwtProvider;
+    Long memberId;
+    Role role;
 
     @BeforeEach
     void setUp() {
