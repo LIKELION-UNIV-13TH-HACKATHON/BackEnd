@@ -16,11 +16,6 @@ public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
     }
 
     @Override
-    public String getProvider() {
-        return "KAKAO";
-    }
-
-    @Override
     public String getSocialId() {
         return socialId;
     }
