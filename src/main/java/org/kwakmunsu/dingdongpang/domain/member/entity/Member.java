@@ -19,34 +19,34 @@ import org.kwakmunsu.dingdongpang.domain.BaseEntity;
 public class Member extends BaseEntity {
 
     @Column(nullable = false, unique = true)
-    String email;
+    private String email;
 
     @Column(nullable = false, unique = true)
-    String nickName;
+    private String nickname;
 
     @Column(nullable = false)
-    String socialId;
+    private String socialId;
 
-    String refreshToken;
+    private String refreshToken;
 
-    String profileUrl;
+    private String profileUrl;
 
     @Enumerated(EnumType.STRING)
-    Role role;
+    private Role role;
 
-    public static Member createGuest(String email, String nickName, String socialId) {
+    public static Member createGuest(String email, String nickname, String socialId) {
         return Member.builder()
                 .email(email)
-                .nickName(nickName)
+                .nickname(nickname)
                 .socialId(socialId)
                 .role(Role.ROLE_GUEST)
                 .build();
     }
 
-    public static Member createMember(String email, String nickName, String socialId) {
+    public static Member createMember(String email, String nickname, String socialId) {
         return Member.builder()
                 .email(email)
-                .nickName(nickName)
+                .nickname(nickname)
                 .socialId(socialId)
                 .role(Role.ROLE_MEMBER)
                 .build();
@@ -58,6 +58,14 @@ public class Member extends BaseEntity {
     
     public void updateEmail(String email) {
         this.email = email;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void upgradeRoleToMember() {
+        this.role = Role.ROLE_MEMBER;
     }
 
 }
