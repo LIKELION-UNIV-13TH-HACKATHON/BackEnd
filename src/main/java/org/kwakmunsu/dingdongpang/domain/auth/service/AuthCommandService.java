@@ -25,7 +25,7 @@ public class AuthCommandService {
     public SignInResponse signIn(String socialAccessToken) {
         OAuth2UserInfo oAuth2UserInfo = kakaoOauthManager.getOAuth2UserInfo(socialAccessToken);
         Optional<Member> optionalMember = memberRepository.findBySocialIdAndRole(oAuth2UserInfo.getSocialId(), ROLE_MEMBER);
-        // 기존 사용자가 로그인 할 경우 정보 업데이트 후 jwt 발급, 첫 사용자 일 경우 Guest 권한의 회원 생성.
+        // 기존 사용자가 로그인 할 경우 정보 업데이트 후 jwt 발급, 첫 사용자 일 경우 Guest 권한의 회원 생성 후 jwt 발급.
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
             return signInAsExistingMember(member, oAuth2UserInfo);
@@ -36,7 +36,9 @@ public class AuthCommandService {
 
     private SignInResponse signInAsExistingMember(Member member, OAuth2UserInfo oAuth2UserInfo) {
         member.updateEmail(oAuth2UserInfo.getEmail());
+
         TokenResponse tokenResponse = jwtProvider.createTokens(member.getId(), member.getRole());
+        member.updateRefreshToken(tokenResponse.refreshToken());
 
         return new SignInResponse(false /*isNewMember*/, tokenResponse);
     }
@@ -44,7 +46,9 @@ public class AuthCommandService {
     private SignInResponse registerNewGuestMember(OAuth2UserInfo oAuth2UserInfo) {
         Member guest = Member.createGuest(oAuth2UserInfo.getEmail(), oAuth2UserInfo.getName(), oAuth2UserInfo.getSocialId());
         memberRepository.save(guest);
+
         TokenResponse tokenResponse = jwtProvider.createTokens(guest.getId(), guest.getRole());
+        guest.updateRefreshToken(tokenResponse.refreshToken());
 
         return new SignInResponse(true /*isNewMember*/, tokenResponse);
     }
