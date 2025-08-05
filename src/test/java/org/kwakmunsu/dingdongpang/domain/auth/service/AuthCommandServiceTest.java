@@ -43,14 +43,13 @@ class AuthCommandServiceTest {
         when(mockUserInfo.getEmail()).thenReturn("test@email.com");
         when(mockUserInfo.getName()).thenReturn("홍길동");
         given(kakaoOauthManager.getOAuth2UserInfo(anyString())).willReturn(mockUserInfo);
-        given(memberRepository.findBySocialIdAndRole(anyString(), any()))
-                .willReturn(Optional.empty());
+
+        given(memberRepository.findBySocialIdAndRole(anyString(), any())).willReturn(Optional.empty());
+
         var tokenResponse = new TokenResponse("accessToken","refreshToken");
-        given(jwtProvider.createTokens(any(),any()))
-                .willReturn(tokenResponse);
+        given(jwtProvider.createTokens(any(),any())).willReturn(tokenResponse);
 
         var result = authCommandService.signIn("accessToken");
-
         assertThat(result.isNewMember()).isTrue();
         assertThat(result.response())
                 .extracting(    TokenResponse::accessToken, TokenResponse::refreshToken)
@@ -64,15 +63,16 @@ class AuthCommandServiceTest {
         when(mockUserInfo.getSocialId()).thenReturn("123456789");
         when(mockUserInfo.getEmail()).thenReturn("test@email.com");
         given(kakaoOauthManager.getOAuth2UserInfo(anyString())).willReturn(mockUserInfo);
+
         Optional<Member> optionalMember = Optional.ofNullable(Member.createMember("email", "nickname", "1234"));
-        given(memberRepository.findBySocialIdAndRole(anyString(), any()))
-                .willReturn(optionalMember);
+        given(memberRepository.findBySocialIdAndRole(anyString(), any())).willReturn(optionalMember);
+
         var tokenResponse = new TokenResponse("accessToken","refreshToken");
-        given(jwtProvider.createTokens(any(),any()))
-                .willReturn(tokenResponse);
+        given(jwtProvider.createTokens(any(),any())).willReturn(tokenResponse);
 
         var result = authCommandService.signIn("accessToken");
 
+        assertThat(optionalMember.get().getRefreshToken()).isEqualTo(tokenResponse.refreshToken());
         assertThat(result.isNewMember()).isFalse();
         assertThat(result.response())
                 .extracting(    TokenResponse::accessToken, TokenResponse::refreshToken)
