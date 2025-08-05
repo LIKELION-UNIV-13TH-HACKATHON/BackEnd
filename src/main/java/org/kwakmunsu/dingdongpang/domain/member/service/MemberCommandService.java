@@ -21,17 +21,35 @@ public class MemberCommandService {
 
     @Transactional
     public void registerCustomer(CustomerRegisterServiceRequest request) {
-        checkDuplicateNickname(request);
-        Member member = memberRepository.findById(request.memberId());
+        Member customer = memberRepository.findById(request.memberId());
 
-        member.updateNickname(request.nickname());
-        member.upgradeRoleToMember();
+        if (!customer.isEqualNickname(request.nickname())) {
+            checkDuplicateNickname(request.nickname());
+            customer.updateNickname(request.nickname());
+        }
 
-        registerMemberTypeToCustomer(member);
+        customer.upgradeRoleToMember();
+
+        registerMemberTypeToCustomer(customer);
     }
 
-    private void checkDuplicateNickname(CustomerRegisterServiceRequest request) {
-        if (memberRepository.existsByNickname(request.nickname())) {
+    @Transactional
+    public Member registerMerchant(String nickname, Long memberId) {
+        Member merchant = memberRepository.findById(memberId);
+
+        if (!merchant.isEqualNickname(nickname)) {
+            checkDuplicateNickname(nickname);
+            merchant.updateNickname(nickname);
+        }
+        merchant.upgradeRoleToMember();
+
+        registerMemberTypeToMerchant(merchant);
+
+        return merchant;
+    }
+
+    private void checkDuplicateNickname(String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
             throw new DuplicationException(ErrorStatus.DUPLICATE_NICKNAME);
         }
     }
@@ -40,10 +58,18 @@ public class MemberCommandService {
         if (memberTypeRepository.existsByMemberIdAndStatus(member.getId(), MemberStatus.CUSTOMER)) {
             throw new DuplicationException(ErrorStatus.DUPLICATE_CUSTOMER);
         }
-
         MemberType customer = MemberType.createCustomer(member.getId());
 
         memberTypeRepository.save(customer);
+    }
+
+    private void registerMemberTypeToMerchant(Member member) {
+        if (memberTypeRepository.existsByMemberIdAndStatus(member.getId(), MemberStatus.MERCHANT)) {
+            throw new DuplicationException(ErrorStatus.DUPLICATE_MERCHANT);
+        }
+        MemberType merchant = MemberType.createMerchant(member.getId());
+
+        memberTypeRepository.save(merchant);
     }
 
 }
