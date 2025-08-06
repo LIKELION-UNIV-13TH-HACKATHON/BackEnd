@@ -23,11 +23,10 @@ public class MemberCommandService {
     public void registerCustomer(CustomerRegisterServiceRequest request) {
         Member customer = memberRepository.findById(request.memberId());
 
-        if (!customer.isEqualNickname(request.nickname())) {
+        if (customer.isNotEqualsNickname(request.nickname())) {
             checkDuplicateNickname(request.nickname());
             customer.updateNickname(request.nickname());
         }
-
         customer.upgradeRoleToMember();
 
         registerMemberTypeToCustomer(customer);
@@ -37,7 +36,7 @@ public class MemberCommandService {
     public Member registerMerchant(String nickname, Long memberId) {
         Member merchant = memberRepository.findById(memberId);
 
-        if (!merchant.isEqualNickname(nickname)) {
+        if (merchant.isNotEqualsNickname(nickname)) {
             checkDuplicateNickname(nickname);
             merchant.updateNickname(nickname);
         }

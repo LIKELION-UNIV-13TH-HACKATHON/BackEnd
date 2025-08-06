@@ -51,8 +51,10 @@ record MemberCommandServiceTest(
     @Test
     void failRegisterCustomerWhenNicknameIsDuplicated() {
         var guest = Member.createGuest("test-email@gmail.com", "nickname", "123456");
+        var duplicateGuest = Member.createGuest("test2-email@gmail.com", "testname2", "12345sada6");
         memberRepository.save(guest);
-        var request = new CustomerRegisterServiceRequest(guest.getNickname(), guest.getId());
+        memberRepository.save(duplicateGuest);
+        var request = new CustomerRegisterServiceRequest(guest.getNickname(), duplicateGuest.getId());
 
         assertThatThrownBy(() -> memberCommandService.registerCustomer(request))
             .isInstanceOf(DuplicationException.class);
@@ -74,5 +76,25 @@ record MemberCommandServiceTest(
 
         assertThatThrownBy(() ->memberCommandService.registerCustomer(request2) )
             .isInstanceOf(DuplicationException.class);
+    }
+
+    @DisplayName("상인 역할의 회원을 생성한다.")
+    @Test
+    void registerMerchant () {
+        Member guest = Member.createGuest("email@naver.com", "nickname", "12345");
+        memberRepository.save(guest);
+
+        assertThat(guest.getRole()).isEqualTo(Role.ROLE_GUEST);
+
+        memberCommandService.registerMerchant("new-nickname", guest.getId());
+        entityManager.flush();
+        entityManager.clear();
+
+        var member = memberRepository.findById(guest.getId());
+        assertThat(member.getRole()).isEqualTo(Role.ROLE_MEMBER);
+
+        // True 라면 테이블에 정상 등록
+        boolean isExistsCustomer = memberTypeRepository.existsByMemberIdAndStatus(member.getId(), MemberStatus.MERCHANT);
+        assertThat(isExistsCustomer).isTrue();
     }
 }
