@@ -68,8 +68,8 @@ public class Member extends BaseEntity {
         this.role = Role.ROLE_MEMBER;
     }
 
-    public boolean isEqualNickname(String nickname) {
-        return this.nickname.equals(nickname);
+    public boolean isNotEqualsNickname(String nickname) {
+        return !this.nickname.equals(nickname);
     }
 
 }
