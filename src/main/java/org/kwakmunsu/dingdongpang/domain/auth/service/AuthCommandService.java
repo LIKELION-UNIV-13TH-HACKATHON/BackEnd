@@ -34,6 +34,16 @@ public class AuthCommandService {
         return registerNewGuestMember(oAuth2UserInfo);
     }
 
+    @Transactional
+    public TokenResponse reissue(String refreshToken) {
+        Member member = memberRepository.findByRefreshToken(refreshToken);
+
+        TokenResponse response = jwtProvider.createTokens(member.getId(), member.getRole());
+        member.updateRefreshToken(response.refreshToken());
+
+        return response;
+    }
+
     private SignInResponse signInAsExistingMember(Member member, OAuth2UserInfo oAuth2UserInfo) {
         member.updateEmail(oAuth2UserInfo.getEmail());
 
