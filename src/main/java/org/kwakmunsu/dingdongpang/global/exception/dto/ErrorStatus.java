@@ -22,6 +22,12 @@ public enum ErrorStatus {
     // NOTIFICATION
     NOT_FOUND_NOTIFICATION (404, "ERROR - 존재하지 않은 알림입니다."),
 
+    // SHOP
+    INVALID_DATE_FORMAT       (400, "ERROR - yyyy-MM-dd 형식으로 입력해주세요."),
+    INVALID_TIME_FORMAT       (400, "ERROR - HH:mm 형식으로 입력해주세요."),
+    NOT_FOUND_BUSINESS_NUMBER (404, "ERROR - 유효하지 않은 사업자 등록 번호입니다."),
+    NOT_FOUND_SHOP            (404, "ERROR - 회원님의 매장을 찾을 수 없습니다."),
+    DUPLICATE_SHOP            (409, "ERROR - 이미 등록된 매장입니다."),
 
     // JWT
     INVALID_TOKEN   (401, "ERROR - 유효하지 않은 토큰입니다."),
@@ -39,6 +45,7 @@ public enum ErrorStatus {
     EMPTY_SECURITY_CONTEXT (401, "Security Context 에 인증 정보가 없습니다."),
     FORBIDDEN_ERROR        (403, "ERROR - 접근 권한이 없습니다."),
     INTERNAL_SERVER_ERROR  (500, "ERROR - 서버 내부 에러"),
+    FAIL_TRANSFER_GEOCODE  (500, "ERROR - 위도 경도 변환에 실패하였습니다.")
     ;
 
     private final int statusCode;
