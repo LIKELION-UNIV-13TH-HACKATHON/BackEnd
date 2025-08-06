@@ -6,6 +6,7 @@ import org.kwakmunsu.dingdongpang.domain.auth.service.AuthCommandService;
 import org.kwakmunsu.dingdongpang.domain.member.controller.MemberController;
 import org.kwakmunsu.dingdongpang.domain.member.service.MemberCommandService;
 import org.kwakmunsu.dingdongpang.domain.member.service.MemberQueryService;
+import org.kwakmunsu.dingdongpang.domain.member.service.MerchantOnboardingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -34,5 +35,8 @@ public abstract class ControllerTestSupport {
 
     @MockitoBean
     protected MemberQueryService memberQueryService;
+
+    @MockitoBean
+    protected MerchantOnboardingService merchantOnboardingService;
 
 }
