@@ -1,6 +1,7 @@
 package org.kwakmunsu.dingdongpang.domain.auth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -14,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.kwakmunsu.dingdongpang.domain.auth.service.kakao.KakaoOauthManager;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
+import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
+import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.kwakmunsu.dingdongpang.global.jwt.JwtProvider;
 import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
 import org.mockito.InjectMocks;
@@ -77,6 +80,32 @@ class AuthCommandServiceTest {
         assertThat(result.response())
                 .extracting(    TokenResponse::accessToken, TokenResponse::refreshToken)
                 .containsExactly(tokenResponse.accessToken(), tokenResponse.refreshToken());
+    }
+
+    @DisplayName("토큰을 재발급한다.")
+    @Test
+    void reissue() {
+        var member = Member.createMember("email", "nickname", "1234");
+        var tokenResponse = new TokenResponse("new-accessToken","new-refreshToken");
+        given(memberRepository.findByRefreshToken(any())).willReturn(member);
+        given(jwtProvider.createTokens(any(),any())).willReturn(tokenResponse);
+
+        TokenResponse result = authCommandService.reissue("refreshToken");
+
+        assertThat(result)
+                .extracting(TokenResponse::accessToken, TokenResponse::refreshToken)
+                .containsExactly(tokenResponse.accessToken(), tokenResponse.refreshToken());
+
+        assertThat(member.getRefreshToken()).isEqualTo(tokenResponse.refreshToken());
+    }
+
+    @DisplayName("유효하지 않은 RT 요청으로 토큰을 재발급에 실패한다.")
+    @Test
+    void failReissue() {
+        given(memberRepository.findByRefreshToken(any())).willThrow(new NotFoundException(ErrorStatus.NOT_FOUND_TOKEN));
+
+        assertThatThrownBy(() ->authCommandService.reissue("refreshToken") )
+            .isInstanceOf(NotFoundException.class);
     }
 
 }

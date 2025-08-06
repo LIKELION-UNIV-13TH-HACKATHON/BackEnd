@@ -1,13 +1,16 @@
 package org.kwakmunsu.dingdongpang.domain.auth.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.ControllerTestSupport;
+import org.kwakmunsu.dingdongpang.domain.auth.controller.dto.ReissueTokenRequest;
 import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInResponse;
 import org.kwakmunsu.dingdongpang.global.exception.UnAuthenticationException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
@@ -60,6 +63,27 @@ class AuthControllerTest extends ControllerTestSupport {
                 .exchange();
 
         assertThat(result).hasStatus(401);
+    }
+
+    @DisplayName("토큰을 재발급한다.")
+    @Test
+    void reissue() throws JsonProcessingException {
+        var reissueTokenRequest = new ReissueTokenRequest("refreshToken");
+        var jsonToString = objectMapper.writeValueAsString(reissueTokenRequest);
+        var tokenResponse = new TokenResponse("accessToken", "refreshToken");
+        given(authCommandService.reissue(any())).willReturn(tokenResponse);
+
+        var result = mvcTester.post().uri("/auth/reissue")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonToString)
+                .exchange();
+
+        assertThat(result)
+                .hasStatusOk()
+                .apply(print())
+                .bodyJson()
+                .hasPathSatisfying("$.accessToken", v -> v.assertThat().isEqualTo(tokenResponse.accessToken()))
+                .hasPathSatisfying("$.refreshToken", v -> v.assertThat().isEqualTo(tokenResponse.refreshToken()));
     }
 
 }
