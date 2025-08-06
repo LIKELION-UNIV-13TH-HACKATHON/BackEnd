@@ -192,7 +192,7 @@ gradle-app.setting
 
 *.yml
 !.github/workflows/deploy.yml
-
+*.png
 *.iml
 
 src/main/generated
