@@ -1,5 +1,7 @@
 package org.kwakmunsu.dingdongpang.domain.member.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
@@ -15,13 +17,13 @@ record MemberQueryServiceTest(MemberQueryService memberQueryService, MemberRepos
     @Test
     void nicknameCheck() {
         var response = memberQueryService.isExistsNickname("nickname");
-        assertThat(response.existsNickname()).isFalse();
+        assertThat(response.isExistsNickname()).isFalse();
 
         var member = Member.createMember("email", "nickname", "1234");
         memberRepository.save(member);
 
         var response2 = memberQueryService.isExistsNickname("nickname");
-        assertThat(response2.existsNickname()).isTrue();
+        assertThat(response2.isExistsNickname()).isTrue();
     }
 
 }
