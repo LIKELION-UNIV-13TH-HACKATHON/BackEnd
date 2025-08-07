@@ -2,10 +2,14 @@ package org.kwakmunsu.dingdongpang.domain.menu.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.kwakmunsu.dingdongpang.domain.member.service.MemberQueryService;
 import org.kwakmunsu.dingdongpang.domain.menu.controller.dto.MenuRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.menu.service.MenuCommandService;
+import org.kwakmunsu.dingdongpang.domain.menu.service.MenuQueryService;
+import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuListResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -18,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MenuController extends MenuDocsController{
 
     private final MenuCommandService menuCommandService;
+    private final MenuQueryService menuQueryService;
 
     @Override
     @PostMapping("/menus")
@@ -29,6 +34,15 @@ public class MenuController extends MenuDocsController{
         menuCommandService.register(request.toServiceRequest(image, memberId));
 
         return ResponseEntity.ok().build();
+    }
+
+    // 상인 전용 메뉴 목록 조회 API
+    @Override
+    @GetMapping("/menus")
+    public ResponseEntity<MenuListResponse> getMenus(@AuthMember Long memberId) {
+        MenuListResponse response = menuQueryService.getMenus(memberId);
+
+        return ResponseEntity.ok(response);
     }
 
 }
