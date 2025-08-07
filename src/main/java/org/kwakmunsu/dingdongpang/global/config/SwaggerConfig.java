@@ -99,8 +99,16 @@ public class SwaggerConfig {
 
     private Info getApiInfo() {
         return new Info()
-                .title("강대훈은 이거 보고 알아서 해라")
-                .description("강대훈 전용 API 문서")
+                .title("""
+                        대훈아 물어보지 마라. 그냥 주는 대로 받아.
+                        """)
+                .description("""
+                        ### 강대훈은 아래 규칙을 읽고 숙지해라
+                        - 1️⃣. 일단 너 잘못이다. 내 탓하지 말아라 ☠️
+                        - 2️⃣. 불평 불만 금지 ❌.
+                        - 3️⃣. 꼼꼼하게 살펴봐라 👀.
+                        - 4️⃣. 새로운 API 만들어줘~ 요청할 때마다 1000원 💵
+                        """)
                 .version("1.0.0");
     }
 

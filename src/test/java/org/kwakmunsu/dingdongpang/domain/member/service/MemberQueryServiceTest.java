@@ -1,7 +1,5 @@
 package org.kwakmunsu.dingdongpang.domain.member.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
