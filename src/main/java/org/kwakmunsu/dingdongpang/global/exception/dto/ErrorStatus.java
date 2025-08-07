@@ -9,6 +9,8 @@ public enum ErrorStatus {
 
     // COMMON
     BAD_REQUEST      (400, "ERROR - 잘못된 요청입니다."),
+    NOT_FOUND        (404, "ERROR - 찾을 수 없습니다."),
+    DUPLICATE        (409, "ERROR - 중복 되었습니다."),
     FORBIDDEN_MODIFY (403, "ERROR - 수정 권한이 없습니다."),
     FORBIDDEN_DELETE (403, "ERROR - 삭제 권한이 없습니다."),
 
