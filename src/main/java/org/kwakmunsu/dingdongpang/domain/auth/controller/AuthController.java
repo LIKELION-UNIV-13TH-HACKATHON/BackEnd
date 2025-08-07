@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @RestController
-public class AuthController {
+public class AuthController extends AuthDocsController {
 
     private final AuthCommandService authCommandService;
 
+    @Override
     @PostMapping("/sign-in")
     public ResponseEntity<SignInResponse> signIn(@RequestHeader("Authorization") String socialAccessToken) {
         SignInResponse response = authCommandService.signIn(socialAccessToken);
@@ -27,6 +28,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @Override
     @PostMapping("/reissue")
     public ResponseEntity<TokenResponse> reissue(@Valid @RequestBody ReissueTokenRequest request) {
         TokenResponse response = authCommandService.reissue(request.refreshToken());
