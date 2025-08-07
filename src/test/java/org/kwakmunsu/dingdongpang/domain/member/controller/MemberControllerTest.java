@@ -70,7 +70,7 @@ class MemberControllerTest extends ControllerTestSupport {
                 .apply(print())
                 .hasStatusOk()
                 .bodyJson()
-                .extractingPath("$.existsNickname").isEqualTo(true);
+                .extractingPath("$.isExistsNickname").isEqualTo(true);
     }
 
     @TestMember
