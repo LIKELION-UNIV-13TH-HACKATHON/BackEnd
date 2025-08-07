@@ -62,17 +62,9 @@ public abstract class MemberDocsController {
             summary = "상인 회원 요청 API  - JWT O",
             description = """
                     ## 상인 등록과 매장 등록을 합니다.
+                    **안내 사항**
+                     - MerchantRegisterRequest, 매장 대표 이미지, 매장 이미지는 FormData로 보내주세요.
                     """
-    )
-    @RequestBody(
-            description = """
-                    상인 회원 요청 정보
-                    """,
-            required = true,
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(implementation = MerchantRegisterRequest.class)
-            )
     )
     @ApiResponse(
             responseCode = "200",
@@ -85,21 +77,28 @@ public abstract class MemberDocsController {
             UNAUTHORIZED_ERROR,
             INTERNAL_SERVER_ERROR
     })
+
     public abstract ResponseEntity<Void> register(
-             MerchantRegisterRequest request,
-            @RequestBody(
+            @Parameter(
+                    required = true,
+                    content = @Content(
+                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                            schema = @Schema(implementation = MerchantRegisterRequest.class))
+            )
+            MerchantRegisterRequest request,
+            @Parameter(
                     description = "매장 대표 이미지",
                     content = @Content(
                             mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                            schema = @Schema(type = "string", format = "binary")
-                    ))
+                            schema = @Schema(type = "string", format = "binary"))
+            )
             MultipartFile mainImage,
-            @RequestBody(
-                    description = "매장 이미지 ",
+            @Parameter(
+                    description = "매장 이미지",
                     content = @Content(
                             mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                            schema = @Schema(type = "string", format = "binary")
-                    ))
+                            schema = @Schema(type = "string", format = "binary"))
+            )
             List<MultipartFile> imageFiles,
             Long memberId
     );
