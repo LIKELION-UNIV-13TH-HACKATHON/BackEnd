@@ -23,12 +23,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/members")
 @RequiredArgsConstructor
 @RestController
-public class MemberController {
+public class MemberController extends MemberDocsController {
 
     private final MemberCommandService memberCommandService;
     private final MemberQueryService memberQueryService;
     private final MerchantOnboardingService merchantOnboardingService;
 
+    @Override
     @PostMapping("/customers")
     public ResponseEntity<Void> register(
             @Valid @RequestBody CustomerRegisterRequest request,
@@ -39,6 +40,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @Override
     @PostMapping("/merchants")
     public ResponseEntity<Void> register(
             @Valid @RequestPart MerchantRegisterRequest request,
@@ -51,6 +53,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @Override
     @GetMapping("/check-nickname")
     public ResponseEntity<CheckNicknameResponse> checkNameDuplicate(@RequestParam String nickname) {
         CheckNicknameResponse response = memberQueryService.isExistsNickname(nickname);
