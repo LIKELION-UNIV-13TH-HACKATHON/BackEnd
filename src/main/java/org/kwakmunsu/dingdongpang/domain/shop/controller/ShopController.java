@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/shops")
 @RequiredArgsConstructor
 @RestController
-public class ShopController {
+public class ShopController extends ShopDocsController {
 
     private final ShopQueryService shopQueryService;
 
+    @Override
     @GetMapping("/{shopId}")
     public ResponseEntity<ShopResponse> getShop(@PathVariable Long shopId, @AuthMember Long memberId) {
         ShopResponse response = shopQueryService.getShop(shopId, memberId);
