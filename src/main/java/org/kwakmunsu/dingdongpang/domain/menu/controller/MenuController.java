@@ -10,6 +10,7 @@ import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuListResponse;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,13 +68,24 @@ public class MenuController extends MenuDocsController{
 
     @Override
     @PatchMapping("/menus/{menuId}")
-    public ResponseEntity<Void> updateMenu(
+    public ResponseEntity<Void> update(
             @Valid @RequestPart MenuUpdateRequest request,
             @RequestPart(required = false) MultipartFile image,
             @PathVariable Long menuId,
             @AuthMember Long memberId
     ) {
         menuCommandService.update(request.toServiceRequest(image, menuId, memberId));
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @DeleteMapping("/menus/{menuId}")
+    public ResponseEntity<Void> delete(
+            @PathVariable Long menuId,
+            @AuthMember Long memberId
+    ) {
+        menuCommandService.delete(menuId, memberId);
 
         return ResponseEntity.noContent().build();
     }

@@ -36,4 +36,8 @@ public class MenuRepository {
                 .orElseThrow(() -> new ForbiddenException(ErrorStatus.FORBIDDEN_MODIFY));
     }
 
+    public void deleteById(Long id) {
+        menuJpaRepository.deleteById(id);
+    }
+
 }

@@ -2,6 +2,8 @@ package org.kwakmunsu.dingdongpang.domain.menu.controller;
 
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.BAD_REQUEST;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.DUPLICATE;
+import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.FORBIDDEN_DELETE;
+import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.FORBIDDEN_MODIFY;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.INTERNAL_SERVER_ERROR;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.NOT_FOUND;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.UNAUTHORIZED_ERROR;
@@ -143,7 +145,6 @@ public abstract class MenuDocsController {
     })
     public abstract ResponseEntity<MenuResponse> getMenu(Long menuId);
 
-
     @Operation(
             summary = "매장 메뉴 수정 API  - JWT O",
             description = """
@@ -158,11 +159,11 @@ public abstract class MenuDocsController {
     )
     @ApiExceptions(values = {
             BAD_REQUEST,
-            NOT_FOUND,
+            FORBIDDEN_MODIFY,
             UNAUTHORIZED_ERROR,
             INTERNAL_SERVER_ERROR
     })
-    public abstract ResponseEntity<Void> updateMenu(
+    public abstract ResponseEntity<Void> update(
             @Parameter(
                     description = "매장 메뉴 수정 요청 정보",
                     required = true,
@@ -187,4 +188,32 @@ public abstract class MenuDocsController {
             Long menuId,
             Long memberId
     );
+
+    @Operation(
+            summary = "매장 메뉴 삭제 API  - JWT O",
+            description = """
+                    ## 매장 메뉴 삭제를 합니다. 매장 관리자가 아닐 경우 메뉴 삭제는 불가능합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "매장 메뉴 삭제 성공"
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            FORBIDDEN_DELETE,
+            UNAUTHORIZED_ERROR,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<Void> delete(
+            @Parameter(
+                    name = "menuId",
+                    description = "메뉴 id ",
+                    in = ParameterIn.PATH,
+                    required = true
+            )
+            Long menuId,
+            Long memberId
+    );
+
 }
