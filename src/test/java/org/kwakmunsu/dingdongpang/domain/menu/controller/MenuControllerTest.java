@@ -79,7 +79,7 @@ class MenuControllerTest extends ControllerTestSupport {
         var menuResponse = new MenuResponse(1L, "menu1", 10000, "description1", null);
         var menuListResponse = new MenuListResponse(List.of(menuResponse));
 
-        given(menuQueryService.getMenus(any())).willReturn(menuListResponse);
+        given(menuQueryService.getMenusByMerchant(any())).willReturn(menuListResponse);
 
         MvcTestResult result = mvcTester.get().uri("/shops/menus")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -97,7 +97,7 @@ class MenuControllerTest extends ControllerTestSupport {
 
     @GetMapping("/menus")
     public ResponseEntity<MenuListResponse> getMenus(@AuthMember Long memberId) {
-        MenuListResponse response = menuQueryService.getMenus(memberId);
+        MenuListResponse response = menuQueryService.getMenusByMerchant(memberId);
 
         return ResponseEntity.ok(response);
     }

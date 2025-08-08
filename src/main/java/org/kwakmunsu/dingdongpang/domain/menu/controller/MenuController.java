@@ -2,7 +2,6 @@ package org.kwakmunsu.dingdongpang.domain.menu.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.kwakmunsu.dingdongpang.domain.member.service.MemberQueryService;
 import org.kwakmunsu.dingdongpang.domain.menu.controller.dto.MenuRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.menu.service.MenuCommandService;
 import org.kwakmunsu.dingdongpang.domain.menu.service.MenuQueryService;
@@ -10,6 +9,7 @@ import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuListResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -39,8 +39,17 @@ public class MenuController extends MenuDocsController{
     // 상인 전용 메뉴 목록 조회 API
     @Override
     @GetMapping("/menus")
-    public ResponseEntity<MenuListResponse> getMenus(@AuthMember Long memberId) {
-        MenuListResponse response = menuQueryService.getMenus(memberId);
+    public ResponseEntity<MenuListResponse> getMenusByMerchant(@AuthMember Long memberId) {
+        MenuListResponse response = menuQueryService.getMenusByMerchant(memberId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    // 고객 전용 메뉴 목록 조회 API
+    @Override
+    @GetMapping("/{shopId}/menus")
+    public ResponseEntity<MenuListResponse> getMenusByCustomer(@PathVariable Long shopId) {
+        MenuListResponse response = menuQueryService.getMenusByCustomer(shopId);
 
         return ResponseEntity.ok(response);
     }

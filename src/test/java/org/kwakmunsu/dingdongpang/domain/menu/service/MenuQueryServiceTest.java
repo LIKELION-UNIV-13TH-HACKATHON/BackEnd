@@ -40,7 +40,7 @@ record MenuQueryServiceTest(
 
     @DisplayName("매장 메뉴 목록 조회")
     @Test
-    void getMenus() throws IOException {
+    void getMenusByMerchant() throws IOException {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var geocodeResponse = new GeocodeResponse("1", "10");
         long merchantId = 1L;
@@ -52,7 +52,7 @@ record MenuQueryServiceTest(
         menuCommandService.register(menuRegisterRequest1);
         menuCommandService.register(menuRegisterRequest2);
 
-        MenuListResponse response = menuQueryService.getMenus(merchantId);
+        MenuListResponse response = menuQueryService.getMenusByMerchant(merchantId);
 
         assertThat(response.responses()).hasSize(2);
         assertThat(response.responses().getFirst())
@@ -71,10 +71,10 @@ record MenuQueryServiceTest(
 
     @DisplayName("상인이 아닌 회원이 매장 메뉴 목록 조회 시 실패한다.")
     @Test
-    void failGetMenus() {
+    void failGetMenusByMerchant() {
         var invalidMerchantId = 99999L;
 
-        assertThatThrownBy(() -> menuQueryService.getMenus(invalidMerchantId))
+        assertThatThrownBy(() -> menuQueryService.getMenusByMerchant(invalidMerchantId))
                 .isInstanceOf(NotFoundException.class);
     }
 
