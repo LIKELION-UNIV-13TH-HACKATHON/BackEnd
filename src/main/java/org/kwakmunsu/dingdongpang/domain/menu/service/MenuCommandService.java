@@ -45,6 +45,14 @@ public class MenuCommandService {
         menu.updateMenu(request.toDomainRequest(uploadImage));
     }
 
+    @Transactional
+    public void delete(Long menuId, Long memberId) {
+        Menu menu = menuRepository.findByIdAndShopMemberId(menuId, memberId);
+
+        deleteImage(menu.getImage());
+        menuRepository.deleteById(menuId);
+    }
+
     private String uploadImage(MultipartFile image) {
         if (image == null || image.isEmpty()) {
             return null;

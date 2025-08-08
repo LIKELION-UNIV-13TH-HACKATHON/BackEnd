@@ -3,7 +3,6 @@ package org.kwakmunsu.dingdongpang.domain.menu.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -35,12 +34,13 @@ record MenuCommandServiceTest(
 
     @DisplayName("매장 메뉴를 등록한다.")
     @Test
-    void register() throws IOException {
+    void register() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
         var geocodeResponse = new GeocodeResponse("1","10");
         var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, geocodeResponse, null));
         shopRepository.save(shop);
+
         var menuRegisterServiceRequest = new MenuRegisterServiceRequest("불닭", 20000, "아주 매워", null, memberId);
         menuCommandService.register(menuRegisterServiceRequest);
 
@@ -50,7 +50,7 @@ record MenuCommandServiceTest(
 
     @DisplayName("이미 등록된 메뉴라면 등록을 실패한다.")
     @Test
-    void failRegister() throws IOException {
+    void failRegister() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
         var geocodeResponse = new GeocodeResponse("1","10");
@@ -66,7 +66,7 @@ record MenuCommandServiceTest(
     
     @DisplayName("메뉴 정보를 수정한다.")
     @Test
-    void updateImage() throws IOException {
+    void updateImage() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
         var geocodeResponse = new GeocodeResponse("1","10");
@@ -93,7 +93,7 @@ record MenuCommandServiceTest(
 
     @DisplayName("매장 관리자가 아니면 매장 메뉴 정보를 수정할 수 없다.")
     @Test
-    void failUpdate() throws IOException {
+    void failUpdate() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
         var geocodeResponse = new GeocodeResponse("1","10");
@@ -111,7 +111,27 @@ record MenuCommandServiceTest(
             .isInstanceOf(ForbiddenException.class);
     }
 
-    private ShopRegisterServiceRequest getShopRegisterServiceRequest() throws IOException {
+    @DisplayName("메뉴를 삭제한다.")
+    @Test
+    void delete() {
+        var shopRegisterServiceRequest = getShopRegisterServiceRequest();
+        var memberId = 1L;
+        var geocodeResponse = new GeocodeResponse("1","10");
+        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, geocodeResponse, null));
+        shopRepository.save(shop);
+
+        var menuRegisterServiceRequest = new MenuRegisterServiceRequest("불닭", 20000, "아주 매워", null, memberId);
+        menuCommandService.register(menuRegisterServiceRequest);
+
+        List<Menu> menus = menuRepository.findByShopId(shop.getId());
+        menuCommandService.delete(menus.getFirst().getId(), memberId);
+
+        boolean exists = menuRepository.existsByShopIdAndName(shop.getId(), menuRegisterServiceRequest.name());
+
+        assertThat(exists).isFalse();
+    }
+
+    private ShopRegisterServiceRequest getShopRegisterServiceRequest() {
 
         OperationTimeServiceRequest mondayOperation = new OperationTimeServiceRequest(
                 DayOfWeek.MONDAY,

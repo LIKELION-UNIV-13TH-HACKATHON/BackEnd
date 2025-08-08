@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuListResponse;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuResponse;
 import org.kwakmunsu.dingdongpang.global.TestMember;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
@@ -119,7 +121,7 @@ class MenuControllerTest extends ControllerTestSupport {
     @TestMember
     @DisplayName("메뉴 정보를 수정한다.")
     @Test
-    void updateMenu() throws JsonProcessingException {
+    void update() throws JsonProcessingException {
         var menuUpdateRequest = new MenuUpdateRequest("updateName", 10000, "updateDescription");
         var requestPart = new MockMultipartFile(
                 "request",
@@ -133,9 +135,25 @@ class MenuControllerTest extends ControllerTestSupport {
         MvcResult result = mvcTester.perform(multipart(HttpMethod.PATCH, "/shops/menus/{menuId}", 1L)
                 .file(requestPart)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .content(objectMapper.writeValueAsString(menuUpdateRequest))).getMvcResult();
+                .content(objectMapper.writeValueAsString(menuUpdateRequest))
+        ).getMvcResult();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(204);
+    }
+
+    @TestMember
+    @DisplayName("메뉴를 삭제 한다.")
+    @Test
+    void delete() {
+        doNothing().when(menuCommandService).delete(any(), any());
+
+        MvcTestResult result = mvcTester.delete().uri("/shops/menus/{menuId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .exchange();
+
+        assertThat(result)
+                .hasStatus(HttpStatus.NO_CONTENT)
+                .apply(print());
     }
 
 }
