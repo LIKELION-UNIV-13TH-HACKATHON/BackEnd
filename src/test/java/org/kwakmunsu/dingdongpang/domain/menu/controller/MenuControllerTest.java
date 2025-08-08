@@ -14,13 +14,10 @@ import org.kwakmunsu.dingdongpang.domain.menu.controller.dto.MenuRegisterRequest
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuListResponse;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuResponse;
 import org.kwakmunsu.dingdongpang.global.TestMember;
-import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
-import org.springframework.web.bind.annotation.GetMapping;
 
 
 class MenuControllerTest extends ControllerTestSupport {
@@ -95,11 +92,26 @@ class MenuControllerTest extends ControllerTestSupport {
                 .hasPathSatisfying("$.responses[0].image", v -> v.assertThat().isNull());
     }
 
-    @GetMapping("/menus")
-    public ResponseEntity<MenuListResponse> getMenus(@AuthMember Long memberId) {
-        MenuListResponse response = menuQueryService.getMenusByMerchant(memberId);
+    @DisplayName("메뉴를 상세 조회 한다.")
+    @Test
+    void getMenu() {
+        var menuId = 1L;
+        var menuResponse = new MenuResponse(1L, "menu1", 10000, "description1", "image");
+        given(menuQueryService.getMenu(menuId)).willReturn(menuResponse);
 
-        return ResponseEntity.ok(response);
+        MvcTestResult result = mvcTester.get().uri("/shops/menus/{menuId}", menuId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .exchange();
+
+        assertThat(result)
+                .hasStatusOk()
+                .bodyJson()
+                .hasPathSatisfying("$.id", v -> v.assertThat().isEqualTo(menuResponse.id().intValue()))
+                .hasPathSatisfying("$.name", v -> v.assertThat().isEqualTo(menuResponse.name()))
+                .hasPathSatisfying("$.price", v -> v.assertThat().isEqualTo(menuResponse.price()))
+                .hasPathSatisfying("$.description", v -> v.assertThat().isEqualTo(menuResponse.description()))
+                .hasPathSatisfying("$.image", v -> v.assertThat().isEqualTo(menuResponse.image()));
+
     }
 
 }

@@ -6,6 +6,7 @@ import org.kwakmunsu.dingdongpang.domain.menu.controller.dto.MenuRegisterRequest
 import org.kwakmunsu.dingdongpang.domain.menu.service.MenuCommandService;
 import org.kwakmunsu.dingdongpang.domain.menu.service.MenuQueryService;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuListResponse;
+import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +51,14 @@ public class MenuController extends MenuDocsController{
     @GetMapping("/{shopId}/menus")
     public ResponseEntity<MenuListResponse> getMenusByCustomer(@PathVariable Long shopId) {
         MenuListResponse response = menuQueryService.getMenusByCustomer(shopId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping("/menus/{menuId}")
+    public ResponseEntity<MenuResponse> getMenu(@PathVariable Long menuId) {
+        MenuResponse response = menuQueryService.getMenu(menuId);
 
         return ResponseEntity.ok(response);
     }

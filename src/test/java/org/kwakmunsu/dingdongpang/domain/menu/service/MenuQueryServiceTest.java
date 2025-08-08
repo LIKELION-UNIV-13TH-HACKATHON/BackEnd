@@ -1,5 +1,6 @@
 package org.kwakmunsu.dingdongpang.domain.menu.service;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -8,11 +9,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.member.service.MemberCommandService;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.OperationTimeServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.menu.entity.Menu;
 import org.kwakmunsu.dingdongpang.domain.menu.repository.MenuRepository;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuListResponse;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuRegisterServiceRequest;
@@ -73,9 +76,35 @@ record MenuQueryServiceTest(
     @Test
     void failGetMenusByMerchant() {
         var invalidMerchantId = 99999L;
-
         assertThatThrownBy(() -> menuQueryService.getMenusByMerchant(invalidMerchantId))
                 .isInstanceOf(NotFoundException.class);
+    }
+
+    @DisplayName("메뉴를 상세 조회한다")
+    @Test
+    void getMenu() throws IOException {
+        var shopRegisterServiceRequest = getShopRegisterServiceRequest();
+        var geocodeResponse = new GeocodeResponse("1", "10");
+        long merchantId = 1L;
+        shopCommandService.register(shopRegisterServiceRequest, geocodeResponse, merchantId);
+        var shop = shopRepository.findByMemberId(merchantId);
+
+        var menu = Menu.create(shop, "name", 10000, "description", "image");
+        menuRepository.save(menu);
+
+        MenuResponse response = menuQueryService.getMenu(menu.getId());
+
+        assertThat(response)
+                .extracting(MenuResponse::name, MenuResponse::price, MenuResponse::description, MenuResponse::image)
+                .containsExactly(menu.getName(),    menu.getPrice(),     menu.getDescription(),     menu.getImage());
+    }
+
+    @DisplayName("존재하지 않는 메뉴 조회 요청을 할 경우 에러를 반환한다.")
+    @Test
+    void failGetMenu() {
+        var invalidMenuId = 99999L;
+        assertThatThrownBy(() -> menuQueryService.getMenu(invalidMenuId))
+            .isInstanceOf(NotFoundException.class);
     }
 
     private MockMultipartFile getMockMultipartFile() throws IOException {
