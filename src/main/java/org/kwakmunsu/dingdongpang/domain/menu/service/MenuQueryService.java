@@ -17,9 +17,17 @@ public class MenuQueryService {
     private final MenuRepository menuRepository;
     private final ShopRepository shopRepository;
 
-    public MenuListResponse getMenus(Long memberId) {
+    public MenuListResponse getMenusByMerchant(Long memberId) {
         Shop shop = shopRepository.findByMemberId(memberId);
-        List<Menu> menus = menuRepository.findByShopId(shop.getId());
+        return getMenuListResponse(shop.getId());
+    }
+
+    public MenuListResponse getMenusByCustomer(Long shopId) {
+        return getMenuListResponse(shopId);
+    }
+
+    private MenuListResponse getMenuListResponse(Long shopId) {
+        List<Menu> menus = menuRepository.findByShopId(shopId);
 
         List<MenuResponse> responses = menus.stream()
                 .map(MenuResponse::of)
