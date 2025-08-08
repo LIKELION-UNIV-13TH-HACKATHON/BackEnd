@@ -1,6 +1,5 @@
 package org.kwakmunsu.dingdongpang.domain.menu.service;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -9,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.member.service.MemberCommandService;

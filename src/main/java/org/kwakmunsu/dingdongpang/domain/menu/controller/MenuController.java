@@ -3,6 +3,7 @@ package org.kwakmunsu.dingdongpang.domain.menu.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.menu.controller.dto.MenuRegisterRequest;
+import org.kwakmunsu.dingdongpang.domain.menu.controller.dto.MenuUpdateRequest;
 import org.kwakmunsu.dingdongpang.domain.menu.service.MenuCommandService;
 import org.kwakmunsu.dingdongpang.domain.menu.service.MenuQueryService;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuListResponse;
@@ -10,6 +11,7 @@ import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,6 +63,19 @@ public class MenuController extends MenuDocsController{
         MenuResponse response = menuQueryService.getMenu(menuId);
 
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @PatchMapping("/menus/{menuId}")
+    public ResponseEntity<Void> updateMenu(
+            @Valid @RequestPart MenuUpdateRequest request,
+            @RequestPart(required = false) MultipartFile image,
+            @PathVariable Long menuId,
+            @AuthMember Long memberId
+    ) {
+        menuCommandService.update(request.toServiceRequest(image, menuId, memberId));
+
+        return ResponseEntity.noContent().build();
     }
 
 }

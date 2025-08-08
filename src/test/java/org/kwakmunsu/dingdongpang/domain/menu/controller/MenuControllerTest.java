@@ -3,6 +3,7 @@ package org.kwakmunsu.dingdongpang.domain.menu.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,9 +12,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.ControllerTestSupport;
 import org.kwakmunsu.dingdongpang.domain.menu.controller.dto.MenuRegisterRequest;
+import org.kwakmunsu.dingdongpang.domain.menu.controller.dto.MenuUpdateRequest;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuListResponse;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuResponse;
 import org.kwakmunsu.dingdongpang.global.TestMember;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
@@ -111,7 +114,28 @@ class MenuControllerTest extends ControllerTestSupport {
                 .hasPathSatisfying("$.price", v -> v.assertThat().isEqualTo(menuResponse.price()))
                 .hasPathSatisfying("$.description", v -> v.assertThat().isEqualTo(menuResponse.description()))
                 .hasPathSatisfying("$.image", v -> v.assertThat().isEqualTo(menuResponse.image()));
+    }
 
+    @TestMember
+    @DisplayName("메뉴 정보를 수정한다.")
+    @Test
+    void updateMenu() throws JsonProcessingException {
+        var menuUpdateRequest = new MenuUpdateRequest("updateName", 10000, "updateDescription");
+        var requestPart = new MockMultipartFile(
+                "request",
+                "request.json",
+                "application/json",
+                objectMapper.writeValueAsString(menuUpdateRequest).getBytes()
+        );
+
+        doNothing().when(menuCommandService).update(any());
+
+        MvcResult result = mvcTester.perform(multipart(HttpMethod.PATCH, "/shops/menus/{menuId}", 1L)
+                .file(requestPart)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .content(objectMapper.writeValueAsString(menuUpdateRequest))).getMvcResult();
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(204);
     }
 
 }

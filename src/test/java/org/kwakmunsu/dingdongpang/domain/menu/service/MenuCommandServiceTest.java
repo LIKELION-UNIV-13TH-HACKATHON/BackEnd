@@ -3,8 +3,6 @@ package org.kwakmunsu.dingdongpang.domain.menu.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.List;
@@ -12,18 +10,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.OperationTimeServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.menu.entity.Menu;
 import org.kwakmunsu.dingdongpang.domain.menu.repository.MenuRepository;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuUpdateServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
+import org.kwakmunsu.dingdongpang.global.exception.ForbiddenException;
 import org.kwakmunsu.dingdongpang.infrastructure.geocoding.GeocodeResponse;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Transactional
 @SpringBootTest
@@ -42,8 +41,7 @@ record MenuCommandServiceTest(
         var geocodeResponse = new GeocodeResponse("1","10");
         var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, geocodeResponse, null));
         shopRepository.save(shop);
-        MockMultipartFile file = getMockMultipartFile();
-        var menuRegisterServiceRequest = new MenuRegisterServiceRequest("불닭", 20000, "아주 매워", file, memberId);
+        var menuRegisterServiceRequest = new MenuRegisterServiceRequest("불닭", 20000, "아주 매워", null, memberId);
         menuCommandService.register(menuRegisterServiceRequest);
 
         boolean exists = menuRepository.existsByShopIdAndName(shop.getId(), menuRegisterServiceRequest.name());
@@ -65,22 +63,55 @@ record MenuCommandServiceTest(
         assertThatThrownBy(() ->  menuCommandService.register(menuRegisterServiceRequest))
             .isInstanceOf(DuplicationException.class);
     }
+    
+    @DisplayName("메뉴 정보를 수정한다.")
+    @Test
+    void updateImage() throws IOException {
+        var shopRegisterServiceRequest = getShopRegisterServiceRequest();
+        var memberId = 1L;
+        var geocodeResponse = new GeocodeResponse("1","10");
+        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, geocodeResponse, null));
+        shopRepository.save(shop);
 
+        var menuRegisterServiceRequest = new MenuRegisterServiceRequest("불닭", 20000, "아주 매워", null, memberId);
+        menuCommandService.register(menuRegisterServiceRequest);
 
-    private MockMultipartFile getMockMultipartFile() throws IOException {
-        File image = new File("src/test/resources/test.png");
-        return new MockMultipartFile(
-                "image",                         // 파라미터 이름
-                "test.png",                      // 파일 이름
-                "image/png",                    // Content-Type
-                new FileInputStream(image)
-        );
+        List<Menu> menus = menuRepository.findByShopId(shop.getId());
+        var menuUpdateServiceRequest = new MenuUpdateServiceRequest(menus.getFirst().getId(), "핵불닭", 25000, "아주아주 매워", null, memberId);
+        menuCommandService.update(menuUpdateServiceRequest);
+
+        var menu = menuRepository.findById(menus.getFirst().getId());
+        assertThat(menu)
+                .extracting(Menu::getName, Menu:: getPrice, Menu:: getDescription, Menu:: getImage)
+                .containsExactly(
+                        menuUpdateServiceRequest.name(),
+                        menuUpdateServiceRequest.price(),
+                        menuUpdateServiceRequest.description(),
+                        menuUpdateServiceRequest.image()
+                );
+    }
+
+    @DisplayName("매장 관리자가 아니면 매장 메뉴 정보를 수정할 수 없다.")
+    @Test
+    void failUpdate() throws IOException {
+        var shopRegisterServiceRequest = getShopRegisterServiceRequest();
+        var memberId = 1L;
+        var geocodeResponse = new GeocodeResponse("1","10");
+        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, geocodeResponse, null));
+        shopRepository.save(shop);
+
+        var menuRegisterServiceRequest = new MenuRegisterServiceRequest("불닭", 20000, "아주 매워", null, memberId);
+        menuCommandService.register(menuRegisterServiceRequest);
+
+        var invalidOwnerId = 12313L;
+        List<Menu> menus = menuRepository.findByShopId(shop.getId());
+        var menuUpdateServiceRequest = new MenuUpdateServiceRequest(menus.getFirst().getId(), "핵불닭", 25000, "아주아주 매워", null, invalidOwnerId);
+
+        assertThatThrownBy(() -> menuCommandService.update(menuUpdateServiceRequest))
+            .isInstanceOf(ForbiddenException.class);
     }
 
     private ShopRegisterServiceRequest getShopRegisterServiceRequest() throws IOException {
-        MultipartFile mainImage = getMockMultipartFile();
-        MultipartFile image1 = getMockMultipartFile();
-        MultipartFile image2 = getMockMultipartFile();
 
         OperationTimeServiceRequest mondayOperation = new OperationTimeServiceRequest(
                 DayOfWeek.MONDAY,
@@ -102,9 +133,10 @@ record MenuCommandServiceTest(
                 "서울특별시 강남구 역삼동 123-45",                 // address
                 "1234567890",                               // businessNumber
                 "홍길동",                                     // ownerName
-                mainImage,                                  // mainImage
-                List.of(image1, image2),                    // imageFiles
+                null,                                       // mainImage
+                List.of(),                                  // imageFiles
                 List.of(mondayOperation, tuesdayOperation)  // operationTimeRequests
         );
     }
+
 }
