@@ -7,6 +7,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SubscribeShopRepository {
 
-    private final SubscribeShopJpaRepository inquiryJpaRepository;
+    private final SubscribeShopJpaRepository subscribeShopJpaRepository;
+
+    public boolean existsByMemberIdAndShopId(Long memberId, Long shopId) {
+        return subscribeShopJpaRepository.existsByMemberIdAndShopId(memberId, shopId);
+    }
 
 }

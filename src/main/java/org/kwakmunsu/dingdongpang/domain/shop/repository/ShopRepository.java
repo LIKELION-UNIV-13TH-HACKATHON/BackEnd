@@ -25,4 +25,9 @@ public class ShopRepository {
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_SHOP));
     }
 
+    public Shop findById(Long id) {
+        return shopJpaRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_SHOP));
+    }
+
 }
