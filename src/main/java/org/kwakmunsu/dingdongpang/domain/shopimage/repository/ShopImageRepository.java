@@ -19,4 +19,7 @@ public class ShopImageRepository {
         shopImageJpaRepository.saveAll(shopImages);
     }
 
+    public List<String> findByShopId(Long shopId) {
+        return shopImageJpaRepository.findByShopId(shopId);
+    }
 }

@@ -77,7 +77,6 @@ public abstract class MemberDocsController {
             UNAUTHORIZED_ERROR,
             INTERNAL_SERVER_ERROR
     })
-
     public abstract ResponseEntity<Void> register(
             @Parameter(
                     required = true,

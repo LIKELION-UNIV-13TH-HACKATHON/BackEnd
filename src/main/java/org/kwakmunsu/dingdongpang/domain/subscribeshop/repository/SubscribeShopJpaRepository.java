@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SubscribeShopJpaRepository extends JpaRepository<SubscribeShop, Long> {
 
+    boolean existsByMemberIdAndShopId(Long memberId, Long shopId);
+
 }
