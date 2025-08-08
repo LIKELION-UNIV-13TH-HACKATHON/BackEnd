@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.kwakmunsu.dingdongpang.domain.menu.controller.dto.MenuRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuListResponse;
+import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.ApiExceptions;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.MediaType;
@@ -116,4 +117,31 @@ public abstract class MenuDocsController {
     })
     public abstract ResponseEntity<MenuListResponse> getMenusByCustomer(Long shopId);
 
+    @Operation(
+            summary = " 매장 메뉴 상세 조회 API  - JWT O",
+            description = """
+                    ## 매장 메뉴 상세 조회 API 입니다.
+                    """
+    )
+    @Parameter(
+            name = "menuId",
+            description = "메뉴 id ",
+            in = ParameterIn.PATH,
+            required = true
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "매장 메뉴 상세 조회 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = MenuResponse.class)
+            )
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            NOT_FOUND,
+            UNAUTHORIZED_ERROR,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<MenuResponse> getMenu(Long menuId);
 }

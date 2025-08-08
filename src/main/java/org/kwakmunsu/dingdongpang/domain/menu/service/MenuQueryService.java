@@ -36,4 +36,10 @@ public class MenuQueryService {
         return new MenuListResponse(responses);
     }
 
+    public MenuResponse getMenu(Long menuId) {
+        Menu menu = menuRepository.findById(menuId);
+
+        return MenuResponse.of(menu);
+    }
+
 }

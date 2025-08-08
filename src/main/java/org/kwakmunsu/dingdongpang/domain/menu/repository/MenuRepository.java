@@ -3,6 +3,8 @@ package org.kwakmunsu.dingdongpang.domain.menu.repository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.menu.entity.Menu;
+import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
+import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -21,6 +23,11 @@ public class MenuRepository {
 
     public List<Menu> findByShopId(Long shopId) {
          return menuJpaRepository.findByShopId(shopId);
+    }
+
+    public Menu findById(Long menuId) {
+        return menuJpaRepository.findById(menuId)
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_MENU));
     }
 
 }
