@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.BaseEntity;
+import org.kwakmunsu.dingdongpang.domain.menu.entity.dto.MenuUpdateDomainRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 
 @Getter
@@ -46,7 +47,11 @@ public class Menu extends BaseEntity {
                 .build();
     }
 
-    public void updateMenu() {
+    public void updateMenu(MenuUpdateDomainRequest request) {
+        this.name = request.name();
+        this.price = request.price();
+        this.description = request.description();
+        this.image = request.image();
     }
 
 }
