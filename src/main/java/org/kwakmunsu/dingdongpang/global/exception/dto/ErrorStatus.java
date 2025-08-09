@@ -24,6 +24,9 @@ public enum ErrorStatus {
     // NOTIFICATION
     NOT_FOUND_NOTIFICATION (404, "ERROR - 존재하지 않은 알림입니다."),
 
+    // MESSAGE
+    FAIL_GENERATE_MESSAGE (500, "ERROR - 메세지 생성에 실패하였습니다."),
+
     // SHOP
     INVALID_DATE_FORMAT       (400, "ERROR - yyyy-MM-dd 형식으로 입력해주세요."),
     INVALID_TIME_FORMAT       (400, "ERROR - HH:mm 형식으로 입력해주세요."),
