@@ -15,6 +15,8 @@ import org.kwakmunsu.dingdongpang.domain.message.service.MessageService;
 import org.kwakmunsu.dingdongpang.domain.shop.controller.ShopController;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopQueryService;
+import org.kwakmunsu.dingdongpang.domain.subscribeshop.controller.SubscribeController;
+import org.kwakmunsu.dingdongpang.domain.subscribeshop.service.SubscribeShopCommandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -28,7 +30,8 @@ import org.springframework.test.web.servlet.assertj.MockMvcTester;
                 MemberController.class,
                 MenuController.class,
                 ShopController.class,
-                MessageController.class
+                MessageController.class,
+                SubscribeController.class
         })
 public abstract class ControllerTestSupport {
 
@@ -64,5 +67,8 @@ public abstract class ControllerTestSupport {
 
     @MockitoBean
     protected MessageService messageService;
+
+    @MockitoBean
+    protected SubscribeShopCommandService subscribeShopCommandService;
 
 }
