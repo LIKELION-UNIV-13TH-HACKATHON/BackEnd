@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/shops")
 @RequiredArgsConstructor
 @RestController
-public class MenuController extends MenuDocsController{
+public class MenuController extends MenuDocsController {
 
     private final MenuCommandService menuCommandService;
     private final MenuQueryService menuQueryService;

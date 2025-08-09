@@ -10,6 +10,8 @@ import org.kwakmunsu.dingdongpang.domain.member.service.MerchantOnboardingServic
 import org.kwakmunsu.dingdongpang.domain.menu.controller.MenuController;
 import org.kwakmunsu.dingdongpang.domain.menu.service.MenuCommandService;
 import org.kwakmunsu.dingdongpang.domain.menu.service.MenuQueryService;
+import org.kwakmunsu.dingdongpang.domain.message.controller.MessageController;
+import org.kwakmunsu.dingdongpang.domain.message.service.MessageService;
 import org.kwakmunsu.dingdongpang.domain.shop.controller.ShopController;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopQueryService;
@@ -26,6 +28,7 @@ import org.springframework.test.web.servlet.assertj.MockMvcTester;
                 MemberController.class,
                 MenuController.class,
                 ShopController.class,
+                MessageController.class
         })
 public abstract class ControllerTestSupport {
 
@@ -58,5 +61,8 @@ public abstract class ControllerTestSupport {
 
     @MockitoBean
     protected ShopQueryService sqsCommandService;
+
+    @MockitoBean
+    protected MessageService messageService;
 
 }
