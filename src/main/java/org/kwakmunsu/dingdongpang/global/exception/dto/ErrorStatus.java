@@ -33,6 +33,7 @@ public enum ErrorStatus {
     NOT_FOUND_BUSINESS_NUMBER (404, "ERROR - 유효하지 않은 사업자 등록 번호입니다."),
     NOT_FOUND_SHOP            (404, "ERROR - 회원님의 매장을 찾을 수 없습니다."),
     DUPLICATE_SHOP            (409, "ERROR - 이미 등록된 매장입니다."),
+    ALREADY_SUBSCRIBE_SHOP    (409, "ERROR - 이미 구독한 매장입니다."),
 
     // MENU
     NOT_FOUND_MENU (404, "ERROR - 메뉴를 찾을 수 없습니다."),
