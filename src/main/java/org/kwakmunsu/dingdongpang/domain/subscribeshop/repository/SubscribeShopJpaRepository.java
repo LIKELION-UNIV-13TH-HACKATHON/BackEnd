@@ -7,4 +7,6 @@ public interface SubscribeShopJpaRepository extends JpaRepository<SubscribeShop,
 
     boolean existsByMemberIdAndShopId(Long memberId, Long shopId);
 
+    void deleteByMemberIdAndShopId(Long memberId, Long shopId);
+
 }
