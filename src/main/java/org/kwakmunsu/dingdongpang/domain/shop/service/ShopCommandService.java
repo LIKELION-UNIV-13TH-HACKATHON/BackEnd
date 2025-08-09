@@ -16,6 +16,7 @@ import org.kwakmunsu.dingdongpang.infrastructure.geocoding.GeocodeResponse;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
@@ -28,15 +29,16 @@ public class ShopCommandService {
 
     @Transactional
     public void register(ShopRegisterServiceRequest request, GeocodeResponse geocodeResponse, Long merchantId) {
-        String mainImage = s3Provider.uploadImage(request.mainImage());
+        // mainImage가 없을 시 Null 반환
+        String mainImage = uploadImage(request.mainImage());
         Shop shop = Shop.create(request.toDomainRequest(merchantId, geocodeResponse, mainImage));
         shopRepository.save(shop);
 
-        // 이미지 저장.
-        List<String> uploadedImages = s3Provider.uploadImages(request.imageFiles());
-        saveShopImages(uploadedImages, shop);
+        if(!request.imageFiles().isEmpty()) {
+            List<String> uploadedImages = s3Provider.uploadImages(request.imageFiles());
+            saveShopImages(uploadedImages, shop);
+        }
 
-        // 운영 시간 따로 저장
         List<OperationTimeServiceRequest> operationTimeRequests = request.operationTimeRequests();
         saveShopOperationTimes(operationTimeRequests, shop);
     }
@@ -58,6 +60,13 @@ public class ShopCommandService {
                         ot.isClosed())
                 ).toList();
         shopOperationTimeRepository.saveAll(operationTimes);
+    }
+
+    private String uploadImage(MultipartFile image) {
+        if (image == null || image.isEmpty()) {
+            return null;
+        }
+        return s3Provider.uploadImage(image);
     }
 
 }
