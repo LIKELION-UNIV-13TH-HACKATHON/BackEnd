@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
@@ -38,6 +39,7 @@ record MerchantOnboardingServiceTest(
         BusinessRegisterProvider businessRegisterProvider
 ) {
 
+    @Disabled("IP 주소 상시 변경으로 비활성화")
     @DisplayName("상인 회원을 등록한다.")
     @Test
     void register() throws IOException {
@@ -65,6 +67,7 @@ record MerchantOnboardingServiceTest(
                         );
     }
 
+    @Disabled("IP 주소 상시 변경으로 비활성화")
     @DisplayName("이미 상인으로 등록된 회원일 경우 재등록이 안된다.")
     @Test
     void failRegister() throws IOException {

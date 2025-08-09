@@ -4,11 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.global.exception.InternalServerException;
 import org.springframework.boot.test.context.SpringBootTest;
 
+@Disabled("IP 주소 상시 변경으로 비활성화")
 @Slf4j
 @SpringBootTest
 record KakaoGeocodingProviderTest(KakaoGeocodingProvider kakaoGeocodingProvider) {
