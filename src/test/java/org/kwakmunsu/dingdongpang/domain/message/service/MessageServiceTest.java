@@ -41,9 +41,9 @@ class MessageServiceTest {
         given(requestBuilder.call()).willReturn(responseBuilder);
     }
 
-    @DisplayName("AI가 생성한 홍보 알림 메세지를 가져온다.")
+    @DisplayName("메세지 생성에 실패할 경우 예외를 던진다..")
     @Test
-    void getMessage() {
+    void failGetMessage() {
 
         given(responseBuilder.chatResponse()).willReturn(null);
 
