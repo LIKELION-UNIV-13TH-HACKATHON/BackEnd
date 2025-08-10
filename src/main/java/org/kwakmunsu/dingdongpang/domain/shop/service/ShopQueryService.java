@@ -3,9 +3,11 @@ package org.kwakmunsu.dingdongpang.domain.shop.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopOperationTimeRepository;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.dto.ShopOperationTimeResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.ShopOperationTimeRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.dto.ShopOperationTimeResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopReadServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopRepository;
@@ -28,6 +30,10 @@ public class ShopQueryService {
         List<String> shopImages = shopImageRepository.findByShopId(shopId);
 
         return ShopResponse.from(shop, isSubscribe, operationTimeResponses, shopImages);
+    }
+
+    public ShopListResponse getShopList(ShopReadServiceRequest request) {
+       return shopRepository.getShopList(request.toDomainRequest());
     }
 
 }

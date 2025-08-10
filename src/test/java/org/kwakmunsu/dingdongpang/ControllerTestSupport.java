@@ -63,7 +63,7 @@ public abstract class ControllerTestSupport {
     protected ShopCommandService shopCommandService;
 
     @MockitoBean
-    protected ShopQueryService sqsCommandService;
+    protected ShopQueryService shopQueryService;
 
     @MockitoBean
     protected MessageService messageService;
