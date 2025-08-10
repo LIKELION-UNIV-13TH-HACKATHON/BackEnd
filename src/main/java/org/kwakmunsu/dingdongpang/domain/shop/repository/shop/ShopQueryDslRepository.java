@@ -30,6 +30,8 @@ public class ShopQueryDslRepository {
     private final JPAQueryFactory queryFactory;
 
     public ShopListResponse getShopList(ShopReadDomainRequest request) {
+        SortBy sort = request.sortBy() == null ? SortBy.NEWEST : request.sortBy();
+
         NumberTemplate<Double> distanceExpr = distanceM(request.longitude(), request.latitude());
         JPAQuery<ShopPreviewResponse> query = queryFactory.select(
                         constructor(ShopPreviewResponse.class,
@@ -51,11 +53,11 @@ public class ShopQueryDslRepository {
                 )
                 .from(shop)
                 .where(
-                        cursorIdCondition(request, distanceExpr),
+                        cursorIdCondition(sort, request, distanceExpr),
                         queryContains(request.q())
                 );
         List<ShopPreviewResponse> responses = query
-                .orderBy(getOrderSpecifiers(request.sortBy(), distanceExpr))
+                .orderBy(getOrderSpecifiers(sort, distanceExpr))
                 .limit(PAGE_SIZE + 1)
                 .fetch();
 
@@ -83,8 +85,7 @@ public class ShopQueryDslRepository {
                 shop.location, userLon, userLat);
     }
 
-    private BooleanExpression cursorIdCondition(ShopReadDomainRequest request, NumberTemplate<Double> distanceExpr) {
-        SortBy sortBy = request.sortBy();
+    private BooleanExpression cursorIdCondition(SortBy sortBy, ShopReadDomainRequest request, NumberTemplate<Double> distanceExpr) {
         Long lastSubscribeCount = request.lastSubscribeCount();
         Long lastShopId = request.lastShopId();
         Double lastDistance = request.lastDistance();
