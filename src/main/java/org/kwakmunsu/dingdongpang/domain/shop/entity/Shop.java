@@ -26,7 +26,7 @@ public class Shop extends BaseEntity {
     @Column(nullable = false)
     private String shopName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String businessNumber;
 
     @Column(nullable = false)
@@ -35,10 +35,10 @@ public class Shop extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ShopType shopType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String address;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String shopTellNumber;
 
     @Column(columnDefinition = "POINT SRID 4326", nullable = false)
