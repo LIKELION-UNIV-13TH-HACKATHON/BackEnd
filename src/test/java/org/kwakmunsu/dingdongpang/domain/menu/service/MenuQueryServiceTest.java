@@ -21,8 +21,9 @@ import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
+import org.kwakmunsu.dingdongpang.global.GeoUtil;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
-import org.kwakmunsu.dingdongpang.infrastructure.geocoding.GeocodeResponse;
+import org.locationtech.jts.geom.Point;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,9 +44,9 @@ record MenuQueryServiceTest(
     @Test
     void getMenusByMerchant() throws IOException {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
-        var geocodeResponse = new GeocodeResponse("1", "10");
+        Point point = GeoUtil.createPoint(1.2, 2.3);
         long merchantId = 1L;
-        shopCommandService.register(shopRegisterServiceRequest, geocodeResponse, merchantId);
+        shopCommandService.register(shopRegisterServiceRequest, point, merchantId);
 
         MockMultipartFile file = getMockMultipartFile();
         var menuRegisterRequest1 = new MenuRegisterServiceRequest("테스트1", 20000, "설명1", file, merchantId);
@@ -82,9 +83,9 @@ record MenuQueryServiceTest(
     @Test
     void getMenu() throws IOException {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
-        var geocodeResponse = new GeocodeResponse("1", "10");
+        Point point = GeoUtil.createPoint(1.2, 2.3);
         long merchantId = 1L;
-        shopCommandService.register(shopRegisterServiceRequest, geocodeResponse, merchantId);
+        shopCommandService.register(shopRegisterServiceRequest, point, merchantId);
         var shop = shopRepository.findByMemberId(merchantId);
 
         var menu = Menu.create(shop, "name", 10000, "description", "image");

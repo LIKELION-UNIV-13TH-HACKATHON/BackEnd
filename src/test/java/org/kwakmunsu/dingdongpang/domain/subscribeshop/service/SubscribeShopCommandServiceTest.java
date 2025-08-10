@@ -14,9 +14,10 @@ import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopRepository;
+import org.kwakmunsu.dingdongpang.global.GeoUtil;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
-import org.kwakmunsu.dingdongpang.infrastructure.geocoding.GeocodeResponse;
+import org.locationtech.jts.geom.Point;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,8 +38,8 @@ record SubscribeShopCommandServiceTest(
         memberRepository.save(member);
 
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
-        var geocodeResponse = new GeocodeResponse("1", "10");
-        shopCommandService.register(shopRegisterServiceRequest, geocodeResponse, member.getId());
+        Point point = GeoUtil.createPoint(1.2, 2.3);
+        shopCommandService.register(shopRegisterServiceRequest, point, member.getId());
 
         Shop shop = shopRepository.findByMemberId(member.getId());
         var subscribeMember = 9999999L;
@@ -49,14 +50,14 @@ record SubscribeShopCommandServiceTest(
         assertThat(isSubscribed).isTrue();
 
         // 이미 구독이 되어있다면 예외를 던진다
-        assertThatThrownBy(() ->   subscribeShopCommandService.subscribe(shop.getId(), subscribeMember))
-            .isInstanceOf(DuplicationException.class);
+        assertThatThrownBy(() -> subscribeShopCommandService.subscribe(shop.getId(), subscribeMember))
+                .isInstanceOf(DuplicationException.class);
     }
 
     @DisplayName("구독할 매장이 존재하지 않을 경우 예외를 던진다.")
     @Test
     void failSubscribe() {
-        assertThatThrownBy(() ->   subscribeShopCommandService.subscribe(-999L, 1L))
+        assertThatThrownBy(() -> subscribeShopCommandService.subscribe(-999L, 1L))
                 .isInstanceOf(NotFoundException.class);
     }
 
@@ -67,8 +68,8 @@ record SubscribeShopCommandServiceTest(
         memberRepository.save(member);
 
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
-        var geocodeResponse = new GeocodeResponse("1", "10");
-        shopCommandService.register(shopRegisterServiceRequest, geocodeResponse, member.getId());
+        Point point = GeoUtil.createPoint(1.2, 2.3);
+        shopCommandService.register(shopRegisterServiceRequest, point, member.getId());
 
         Shop shop = shopRepository.findByMemberId(member.getId());
         var subscribeMember = 9999999L;

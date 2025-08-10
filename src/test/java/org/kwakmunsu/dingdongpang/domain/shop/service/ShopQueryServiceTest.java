@@ -18,8 +18,9 @@ import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopRepository;
+import org.kwakmunsu.dingdongpang.global.GeoUtil;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
-import org.kwakmunsu.dingdongpang.infrastructure.geocoding.GeocodeResponse;
+import org.locationtech.jts.geom.Point;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,10 +41,10 @@ record ShopQueryServiceTest(
     @Test
     void getShop() throws IOException {
         var registerRequest = getShopRegisterServiceRequest();
-        var geocodeResponse = new GeocodeResponse("1", "10");
+        Point point = GeoUtil.createPoint(1.2, 2.3);
         long merchantId = 1L;
         long memberId = 2L;
-        shopCommandService.register(registerRequest, geocodeResponse, merchantId);
+        shopCommandService.register(registerRequest, point, merchantId);
 
         var shop = shopRepository.findByMemberId(merchantId);
 

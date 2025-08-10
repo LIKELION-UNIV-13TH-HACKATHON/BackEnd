@@ -9,9 +9,9 @@ import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
-import org.kwakmunsu.dingdongpang.infrastructure.geocoding.GeocodeResponse;
 import org.kwakmunsu.dingdongpang.infrastructure.geocoding.KakaoGeocodingProvider;
 import org.kwakmunsu.dingdongpang.infrastructure.openapi.BusinessRegisterProvider;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +38,9 @@ public class MerchantOnboardingService {
 
         Member merchant = memberCommandService.registerMerchant(request.nickname(), request.memberId());
 
-        GeocodeResponse geocodeResponse = kakaoGeocodingProvider.transferToGeocode(shopRegisterRequest.address());
+        Point point = kakaoGeocodingProvider.transferToGeocode(shopRegisterRequest.address());
 
-        shopCommandService.register(shopRegisterRequest, geocodeResponse, merchant.getId());
+        shopCommandService.register(shopRegisterRequest, point, merchant.getId());
     }
 
     private void checkDuplicateRegisterShop(MerchantRegisterServiceRequest request) {
