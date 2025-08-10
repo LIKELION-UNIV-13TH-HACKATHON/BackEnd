@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.domain.shop.repository.dto;
+package org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.DayOfWeek;

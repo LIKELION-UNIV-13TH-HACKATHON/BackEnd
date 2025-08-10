@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.domain.shop.repository;
+package org.kwakmunsu.dingdongpang.domain.shop.repository.shop;
 
 import java.util.Optional;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
