@@ -20,10 +20,10 @@ class GeoUtilTest {
     void cal() {
         var address = "경기 광주시 경충대로 1477";
         Point point = kakaoGeocodingProvider.transferToGeocode(address);
-
+        log.info("{}", point);
         var address2 = "경기 광주시 경충대로 1411 투썸플레이스";
         Point point2 = kakaoGeocodingProvider.transferToGeocode(address2);
-
+        log.info("{}", point2);
         double v = GeoUtil.distanceKm(point2.getY(), point2.getX(), point.getY(), point.getX());
         log.info("{}", v);
     }
