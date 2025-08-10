@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,15 +32,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Transactional
-@RequiredArgsConstructor
 @SpringBootTest
-class ShopQueryDslRepositoryTest {
-
-    private final ShopCommandService shopCommandService;
-    private final ShopRepository shopRepository;
-    private final SubscribeShopRepository subscribeShopRepository;
-    private final ShopQueryDslRepository shopQueryDslRepository;
-    private final KakaoGeocodingProvider kakaoGeocodingProvider;
+record ShopQueryDslRepositoryTest(
+        ShopCommandService shopCommandService,
+        ShopRepository shopRepository,
+        SubscribeShopRepository subscribeShopRepository,
+        ShopQueryDslRepository shopQueryDslRepository,
+        KakaoGeocodingProvider kakaoGeocodingProvider
+) {
 
     @DisplayName("매장 목록을 조회힌다.")
     @Test
@@ -293,7 +291,7 @@ class ShopQueryDslRepositoryTest {
                 .latitude(37.4013921881645)
                 .build();
 
-        ShopListResponse secondPage =  shopQueryDslRepository.getShopList(secondRequest.toDomainRequest());
+        ShopListResponse secondPage = shopQueryDslRepository.getShopList(secondRequest.toDomainRequest());
 
         // 두 번째 페이지 검증
         assertThat(secondPage.responses()).hasSize(5);  // 나머지 5개
