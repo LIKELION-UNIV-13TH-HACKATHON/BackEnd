@@ -26,9 +26,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    // OAuth2
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -66,6 +63,9 @@ dependencies {
     // Spring AI (starter + BOM 관리)
     implementation "org.springframework.ai:spring-ai-starter-model-openai"
     implementation platform("org.springframework.ai:spring-ai-bom:1.1.0-SNAPSHOT")
+
+    // 위도 경도 자료형 POINT 에 대한 MySql - Spring 연동 라이브러리 : 하이버네이트버전이랑 맞춰주어야함
+    implementation 'org.hibernate:hibernate-spatial:6.6.22.Final'
 }
 
 tasks.named('test') {
