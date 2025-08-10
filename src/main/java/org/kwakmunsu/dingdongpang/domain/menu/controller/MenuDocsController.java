@@ -19,7 +19,7 @@ import org.kwakmunsu.dingdongpang.domain.menu.controller.dto.MenuRegisterRequest
 import org.kwakmunsu.dingdongpang.domain.menu.controller.dto.MenuUpdateRequest;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuListResponse;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuResponse;
-import org.kwakmunsu.dingdongpang.global.annotation.ApiExceptions;
+import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;

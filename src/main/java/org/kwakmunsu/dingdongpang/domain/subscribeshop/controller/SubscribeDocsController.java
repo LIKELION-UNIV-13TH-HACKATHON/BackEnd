@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.kwakmunsu.dingdongpang.global.annotation.ApiExceptions;
+import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "ShopSubscribe API", description = "매장 구독 관련 API 문서입니다.")

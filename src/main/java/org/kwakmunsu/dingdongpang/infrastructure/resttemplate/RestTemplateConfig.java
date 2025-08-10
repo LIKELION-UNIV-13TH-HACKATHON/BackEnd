@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.global.config;
+package org.kwakmunsu.dingdongpang.infrastructure.resttemplate;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

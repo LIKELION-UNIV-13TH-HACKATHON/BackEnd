@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.global.config;
+package org.kwakmunsu.dingdongpang.global.swagger;
 
 import io.swagger.v3.oas.models.examples.Example;
 import lombok.Builder;

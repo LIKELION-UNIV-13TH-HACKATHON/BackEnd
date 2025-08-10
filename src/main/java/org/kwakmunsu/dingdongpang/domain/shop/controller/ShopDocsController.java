@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
-import org.kwakmunsu.dingdongpang.global.annotation.ApiExceptions;
+import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
