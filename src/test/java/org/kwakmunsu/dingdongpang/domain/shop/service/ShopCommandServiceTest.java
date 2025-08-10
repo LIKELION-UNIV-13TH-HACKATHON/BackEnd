@@ -16,7 +16,7 @@ import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopOperationTimeRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
-import org.kwakmunsu.dingdongpang.global.GeoUtil;
+import org.kwakmunsu.dingdongpang.global.GeoFixture;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;
 import org.locationtech.jts.geom.Point;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,7 +38,7 @@ record ShopCommandServiceTest(
         @Test
         void register() throws IOException {
             var shopRegisterServiceRequest = getShopRegisterServiceRequest();
-            Point point = GeoUtil.createPoint(1.2, 2.3);
+            Point point = GeoFixture.createPoint(1.2, 2.3);
 
             shopCommandService.register(shopRegisterServiceRequest, point, 1L);
 

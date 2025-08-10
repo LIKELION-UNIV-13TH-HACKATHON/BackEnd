@@ -16,7 +16,7 @@ import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuUpdateServiceReque
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
-import org.kwakmunsu.dingdongpang.global.GeoUtil;
+import org.kwakmunsu.dingdongpang.global.GeoFixture;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.ForbiddenException;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;
@@ -38,7 +38,7 @@ record MenuCommandServiceTest(
     void register() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
-        Point point = GeoUtil.createPoint();
+        Point point = GeoFixture.createPoint();
         var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, point, null));
         shopRepository.save(shop);
 
@@ -54,7 +54,7 @@ record MenuCommandServiceTest(
     void failRegister() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
-        Point point = GeoUtil.createPoint();
+        Point point = GeoFixture.createPoint();
         var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, point, null));
         shopRepository.save(shop);
 
@@ -70,7 +70,7 @@ record MenuCommandServiceTest(
     void updateImage() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
-        Point point = GeoUtil.createPoint();
+        Point point = GeoFixture.createPoint();
         var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, point, null));
         shopRepository.save(shop);
 
@@ -97,7 +97,7 @@ record MenuCommandServiceTest(
     void failUpdate() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
-        Point point = GeoUtil.createPoint();
+        Point point = GeoFixture.createPoint();
         var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, point, null));
         shopRepository.save(shop);
 
@@ -117,7 +117,7 @@ record MenuCommandServiceTest(
     void delete() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
-        Point point = GeoUtil.createPoint();
+        Point point = GeoFixture.createPoint();
         var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, point, null));
         shopRepository.save(shop);
 

@@ -8,7 +8,7 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class GeoUtil {
+public final class GeoFixture {
 
     private static final GeometryFactory GF = new GeometryFactory(new PrecisionModel(), 4326);
 

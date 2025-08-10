@@ -14,7 +14,7 @@ import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopRepository;
-import org.kwakmunsu.dingdongpang.global.GeoUtil;
+import org.kwakmunsu.dingdongpang.global.GeoFixture;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
 import org.locationtech.jts.geom.Point;
@@ -38,7 +38,7 @@ record SubscribeShopCommandServiceTest(
         memberRepository.save(member);
 
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
-        Point point = GeoUtil.createPoint(1.2, 2.3);
+        Point point = GeoFixture.createPoint(1.2, 2.3);
         shopCommandService.register(shopRegisterServiceRequest, point, member.getId());
 
         Shop shop = shopRepository.findByMemberId(member.getId());
@@ -68,7 +68,7 @@ record SubscribeShopCommandServiceTest(
         memberRepository.save(member);
 
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
-        Point point = GeoUtil.createPoint(1.2, 2.3);
+        Point point = GeoFixture.createPoint(1.2, 2.3);
         shopCommandService.register(shopRegisterServiceRequest, point, member.getId());
 
         Shop shop = shopRepository.findByMemberId(member.getId());

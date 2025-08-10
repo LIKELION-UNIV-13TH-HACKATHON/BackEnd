@@ -21,7 +21,7 @@ import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
-import org.kwakmunsu.dingdongpang.global.GeoUtil;
+import org.kwakmunsu.dingdongpang.global.GeoFixture;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
 import org.locationtech.jts.geom.Point;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,7 +44,7 @@ record MenuQueryServiceTest(
     @Test
     void getMenusByMerchant() throws IOException {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
-        Point point = GeoUtil.createPoint(1.2, 2.3);
+        Point point = GeoFixture.createPoint(1.2, 2.3);
         long merchantId = 1L;
         shopCommandService.register(shopRegisterServiceRequest, point, merchantId);
 
@@ -83,7 +83,7 @@ record MenuQueryServiceTest(
     @Test
     void getMenu() throws IOException {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
-        Point point = GeoUtil.createPoint(1.2, 2.3);
+        Point point = GeoFixture.createPoint(1.2, 2.3);
         long merchantId = 1L;
         shopCommandService.register(shopRegisterServiceRequest, point, merchantId);
         var shop = shopRepository.findByMemberId(merchantId);
