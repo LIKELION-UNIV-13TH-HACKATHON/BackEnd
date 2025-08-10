@@ -54,6 +54,8 @@ class ShopControllerTest extends ControllerTestSupport {
 
         ShopPreviewResponse response = shopListResponse.responses().getFirst();
         MvcTestResult result = mvcTester.get().uri("/shops")
+                .param("longitude", "123.231")
+                .param("latitude", "13.1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .exchange();
 
