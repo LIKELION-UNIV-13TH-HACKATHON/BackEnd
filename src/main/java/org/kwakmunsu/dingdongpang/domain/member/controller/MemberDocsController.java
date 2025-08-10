@@ -18,7 +18,7 @@ import java.util.List;
 import org.kwakmunsu.dingdongpang.domain.member.controller.dto.CustomerRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.member.controller.dto.MerchantRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.CheckNicknameResponse;
-import org.kwakmunsu.dingdongpang.global.annotation.ApiExceptions;
+import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;

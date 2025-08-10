@@ -6,7 +6,7 @@ import org.kwakmunsu.dingdongpang.domain.menu.repository.MenuRepository;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuUpdateServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;

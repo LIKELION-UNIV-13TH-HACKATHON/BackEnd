@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Builder;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.dto.ShopOperationTimeResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.dto.ShopOperationTimeResponse;
 
 @Schema(description = "매장 정보 응답 DTO")
 @Builder

@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.global.config;
+package org.kwakmunsu.dingdongpang.global.jwt.config;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

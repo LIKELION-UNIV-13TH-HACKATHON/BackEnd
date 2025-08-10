@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.global.annotation;
+package org.kwakmunsu.dingdongpang.global.swagger;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

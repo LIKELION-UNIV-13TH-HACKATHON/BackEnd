@@ -8,8 +8,8 @@ import org.kwakmunsu.dingdongpang.domain.member.service.dto.OperationTimeService
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopOperationTime;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopOperationTimeRepository;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.ShopOperationTimeRepository;
 import org.kwakmunsu.dingdongpang.domain.shopimage.entity.ShopImage;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;

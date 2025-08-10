@@ -1,7 +1,7 @@
 package org.kwakmunsu.dingdongpang.domain.subscribeshop.service;
 
 import lombok.RequiredArgsConstructor;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.entity.SubscribeShop;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopRepository;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;

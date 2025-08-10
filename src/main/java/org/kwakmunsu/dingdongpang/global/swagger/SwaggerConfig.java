@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.global.config;
+package org.kwakmunsu.dingdongpang.global.swagger;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.kwakmunsu.dingdongpang.global.annotation.ApiExceptions;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.kwakmunsu.dingdongpang.global.exception.dto.response.ErrorResponse;
 import org.springdoc.core.customizers.OperationCustomizer;

@@ -8,24 +8,25 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.OperationTimeServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopOperationTimeRepository;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.ShopOperationTimeRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopRepository;
-import org.kwakmunsu.dingdongpang.global.GeoUtil;
+import org.kwakmunsu.dingdongpang.global.GeoFixture;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
-import org.locationtech.jts.geom.Point;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Transactional
 @SpringBootTest
 record ShopQueryServiceTest(
@@ -41,7 +42,7 @@ record ShopQueryServiceTest(
     @Test
     void getShop() throws IOException {
         var registerRequest = getShopRegisterServiceRequest();
-        Point point = GeoUtil.createPoint(1.2, 2.3);
+        var point = GeoFixture.createPoint(1.2, 2.3);
         long merchantId = 1L;
         long memberId = 2L;
         shopCommandService.register(registerRequest, point, merchantId);
@@ -99,7 +100,7 @@ record ShopQueryServiceTest(
                 "My Shop",                                  // shopName
                 ShopType.FOOD,                              // shopType (예: enum)
                 "010-1234-5678",                            // shopPhoneNumber
-                "서울특별시 강남구 역삼동 123-45",                 // address
+                "경기 광주시 경충대로 1411 투썸플레이스",                 // address
                 "1234567890",                               // businessNumber
                 "홍길동",                                     // ownerName
                 mainImage,                                  // mainImage

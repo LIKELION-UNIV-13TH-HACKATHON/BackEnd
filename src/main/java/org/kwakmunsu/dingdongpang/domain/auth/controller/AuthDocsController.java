@@ -15,8 +15,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.kwakmunsu.dingdongpang.domain.auth.controller.dto.ReissueTokenRequest;
 import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInResponse;
-import org.kwakmunsu.dingdongpang.global.annotation.ApiExceptions;
 import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
+import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 

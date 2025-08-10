@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.MerchantRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;

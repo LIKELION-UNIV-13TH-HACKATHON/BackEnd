@@ -7,7 +7,7 @@ import org.kwakmunsu.dingdongpang.domain.menu.repository.MenuRepository;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuListResponse;
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
