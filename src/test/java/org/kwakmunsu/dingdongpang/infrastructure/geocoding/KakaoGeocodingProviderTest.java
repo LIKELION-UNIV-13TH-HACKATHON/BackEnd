@@ -22,8 +22,8 @@ record KakaoGeocodingProviderTest(KakaoGeocodingProvider kakaoGeocodingProvider)
 
         var response = kakaoGeocodingProvider.transferToGeocode(address);
 
-        assertThat(response).isNotNull();
-        log.info(response.toString());
+        assertThat(response.getCoordinate()).isNotNull();
+        log.info("{} {}", response.getCoordinate().getX(), response.getCoordinate().getY());
     }
 
     @DisplayName("유효하지 않은 주소 일 경우 에러를 던진다.")

@@ -16,8 +16,9 @@ import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopOperationTimeRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
-import org.kwakmunsu.dingdongpang.infrastructure.geocoding.GeocodeResponse;
+import org.kwakmunsu.dingdongpang.global.GeoUtil;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;
+import org.locationtech.jts.geom.Point;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,8 +38,9 @@ record ShopCommandServiceTest(
         @Test
         void register() throws IOException {
             var shopRegisterServiceRequest = getShopRegisterServiceRequest();
-            var geocodeResponse = new GeocodeResponse("1","10");
-            shopCommandService.register(shopRegisterServiceRequest, geocodeResponse, 1L);
+            Point point = GeoUtil.createPoint(1.2, 2.3);
+
+            shopCommandService.register(shopRegisterServiceRequest, point, 1L);
 
             boolean exists = shopRepository.existsByBusinessNumber(shopRegisterServiceRequest.businessNumber());
 

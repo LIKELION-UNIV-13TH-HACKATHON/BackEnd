@@ -16,10 +16,11 @@ import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuUpdateServiceReque
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
+import org.kwakmunsu.dingdongpang.global.GeoUtil;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.ForbiddenException;
-import org.kwakmunsu.dingdongpang.infrastructure.geocoding.GeocodeResponse;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;
+import org.locationtech.jts.geom.Point;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,8 +38,8 @@ record MenuCommandServiceTest(
     void register() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
-        var geocodeResponse = new GeocodeResponse("1","10");
-        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, geocodeResponse, null));
+        Point point = GeoUtil.createPoint();
+        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, point, null));
         shopRepository.save(shop);
 
         var menuRegisterServiceRequest = new MenuRegisterServiceRequest("불닭", 20000, "아주 매워", null, memberId);
@@ -53,8 +54,8 @@ record MenuCommandServiceTest(
     void failRegister() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
-        var geocodeResponse = new GeocodeResponse("1","10");
-        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, geocodeResponse, null));
+        Point point = GeoUtil.createPoint();
+        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, point, null));
         shopRepository.save(shop);
 
         var menuRegisterServiceRequest = new MenuRegisterServiceRequest("불닭", 20000, "아주 매워", null, memberId);
@@ -69,8 +70,8 @@ record MenuCommandServiceTest(
     void updateImage() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
-        var geocodeResponse = new GeocodeResponse("1","10");
-        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, geocodeResponse, null));
+        Point point = GeoUtil.createPoint();
+        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, point, null));
         shopRepository.save(shop);
 
         var menuRegisterServiceRequest = new MenuRegisterServiceRequest("불닭", 20000, "아주 매워", null, memberId);
@@ -96,8 +97,8 @@ record MenuCommandServiceTest(
     void failUpdate() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
-        var geocodeResponse = new GeocodeResponse("1","10");
-        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, geocodeResponse, null));
+        Point point = GeoUtil.createPoint();
+        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, point, null));
         shopRepository.save(shop);
 
         var menuRegisterServiceRequest = new MenuRegisterServiceRequest("불닭", 20000, "아주 매워", null, memberId);
@@ -116,8 +117,8 @@ record MenuCommandServiceTest(
     void delete() {
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var memberId = 1L;
-        var geocodeResponse = new GeocodeResponse("1","10");
-        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, geocodeResponse, null));
+        Point point = GeoUtil.createPoint();
+        var shop = Shop.create(shopRegisterServiceRequest.toDomainRequest(memberId, point, null));
         shopRepository.save(shop);
 
         var menuRegisterServiceRequest = new MenuRegisterServiceRequest("불닭", 20000, "아주 매워", null, memberId);

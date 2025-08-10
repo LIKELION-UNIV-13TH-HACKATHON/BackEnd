@@ -2,6 +2,7 @@ package org.kwakmunsu.dingdongpang.domain.member.repository.dto;
 
 import lombok.Builder;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
+import org.locationtech.jts.geom.Point;
 
 @Builder
 public record ShopRegisterDomainRequest(
@@ -12,8 +13,7 @@ public record ShopRegisterDomainRequest(
         ShopType shopType,
         String address,
         String shopTellNumber,
-        String latitude,
-        String longitude,
+        Point location,
         String mainImage
 ) {
 

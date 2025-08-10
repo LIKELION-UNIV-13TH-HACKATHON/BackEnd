@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.BaseEntity;
 import org.kwakmunsu.dingdongpang.domain.member.repository.dto.ShopRegisterDomainRequest;
+import org.locationtech.jts.geom.Point;
 
 @Builder
 @Getter
@@ -40,11 +41,8 @@ public class Shop extends BaseEntity {
     @Column(nullable = false)
     private String shopTellNumber;
 
-    @Column(nullable = false)
-    private String latitude;  // 위도
-
-    @Column(nullable = false)
-    private String longitude; // 경도
+    @Column(columnDefinition = "POINT SRID 4326", nullable = false)
+    private Point location; // 경도(X), 위도(Y)
 
     private String mainImage;
 
@@ -59,8 +57,7 @@ public class Shop extends BaseEntity {
                 .shopType(request.shopType())
                 .address(request.address())
                 .shopTellNumber(request.shopTellNumber())
-                .latitude(request.latitude())
-                .longitude(request.longitude())
+                .location(request.location())
                 .mainImage(request.mainImage())
                 .isDeleted(false)
                 .build();

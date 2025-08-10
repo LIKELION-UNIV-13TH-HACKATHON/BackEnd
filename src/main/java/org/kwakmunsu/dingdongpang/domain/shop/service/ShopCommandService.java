@@ -12,8 +12,8 @@ import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopOperationTimeReposi
 import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shopimage.entity.ShopImage;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
-import org.kwakmunsu.dingdongpang.infrastructure.geocoding.GeocodeResponse;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,10 +28,10 @@ public class ShopCommandService {
     private final ShopOperationTimeRepository shopOperationTimeRepository;
 
     @Transactional
-    public void register(ShopRegisterServiceRequest request, GeocodeResponse geocodeResponse, Long merchantId) {
+    public void register(ShopRegisterServiceRequest request, Point point, Long merchantId) {
         // mainImage가 없을 시 Null 반환
         String mainImage = uploadImage(request.mainImage());
-        Shop shop = Shop.create(request.toDomainRequest(merchantId, geocodeResponse, mainImage));
+        Shop shop = Shop.create(request.toDomainRequest(merchantId, point, mainImage));
         shopRepository.save(shop);
 
         if(!request.imageFiles().isEmpty()) {

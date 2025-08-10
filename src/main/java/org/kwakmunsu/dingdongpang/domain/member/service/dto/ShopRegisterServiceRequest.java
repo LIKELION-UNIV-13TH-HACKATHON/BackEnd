@@ -4,7 +4,7 @@ import java.util.List;
 import lombok.Builder;
 import org.kwakmunsu.dingdongpang.domain.member.repository.dto.ShopRegisterDomainRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
-import org.kwakmunsu.dingdongpang.infrastructure.geocoding.GeocodeResponse;
+import org.locationtech.jts.geom.Point;
 import org.springframework.web.multipart.MultipartFile;
 
 @Builder
@@ -20,7 +20,7 @@ public record ShopRegisterServiceRequest(
         List<OperationTimeServiceRequest> operationTimeRequests
 ) {
 
-    public ShopRegisterDomainRequest toDomainRequest(Long memberId, GeocodeResponse response, String mainImage) {
+    public ShopRegisterDomainRequest toDomainRequest(Long memberId, Point location, String mainImage) {
         return ShopRegisterDomainRequest.builder()
                 .memberId(memberId)
                 .shopName(shopName)
@@ -29,8 +29,7 @@ public record ShopRegisterServiceRequest(
                 .shopType(shopType)
                 .address(address)
                 .shopTellNumber(shopPhoneNumber)
-                .latitude(response.latitude())
-                .longitude(response.longitude())
+                .location(location)
                 .mainImage(mainImage)
                 .build();
     }
