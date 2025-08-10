@@ -15,7 +15,7 @@ import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuRegisterServiceReq
 import org.kwakmunsu.dingdongpang.domain.menu.service.dto.MenuUpdateServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
-import org.kwakmunsu.dingdongpang.domain.shop.repository.ShopRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.global.GeoFixture;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.ForbiddenException;
