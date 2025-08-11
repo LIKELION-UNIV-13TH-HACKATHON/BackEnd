@@ -31,8 +31,8 @@ public class MenuRepository {
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_MENU));
     }
 
-    public Menu findByIdAndShopMemberId(Long menuId, Long memberId) {
-        return menuJpaRepository.findByIdAndShopMemberId(menuId, memberId)
+    public Menu findByIdAndShopMerchantId(Long menuId, Long merchantId) {
+        return menuJpaRepository.findByIdAndShopMerchantId(menuId, merchantId)
                 .orElseThrow(() -> new ForbiddenException(ErrorStatus.FORBIDDEN_MODIFY));
     }
 

@@ -47,7 +47,7 @@ record ShopQueryServiceTest(
         long memberId = 2L;
         shopCommandService.register(registerRequest, point, merchantId);
 
-        var shop = shopRepository.findByMemberId(merchantId);
+        var shop = shopRepository.findByMerchantId(merchantId);
 
         ShopResponse response = shopQueryService.getShop(shop.getId(), memberId);
 

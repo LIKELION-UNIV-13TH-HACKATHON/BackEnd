@@ -8,5 +8,5 @@ public interface ShopJpaRepository extends JpaRepository<Shop, Long> {
 
     boolean existsByBusinessNumber(String businessNumber);
 
-    Optional<Shop> findByMemberId(Long memberId);
+    Optional<Shop> findByMerchantId(Long merchantId);
 }

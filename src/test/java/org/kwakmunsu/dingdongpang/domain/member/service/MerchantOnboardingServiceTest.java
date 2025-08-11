@@ -49,7 +49,7 @@ record MerchantOnboardingServiceTest(
 
         merchantOnboardingService.register(request);
 
-        var shop = shopRepository.findByMemberId(guest.getId());
+        var shop = shopRepository.findByMerchantId(guest.getId());
 
         var shopRegisterRequest = request.shopRegisterServiceRequest();
         assertThat(shop)

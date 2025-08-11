@@ -18,7 +18,7 @@ public class MenuQueryService {
     private final ShopRepository shopRepository;
 
     public MenuListResponse getMenusByMerchant(Long memberId) {
-        Shop shop = shopRepository.findByMemberId(memberId);
+        Shop shop = shopRepository.findByMerchantId(memberId);
         return getMenuListResponse(shop.getId());
     }
 

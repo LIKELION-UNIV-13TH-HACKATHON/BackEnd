@@ -21,7 +21,7 @@ import org.locationtech.jts.geom.Point;
 public class Shop extends BaseEntity {
 
     @Column(nullable = false)
-    private Long memberId;
+    private Long merchantId;
 
     @Column(nullable = false)
     private String shopName;
@@ -50,7 +50,7 @@ public class Shop extends BaseEntity {
 
     public static Shop create(ShopRegisterDomainRequest request) {
         return Shop.builder()
-                .memberId(request.memberId())
+                .merchantId(request.merchantId())
                 .shopName(request.shopName())
                 .businessNumber(request.businessNumber())
                 .ownerName(request.ownerName())

@@ -23,7 +23,7 @@ public class MenuCommandService {
     private final S3Provider s3Provider;
 
     public void register(MenuRegisterServiceRequest request) {
-        Shop shop = shopRepository.findByMemberId(request.memberId());
+        Shop shop = shopRepository.findByMerchantId(request.merchantId());
 
         if (menuRepository.existsByShopIdAndName(shop.getId(), request.name())) {
             throw new DuplicationException(ErrorStatus.DUPLICATE_MENU);
@@ -37,7 +37,7 @@ public class MenuCommandService {
 
     @Transactional
     public void update(MenuUpdateServiceRequest request) {
-        Menu menu = menuRepository.findByIdAndShopMemberId(request.id(), request.memberId());
+        Menu menu = menuRepository.findByIdAndShopMerchantId(request.id(), request.merchantId());
 
         deleteImage(menu.getImage());
         String uploadImage = uploadImage(request.image());
@@ -46,8 +46,8 @@ public class MenuCommandService {
     }
 
     @Transactional
-    public void delete(Long menuId, Long memberId) {
-        Menu menu = menuRepository.findByIdAndShopMemberId(menuId, memberId);
+    public void delete(Long menuId, Long merchantId) {
+        Menu menu = menuRepository.findByIdAndShopMerchantId(menuId, merchantId);
 
         deleteImage(menu.getImage());
         menuRepository.deleteById(menuId);

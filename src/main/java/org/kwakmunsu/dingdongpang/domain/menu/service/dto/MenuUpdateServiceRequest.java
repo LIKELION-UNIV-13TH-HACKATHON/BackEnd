@@ -11,7 +11,7 @@ public record MenuUpdateServiceRequest(
         int price,
         String description,
         MultipartFile image,
-        Long memberId
+        Long merchantId
 ) {
 
     public MenuUpdateDomainRequest toDomainRequest(String image) {

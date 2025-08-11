@@ -41,7 +41,7 @@ record SubscribeShopCommandServiceTest(
         Point point = GeoFixture.createPoint(1.2, 2.3);
         shopCommandService.register(shopRegisterServiceRequest, point, member.getId());
 
-        Shop shop = shopRepository.findByMemberId(member.getId());
+        Shop shop = shopRepository.findByMerchantId(member.getId());
         var subscribeMember = 9999999L;
 
         subscribeShopCommandService.subscribe(shop.getId(), subscribeMember);
@@ -71,7 +71,7 @@ record SubscribeShopCommandServiceTest(
         Point point = GeoFixture.createPoint(1.2, 2.3);
         shopCommandService.register(shopRegisterServiceRequest, point, member.getId());
 
-        Shop shop = shopRepository.findByMemberId(member.getId());
+        Shop shop = shopRepository.findByMerchantId(member.getId());
         var subscribeMember = 9999999L;
 
         subscribeShopCommandService.subscribe(shop.getId(), subscribeMember);
