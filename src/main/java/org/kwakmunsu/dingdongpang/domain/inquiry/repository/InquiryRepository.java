@@ -23,6 +23,10 @@ public class InquiryRepository {
         return inquiryJpaRepository.findByShopId(shopId);
     }
 
+    public List<Inquiry> findByShopIdAndAuthorId(Long shopId, Long authorId) {
+        return inquiryJpaRepository.findByShopIdAndAuthorId(shopId, authorId);
+    }
+
     public void findByAuthorId(Long authorId) {
 
     }
