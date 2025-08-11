@@ -3,6 +3,8 @@ package org.kwakmunsu.dingdongpang.domain.inquiry.repository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.Inquiry;
+import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
+import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -15,8 +17,9 @@ public class InquiryRepository {
         inquiryJpaRepository.save(inquiry);
     }
 
-    public void findById(Long id) {
-
+    public Inquiry findById(Long id) {
+        return inquiryJpaRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_INQUIRY));
     }
 
     public List<Inquiry> findByShopId(Long shopId) {
@@ -27,8 +30,8 @@ public class InquiryRepository {
         return inquiryJpaRepository.findByShopIdAndAuthorId(shopId, authorId);
     }
 
-    public void findByAuthorId(Long authorId) {
-
+    public List<Inquiry> findByShopIdForMerchant(Long authorId) {
+        return inquiryJpaRepository.findByShopIdForMerchant(authorId);
     }
 
 }

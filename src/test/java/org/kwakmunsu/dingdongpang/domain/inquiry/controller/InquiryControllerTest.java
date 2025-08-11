@@ -15,8 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.ControllerTestSupport;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryByMerchantResponse;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryListByMerchantResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryListResponse;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryPreviewResponse;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryReadServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.global.TestMember;
 import org.springframework.http.HttpStatus;
@@ -58,19 +61,19 @@ class InquiryControllerTest extends ControllerTestSupport {
     }
 
     @TestMember
-    @DisplayName("문의 목록을 조회한다.")
+    @DisplayName("고객이 문의 목록을 조회한다.")
     @Test
-    void getInquiryList() {
-        var inquiryPreviewResponse = InquiryPreviewResponse.builder()
+    void getInquiryListByCustomer() {
+        var inquiryPreviewResponse = InquiryResponse.builder()
                 .inquiryId(1L)
                 .question("question")
                 .answer("answer")
                 .createdAt(dateTimeToString(LocalDateTime.now()))
                 .build();
         var inquiryListResponse = new InquiryListResponse(List.of(inquiryPreviewResponse));
-        given(inquiryQueryService.getInquiryList(any())).willReturn(inquiryListResponse);
+        given(inquiryQueryService.getInquiryList(any(InquiryReadServiceRequest.class))).willReturn(inquiryListResponse);
 
-        MvcTestResult result = mvcTester.get().uri("/shops/{shopId}/inquiries", 1L)
+        MvcTestResult result = mvcTester.get().uri("/shops/{shopId}/inquiries/customers", 1L)
                 .param("filter", InquiryFilter.GENERAL.name())
                 .contentType(MediaType.APPLICATION_JSON)
                 .exchange();
@@ -89,11 +92,38 @@ class InquiryControllerTest extends ControllerTestSupport {
     @DisplayName("쿼리 파리미터의 Filter 포맷이 옳바르지 않으면 예외를 반환한다.")
     @Test
     void filaGetInquiryList() {
-        assertThat(mvcTester.get().uri("/shops/{shopId}/inquiries", 1L)
+        assertThat(mvcTester.get().uri("/shops/{shopId}/inquiries/customers", 1L)
                 .param("filter", "invalidFilter")
                 .contentType(MediaType.APPLICATION_JSON))
                 .hasStatus(HttpStatus.BAD_REQUEST)
                 .apply(print());
+    }
+
+    @TestMember
+    @DisplayName("상인이 문의 목록을 조회한다.")
+    @Test
+    void getInquiryListByMerchant() {
+        var inquiryByMerchantResponse = InquiryByMerchantResponse.builder()
+                .inquiryId(1L)
+                .question("question")
+                .answer("answer")
+                .createdAt(dateTimeToString(LocalDateTime.now()))
+                .build();
+        var inquiryListResponse = new InquiryListByMerchantResponse(List.of(inquiryByMerchantResponse));
+        given(inquiryQueryService.getInquiryList(any(Long.class))).willReturn(inquiryListResponse);
+
+        MvcTestResult result = mvcTester.get().uri("/shops/inquiries/merchants", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .exchange();
+
+        assertThat(result)
+                .hasStatusOk()
+                .apply(print())
+                .bodyJson()
+                .hasPathSatisfying("$.responses[0].inquiryId", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.inquiryId().intValue()))
+                .hasPathSatisfying("$.responses[0].question", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.question()))
+                .hasPathSatisfying("$.responses[0].answer", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.answer()))
+                .hasPathSatisfying("$.responses[0].createdAt", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.createdAt()));
     }
 
 }
