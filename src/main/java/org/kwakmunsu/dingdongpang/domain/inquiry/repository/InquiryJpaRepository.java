@@ -1,6 +1,7 @@
 package org.kwakmunsu.dingdongpang.domain.inquiry.repository;
 
 import java.util.List;
+import java.util.Optional;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.Inquiry;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,7 @@ public interface InquiryJpaRepository extends JpaRepository<Inquiry, Long> {
 
     @Query("select i from Inquiry i join fetch i.author where i.shopId = :shopId")
     List<Inquiry> findByShopIdForMerchant(@Param("shopId") Long shopId);
+
+    Optional<Inquiry> findByIdAndAuthorId(Long id, Long authorId);
+
 }

@@ -24,7 +24,7 @@ public class Inquiry extends BaseEntity {
     private Long shopId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "authorId")
+    @JoinColumn(name = "author_id")
     private Member author;
 
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -47,6 +47,10 @@ public class Inquiry extends BaseEntity {
 
     public void updateAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public void updateQuestion(String question) {
+        this.question = question;
     }
 
 }

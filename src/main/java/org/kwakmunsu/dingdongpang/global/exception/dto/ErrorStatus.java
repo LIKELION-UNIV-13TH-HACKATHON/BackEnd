@@ -40,8 +40,10 @@ public enum ErrorStatus {
     DUPLICATE_MENU (409, "ERROR - 이미 등록하신 메뉴입니다."),
 
     // INQUIRY
-    FORBIDDEN_ANSWER  (403,"ERROR - 답변 권한이 없습니다."),
-    NOT_FOUND_INQUIRY (404, "ERROR - 문의를 찾을 수 없습니다."),
+    FORBIDDEN_ANSWER            (403,"ERROR - 답변 권한이 없습니다."),
+    FORBIDDEN_INQUIRY_BY_AUTHOR (403, "ERROR - 회원님이 작성하신 문의가 아닙니다."),
+    NOT_FOUND_INQUIRY           (404, "ERROR - 문의를 찾을 수 없습니다."),
+
     // JWT
     INVALID_TOKEN   (401, "ERROR - 유효하지 않은 토큰입니다."),
     NOT_FOUND_TOKEN (404, "ERROR - 토큰을 찾을 수 없습니다."),

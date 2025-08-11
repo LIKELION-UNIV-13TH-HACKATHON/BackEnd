@@ -8,19 +8,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.Inquiry;
 import org.kwakmunsu.dingdongpang.domain.inquiry.repository.InquiryRepository;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryAnswerServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryAnswerServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryModifyServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
 import org.kwakmunsu.dingdongpang.global.GeoFixture;
 import org.kwakmunsu.dingdongpang.global.exception.ForbiddenException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
-import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -126,6 +125,55 @@ record InquiryCommandServiceTest(
 
         assertThatThrownBy(() -> inquiryCommandService.registerAnswer(answerServiceRequest))
                 .isInstanceOf(ForbiddenException.class);
+    }
+
+    @DisplayName("문의 작성자가 문의 내용을 수정한다.")
+    @Test
+    void modifyQuestion() {
+        var author = Member.createMember("email@gmail.com", "nickname", "12345");
+        memberRepository.save(author);
+
+        var shopRegisterServiceRequest = getShopRegisterServiceRequest();
+        var point = GeoFixture.createPoint(1.2, 2.3);
+        shopCommandService.register(shopRegisterServiceRequest, point, 1L);
+
+        var shop = shopRepository.findByMerchantId(1L);
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), author.getId());
+        inquiryCommandService.register(inquiryRegisterServiceRequest);
+
+        List<Inquiry> inquiries = inquiryRepository.findByShopIdAndAuthorId(shop.getId(), author.getId());
+        var inquiryId = inquiries.getFirst().getId();
+        // 수정 전 확인
+        assertThat(inquiries.getFirst().getQuestion()).isEqualTo(inquiryRegisterServiceRequest.question());
+
+        var inquiryModifyServiceRequest = new InquiryModifyServiceRequest("updateQuestion", inquiryId, author.getId());
+        inquiryCommandService.modifyInquiry(inquiryModifyServiceRequest);
+
+        var inquiry = inquiryRepository.findById(inquiryId);
+        // 수정 후
+        assertThat(inquiry.getQuestion()).isEqualTo(inquiryModifyServiceRequest.question());
+    }
+
+    @DisplayName("문의 작성자가 아닐 경우 문의 내용을 수정할 수 없다.")
+    @Test
+    void failModifyQuestion() {
+        var author = Member.createMember("email@gmail.com", "nickname", "12345");
+        memberRepository.save(author);
+
+        var shopRegisterServiceRequest = getShopRegisterServiceRequest();
+        var point = GeoFixture.createPoint(1.2, 2.3);
+        shopCommandService.register(shopRegisterServiceRequest, point, 1L);
+
+        var shop = shopRepository.findByMerchantId(1L);
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), author.getId());
+        inquiryCommandService.register(inquiryRegisterServiceRequest);
+
+        List<Inquiry> inquiries = inquiryRepository.findByShopIdAndAuthorId(shop.getId(), author.getId());
+        var inquiryId = inquiries.getFirst().getId();
+        var inquiryModifyServiceRequest = new InquiryModifyServiceRequest("updateQuestion", inquiryId, 999L);
+
+        assertThatThrownBy(() ->inquiryCommandService.modifyInquiry(inquiryModifyServiceRequest) )
+            .isInstanceOf(ForbiddenException.class);
     }
 
     private ShopRegisterServiceRequest getShopRegisterServiceRequest() {

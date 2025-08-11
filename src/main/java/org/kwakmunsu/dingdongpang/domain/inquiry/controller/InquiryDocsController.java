@@ -2,6 +2,7 @@ package org.kwakmunsu.dingdongpang.domain.inquiry.controller;
 
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.BAD_REQUEST;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.FORBIDDEN_ANSWER;
+import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.FORBIDDEN_MODIFY;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.INTERNAL_SERVER_ERROR;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.NOT_FOUND;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.UNAUTHORIZED_ERROR;
@@ -16,10 +17,11 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryAnswerRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryModifyRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryListByMerchantResponse;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryListResponse;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListByMerchantResponse;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -97,7 +99,7 @@ public abstract class InquiryDocsController {
             UNAUTHORIZED_ERROR,
             INTERNAL_SERVER_ERROR
     })
-    public abstract ResponseEntity<InquiryListResponse> getInquiryListByCustomer(
+    public abstract ResponseEntity<org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListResponse> getInquiryListByCustomer(
             InquiryFilter filter,
             Long shopId,
             Long memberId
@@ -166,4 +168,43 @@ public abstract class InquiryDocsController {
             Long inquiryId,
             Long memberId
     );
+
+    @Operation(
+            summary = "문의 수정 API  - JWT O",
+            description = """
+                    ## 문의 작성자만이 수정 가능합니다.
+                    """
+    )
+    @Parameter(
+            name = "inquiryId",
+            description = "문의 ID",
+            in = ParameterIn.PATH,
+            required = true
+    )
+    @RequestBody(
+            description = """
+                    문의 수정 정보
+                    """,
+            required = true,
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = InquiryModifyRequest.class)
+            )
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "문의 수정 성공"
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            UNAUTHORIZED_ERROR,
+            FORBIDDEN_MODIFY,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<Void> modifyQuestion(
+            InquiryModifyRequest request,
+            Long inquiryId,
+            Long memberId
+    );
+
 }
