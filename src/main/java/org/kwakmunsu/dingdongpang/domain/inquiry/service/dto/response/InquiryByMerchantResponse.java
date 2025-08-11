@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.domain.inquiry.service.dto;
+package org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response;
 
 import static org.kwakmunsu.dingdongpang.global.util.TimeConverter.dateTimeToString;
 
