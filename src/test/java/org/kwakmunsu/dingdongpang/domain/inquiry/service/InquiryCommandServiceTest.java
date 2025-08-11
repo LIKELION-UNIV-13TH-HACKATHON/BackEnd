@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.Inquiry;
 import org.kwakmunsu.dingdongpang.domain.inquiry.repository.InquiryRepository;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
+import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
@@ -24,18 +26,22 @@ record InquiryCommandServiceTest(
         InquiryCommandService inquiryCommandService,
         ShopCommandService shopCommandService,
         ShopRepository shopRepository,
-        InquiryRepository inquiryRepository
+        InquiryRepository inquiryRepository,
+        MemberRepository memberRepository
 ) {
 
     @DisplayName("문의를 등록한다.")
     @Test
     void register() {
+        var author = Member.createMember("email@gmail.com", "nickname", "12345");
+        memberRepository.save(author);
+
         var shopRegisterServiceRequest = getShopRegisterServiceRequest();
         var point = GeoFixture.createPoint(1.2, 2.3);
         shopCommandService.register(shopRegisterServiceRequest, point, 1L);
 
-        var shop = shopRepository.findByMemberId(1L);
-        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), 1L);
+        var shop = shopRepository.findByMerchantId(1L);
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), author.getId());
 
         inquiryCommandService.register(inquiryRegisterServiceRequest);
         List<Inquiry> inquiries = inquiryRepository.findByShopId(shop.getId());
@@ -45,12 +51,12 @@ record InquiryCommandServiceTest(
                 .extracting(
                         Inquiry::getQuestion,
                         Inquiry::getShopId,
-                        Inquiry::getAuthorId
+                        Inquiry::getAuthor
                 )
                 .containsExactly(
                         inquiryRegisterServiceRequest.question(),
                         inquiryRegisterServiceRequest.shopId(),
-                        inquiryRegisterServiceRequest.memberId()
+                        author
                 );
     }
 

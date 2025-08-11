@@ -6,6 +6,7 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryRegisterR
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.InquiryCommandService;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.InquiryQueryService;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryListByMerchantResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryListResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryReadServiceRequest;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
@@ -39,14 +40,22 @@ public class InquiryController extends InquiryDocsController {
     }
 
     @Override
-    @GetMapping("/{shopId}/inquiries")
-    public ResponseEntity<InquiryListResponse> getInquiryList(
+    @GetMapping("/{shopId}/inquiries/customers")
+    public ResponseEntity<InquiryListResponse> getInquiryListByCustomer(
             @RequestParam(defaultValue = "GENERAL") InquiryFilter filter,
             @PathVariable Long shopId,
             @AuthMember Long memberId
     ) {
         InquiryReadServiceRequest request = new InquiryReadServiceRequest(filter, shopId, memberId);
         InquiryListResponse response = inquiryQueryService.getInquiryList(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping("/inquiries/merchants")
+    public ResponseEntity<InquiryListByMerchantResponse> getInquiryListByMerchant(@AuthMember Long memberId) {
+        InquiryListByMerchantResponse response = inquiryQueryService.getInquiryList(memberId);
 
         return ResponseEntity.ok(response);
     }
