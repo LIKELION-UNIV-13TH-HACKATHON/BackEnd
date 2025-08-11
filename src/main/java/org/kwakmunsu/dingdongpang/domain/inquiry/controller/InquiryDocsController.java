@@ -7,6 +7,7 @@ import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.UNAUTH
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,6 +15,9 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryRegisterRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryListResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -54,9 +58,47 @@ public abstract class InquiryDocsController {
             INTERNAL_SERVER_ERROR
     })
     public abstract ResponseEntity<Void> register(
-             InquiryRegisterRequest request,
-             Long shopId,
-             Long memberId
+            InquiryRegisterRequest request,
+            Long shopId,
+            Long memberId
+    );
+
+    @Operation(
+            summary = "문의 목록 조회 API  - JWT O",
+            description = """
+                    ## 매장에 대한 문의 목록을 조회합니다.
+                    """
+    )
+    @Parameters(value = {
+            @Parameter(
+                    name = "shopId",
+                    description = "조회 할 매장 ID",
+                    in = ParameterIn.PATH,
+                    required = true
+            ),
+            @Parameter(
+                    name = "filter",
+                    description = "문의 목록 필터",
+                    in = ParameterIn.QUERY
+            )
+    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "문의 목록 조회 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = InquiryListResponse.class)
+            )
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            UNAUTHORIZED_ERROR,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<InquiryListResponse> getInquiryList(
+            InquiryFilter filter,
+            Long shopId,
+            Long memberId
     );
 
 }

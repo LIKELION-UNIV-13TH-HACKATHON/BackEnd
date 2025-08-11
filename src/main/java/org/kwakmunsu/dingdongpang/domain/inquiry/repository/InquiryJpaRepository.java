@@ -8,4 +8,5 @@ public interface InquiryJpaRepository extends JpaRepository<Inquiry, Long> {
 
     List<Inquiry> findByShopId(Long shopId);
 
+    List<Inquiry> findByShopIdAndAuthorId(Long shopId, Long authorId);
 }
