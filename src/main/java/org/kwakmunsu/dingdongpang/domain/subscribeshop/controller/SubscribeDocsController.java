@@ -74,7 +74,7 @@ public abstract class SubscribeDocsController {
 
 
     @Operation(
-            summary = "구독 매장 목록 조회 ",
+            summary = "구독 매장 목록 조회 - JWT O ",
             description = """
                     ### 매장 목록 조회 API 안내
                     - **위도(latitude) 경도(longitude) 는 필수값입니다!**
