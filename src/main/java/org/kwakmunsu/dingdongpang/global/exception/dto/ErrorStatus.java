@@ -39,6 +39,9 @@ public enum ErrorStatus {
     NOT_FOUND_MENU (404, "ERROR - 메뉴를 찾을 수 없습니다."),
     DUPLICATE_MENU (409, "ERROR - 이미 등록하신 메뉴입니다."),
 
+    // INQUIRY
+    NOT_FOUND_INQUIRY (404, "ERROR - 문의를 찾을 수 없습니다."),
+
     // JWT
     INVALID_TOKEN   (401, "ERROR - 유효하지 않은 토큰입니다."),
     NOT_FOUND_TOKEN (404, "ERROR - 토큰을 찾을 수 없습니다."),
