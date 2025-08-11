@@ -6,7 +6,7 @@ import org.locationtech.jts.geom.Point;
 
 @Builder
 public record ShopRegisterDomainRequest(
-        Long memberId,
+        Long merchantId,
         String shopName,
         String businessNumber,
         String ownerName,

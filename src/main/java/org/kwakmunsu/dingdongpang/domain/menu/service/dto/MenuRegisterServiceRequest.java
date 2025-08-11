@@ -9,7 +9,7 @@ public record MenuRegisterServiceRequest(
         int price,
         String description,
         MultipartFile image,
-        Long memberId
+        Long merchantId
 ) {
 
 }

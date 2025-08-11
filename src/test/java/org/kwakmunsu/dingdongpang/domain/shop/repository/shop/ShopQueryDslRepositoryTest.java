@@ -62,7 +62,7 @@ record ShopQueryDslRepositoryTest(
 
         long memberId = 99L;
         // 맨처음 매장 구독
-        Shop shop = shopRepository.findByMemberId(1L);
+        Shop shop = shopRepository.findByMerchantId(1L);
         var subscribeShop = SubscribeShop.create(memberId, shop.getId());
         subscribeShopRepository.save(subscribeShop);
 
@@ -123,7 +123,7 @@ record ShopQueryDslRepositoryTest(
 
         long memberId = 99L;
         // 구독
-        Shop shop = shopRepository.findByMemberId(1L);
+        Shop shop = shopRepository.findByMerchantId(1L);
         var subscribeShop = SubscribeShop.create(memberId, shop.getId());
         subscribeShopRepository.save(subscribeShop);
 
@@ -225,8 +225,8 @@ record ShopQueryDslRepositoryTest(
 
         long memberId = 99L;
         // 구독
-        Shop shop = shopRepository.findByMemberId(1L);
-        Shop shop2 = shopRepository.findByMemberId(3L);
+        Shop shop = shopRepository.findByMerchantId(1L);
+        Shop shop2 = shopRepository.findByMerchantId(3L);
         var subscribeShop = SubscribeShop.create(memberId, shop.getId());
         var subscribeShop2 = SubscribeShop.create(200L, shop.getId());
         var subscribeShop3 = SubscribeShop.create(200L, shop2.getId());

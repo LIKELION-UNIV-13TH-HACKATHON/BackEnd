@@ -47,8 +47,8 @@ record SubscribeShopQueryDslRepositoryTest(
 
         long memberId = 99L;
         // 구독
-        var shop = shopRepository.findByMemberId(1L);
-        var shop2 = shopRepository.findByMemberId(3L);
+        var shop = shopRepository.findByMerchantId(1L);
+        var shop2 = shopRepository.findByMerchantId(3L);
         var subscribeShop = SubscribeShop.create(memberId, shop.getId());
         var subscribeShop2 = SubscribeShop.create(2332L, shop.getId());
         var subscribeShop3 = SubscribeShop.create(memberId, shop2.getId());

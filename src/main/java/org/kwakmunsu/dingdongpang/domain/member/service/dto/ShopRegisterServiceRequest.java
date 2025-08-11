@@ -20,9 +20,9 @@ public record ShopRegisterServiceRequest(
         List<OperationTimeServiceRequest> operationTimeRequests
 ) {
 
-    public ShopRegisterDomainRequest toDomainRequest(Long memberId, Point location, String mainImage) {
+    public ShopRegisterDomainRequest toDomainRequest(Long merchantId, Point location, String mainImage) {
         return ShopRegisterDomainRequest.builder()
-                .memberId(memberId)
+                .merchantId(merchantId)
                 .shopName(shopName)
                 .businessNumber(businessNumber)
                 .ownerName(ownerName)

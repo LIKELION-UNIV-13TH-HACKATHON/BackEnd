@@ -27,7 +27,7 @@ public record MenuRegisterRequest(
                 .price(price)
                 .description(description)
                 .image(image)
-                .memberId(memberId)
+                .merchantId(memberId)
                 .build();
     }
 

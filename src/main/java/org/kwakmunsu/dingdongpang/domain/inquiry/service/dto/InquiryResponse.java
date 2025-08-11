@@ -8,7 +8,7 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.entity.Inquiry;
 
 @Schema(description = "문의 목록 조회 정보 ")
 @Builder
-public record InquiryPreviewResponse(
+public record InquiryResponse(
         @Schema(description = "문의 id", example = "1")
         Long inquiryId,
 
@@ -22,8 +22,8 @@ public record InquiryPreviewResponse(
         String createdAt
 ) {
 
-    public static InquiryPreviewResponse of(Inquiry inquiry) {
-        return InquiryPreviewResponse.builder()
+    public static InquiryResponse of(Inquiry inquiry) {
+        return InquiryResponse.builder()
                 .inquiryId(inquiry.getId())
                 .question(inquiry.getQuestion())
                 .answer(inquiry.getAnswer())

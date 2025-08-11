@@ -86,7 +86,7 @@ record MenuQueryServiceTest(
         Point point = GeoFixture.createPoint(1.2, 2.3);
         long merchantId = 1L;
         shopCommandService.register(shopRegisterServiceRequest, point, merchantId);
-        var shop = shopRepository.findByMemberId(merchantId);
+        var shop = shopRepository.findByMerchantId(merchantId);
 
         var menu = Menu.create(shop, "name", 10000, "description", "image");
         menuRepository.save(menu);

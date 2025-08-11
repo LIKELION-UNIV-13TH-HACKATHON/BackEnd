@@ -23,8 +23,8 @@ public class ShopRepository {
         return shopJpaRepository.existsByBusinessNumber(businessNumber);
     }
 
-    public Shop findByMemberId(Long memberId) {
-        return shopJpaRepository.findByMemberId(memberId)
+    public Shop findByMerchantId(Long memberId) {
+        return shopJpaRepository.findByMerchantId(memberId)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_SHOP));
     }
 

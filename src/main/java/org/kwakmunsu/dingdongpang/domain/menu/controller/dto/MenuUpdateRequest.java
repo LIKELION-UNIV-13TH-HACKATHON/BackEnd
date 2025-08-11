@@ -28,7 +28,7 @@ public record MenuUpdateRequest(
                 .price(price)
                 .description(description)
                 .image(image)
-                .memberId(memberId)
+                .merchantId(memberId)
                 .build();
     }
 
