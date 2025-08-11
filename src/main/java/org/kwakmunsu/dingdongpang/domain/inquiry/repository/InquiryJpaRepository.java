@@ -12,6 +12,6 @@ public interface InquiryJpaRepository extends JpaRepository<Inquiry, Long> {
 
     List<Inquiry> findByShopIdAndAuthorId(Long shopId, Long authorId);
 
-    @Query("select i from Inquiry i join fetch i.author where i.author.id = :authorId")
-    List<Inquiry> findByShopIdForMerchant(@Param("authorId") Long authorId);
+    @Query("select i from Inquiry i join fetch i.author where i.shopId = :shopId")
+    List<Inquiry> findByShopIdForMerchant(@Param("shopId") Long shopId);
 }

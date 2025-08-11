@@ -1,6 +1,7 @@
 package org.kwakmunsu.dingdongpang.domain.inquiry.controller;
 
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.BAD_REQUEST;
+import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.FORBIDDEN_ANSWER;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.INTERNAL_SERVER_ERROR;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.NOT_FOUND;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.UNAUTHORIZED_ERROR;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryAnswerRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryListByMerchantResponse;
@@ -122,4 +124,46 @@ public abstract class InquiryDocsController {
     })
     public abstract ResponseEntity<InquiryListByMerchantResponse> getInquiryListByMerchant(Long memberId);
 
+
+    @Operation(
+            summary = "문의 답변 등록 API  - JWT O",
+            description = """
+                    ## 매장 관리자만 등록이 가능합니다.
+                    """
+    )
+    @Parameters(value = {
+            @Parameter(
+                    name = "shopId",
+                    description = " 매장 ID",
+                    in = ParameterIn.PATH,
+                    required = true
+            ),
+            @Parameter(
+                    name = "inquiryId",
+                    description = "문의 ID",
+                    in = ParameterIn.PATH,
+                    required = true
+            )
+    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "문의 답변 등록 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = InquiryListResponse.class)
+            )
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            UNAUTHORIZED_ERROR,
+            NOT_FOUND,
+            FORBIDDEN_ANSWER,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<Void> registerAnswer(
+            InquiryAnswerRequest request,
+            Long shopId,
+            Long inquiryId,
+            Long memberId
+    );
 }

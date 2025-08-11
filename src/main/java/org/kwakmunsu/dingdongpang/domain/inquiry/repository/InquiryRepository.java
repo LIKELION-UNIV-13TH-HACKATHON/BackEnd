@@ -30,8 +30,8 @@ public class InquiryRepository {
         return inquiryJpaRepository.findByShopIdAndAuthorId(shopId, authorId);
     }
 
-    public List<Inquiry> findByShopIdForMerchant(Long authorId) {
-        return inquiryJpaRepository.findByShopIdForMerchant(authorId);
+    public List<Inquiry> findByShopIdForMerchant(Long shopId) {
+        return inquiryJpaRepository.findByShopIdForMerchant(shopId);
     }
 
 }
