@@ -8,31 +8,26 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.ControllerTestSupport;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryAnswerRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryModifyRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryAnswerServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryByMerchantResponse;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryListByMerchantResponse;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryListResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryReadServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryResponse;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryAnswerServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryByMerchantResponse;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListByMerchantResponse;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListResponse;
 import org.kwakmunsu.dingdongpang.global.TestMember;
-import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 class InquiryControllerTest extends ControllerTestSupport {
@@ -148,6 +143,20 @@ class InquiryControllerTest extends ControllerTestSupport {
                 .apply(print());
 
         verify(inquiryCommandService).registerAnswer(any(InquiryAnswerServiceRequest.class));
+    }
+
+    @TestMember
+    @DisplayName("문의 내용을 수정한다.")
+    @Test
+    void modifyQuestion() throws JsonProcessingException {
+        var request = new InquiryModifyRequest("updateQuestion");
+        String jsonToString = objectMapper.writeValueAsString(request);
+
+        assertThat(mvcTester.patch().uri("/shops/inquiries/{inquiryId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonToString))
+                .hasStatus(HttpStatus.NO_CONTENT)
+                .apply(print());
     }
 
 }

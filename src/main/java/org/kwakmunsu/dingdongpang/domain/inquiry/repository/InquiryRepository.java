@@ -3,6 +3,7 @@ package org.kwakmunsu.dingdongpang.domain.inquiry.repository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.Inquiry;
+import org.kwakmunsu.dingdongpang.global.exception.ForbiddenException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.springframework.stereotype.Repository;
@@ -32,6 +33,11 @@ public class InquiryRepository {
 
     public List<Inquiry> findByShopIdForMerchant(Long shopId) {
         return inquiryJpaRepository.findByShopIdForMerchant(shopId);
+    }
+
+    public Inquiry findByIdAndAuthorId(Long id, Long authorId) {
+        return inquiryJpaRepository.findByIdAndAuthorId(id, authorId)
+                .orElseThrow(() -> new ForbiddenException(ErrorStatus.FORBIDDEN_INQUIRY_BY_AUTHOR));
     }
 
 }

@@ -3,16 +3,18 @@ package org.kwakmunsu.dingdongpang.domain.inquiry.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryAnswerRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryModifyRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.InquiryCommandService;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.InquiryQueryService;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryListByMerchantResponse;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryListResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryReadServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListByMerchantResponse;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,6 +74,18 @@ public class InquiryController extends InquiryDocsController {
         InquiryListByMerchantResponse response = inquiryQueryService.getInquiryList(memberId);
 
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @PatchMapping("/inquiries/{inquiryId}")
+    public ResponseEntity<Void> modifyQuestion(
+            @Valid @RequestBody InquiryModifyRequest request,
+            @PathVariable Long inquiryId,
+            @AuthMember Long memberId
+    ) {
+        inquiryCommandService.modifyInquiry(request.toServiceRequest(inquiryId, memberId));
+
+        return ResponseEntity.noContent().build();
     }
 
 }
