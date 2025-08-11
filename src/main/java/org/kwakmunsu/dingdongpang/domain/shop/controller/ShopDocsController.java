@@ -24,7 +24,7 @@ import org.springframework.http.ResponseEntity;
 public abstract class ShopDocsController {
 
     @Operation(
-            summary = "매장 목록 조회 - 정렬 검색 포함",
+            summary = "매장 목록 조회(정렬 검색 포함) - JWT O",
             description = """
                     ### 매장 목록 조회 API 안내
                     - **위도(latitude) 경도(longitude) 는 필수값입니다!**
