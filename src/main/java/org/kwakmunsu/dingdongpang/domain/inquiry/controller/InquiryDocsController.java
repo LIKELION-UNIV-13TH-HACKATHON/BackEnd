@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryAnswerModifyRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryAnswerRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryModifyRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryRegisterRequest;
@@ -99,7 +100,7 @@ public abstract class InquiryDocsController {
             UNAUTHORIZED_ERROR,
             INTERNAL_SERVER_ERROR
     })
-    public abstract ResponseEntity<org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListResponse> getInquiryListByCustomer(
+    public abstract ResponseEntity<InquiryListResponse> getInquiryListByCustomer(
             InquiryFilter filter,
             Long shopId,
             Long memberId
@@ -125,7 +126,6 @@ public abstract class InquiryDocsController {
             INTERNAL_SERVER_ERROR
     })
     public abstract ResponseEntity<InquiryListByMerchantResponse> getInquiryListByMerchant(Long memberId);
-
 
     @Operation(
             summary = "문의 답변 등록 API  - JWT O",
@@ -203,6 +203,53 @@ public abstract class InquiryDocsController {
     })
     public abstract ResponseEntity<Void> modifyQuestion(
             InquiryModifyRequest request,
+            Long inquiryId,
+            Long memberId
+    );
+
+    @Operation(
+            summary = "문의 답변 수정 API  - JWT O",
+            description = """
+                    ## 매장 관리자만 매장 답변 수정 가능합니다.
+                    """
+    )
+    @Parameters(value = {
+            @Parameter(
+                    name = "shopId",
+                    description = " 매장 ID",
+                    in = ParameterIn.PATH,
+                    required = true
+            ),
+            @Parameter(
+                    name = "inquiryId",
+                    description = "문의 ID",
+                    in = ParameterIn.PATH,
+                    required = true
+            )
+    })
+    @RequestBody(
+            description = """
+                    문의 답변 수정 정보
+                    """,
+            required = true,
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = InquiryAnswerModifyRequest.class)
+            )
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "문의 답변 수정 성공"
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            UNAUTHORIZED_ERROR,
+            FORBIDDEN_MODIFY,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<Void> modifyAnswer(
+            InquiryAnswerModifyRequest request,
+            Long shopId,
             Long inquiryId,
             Long memberId
     );

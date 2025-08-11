@@ -2,6 +2,7 @@ package org.kwakmunsu.dingdongpang.domain.inquiry.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryAnswerModifyRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryAnswerRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryModifyRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryRegisterRequest;
@@ -84,6 +85,19 @@ public class InquiryController extends InquiryDocsController {
             @AuthMember Long memberId
     ) {
         inquiryCommandService.modifyInquiry(request.toServiceRequest(inquiryId, memberId));
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @PatchMapping("/{shopId}/inquiries/{inquiryId}/answer")
+    public ResponseEntity<Void> modifyAnswer(
+            @Valid @RequestBody InquiryAnswerModifyRequest request,
+            @PathVariable Long shopId,
+            @PathVariable Long inquiryId,
+            @AuthMember Long memberId
+    ) {
+        inquiryCommandService.modifyAnswer(request.toServiceRequest(shopId, inquiryId, memberId));
 
         return ResponseEntity.noContent().build();
     }

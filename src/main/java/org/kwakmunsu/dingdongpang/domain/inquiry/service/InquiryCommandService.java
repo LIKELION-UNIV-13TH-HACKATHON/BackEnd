@@ -49,4 +49,16 @@ public class InquiryCommandService {
         inquiry.updateQuestion(request.question());
     }
 
+    @Transactional
+    public void modifyAnswer(InquiryAnswerServiceRequest request) {
+        Inquiry inquiry = inquiryRepository.findById(request.inquiryId());
+        Shop shop = shopRepository.findById(request.shopId());
+
+        if (shop.isMerchant(request.merchantId())) {
+            inquiry.updateAnswer(request.answer());
+            return;
+        }
+        throw new ForbiddenException(ErrorStatus.FORBIDDEN_MODIFY);
+    }
+
 }
