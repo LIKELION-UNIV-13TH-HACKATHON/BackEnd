@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.Inquiry;
 import org.kwakmunsu.dingdongpang.domain.inquiry.repository.InquiryRepository;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryAnswerServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryDeleteServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryModifyServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
@@ -59,6 +60,19 @@ public class InquiryCommandService {
             return;
         }
         throw new ForbiddenException(ErrorStatus.FORBIDDEN_MODIFY);
+    }
+
+    @Transactional
+    public void delete(InquiryDeleteServiceRequest request) {
+        boolean isAuthor = inquiryRepository.existsByIdAndAuthorId(request.inquiryId(), request.memberId());
+        Shop shop = shopRepository.findById(request.shopId());
+
+        // 관리자 || 문의 작성자 사람만이 삭제할 수 있다.
+        if (shop.isMerchant(request.memberId()) || isAuthor) {
+            inquiryRepository.deleteById(request.inquiryId());
+            return;
+        }
+        throw new ForbiddenException(ErrorStatus.FORBIDDEN_DELETE);
     }
 
 }

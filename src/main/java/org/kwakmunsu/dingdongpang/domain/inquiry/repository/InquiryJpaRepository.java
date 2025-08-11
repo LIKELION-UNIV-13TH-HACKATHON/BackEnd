@@ -18,4 +18,6 @@ public interface InquiryJpaRepository extends JpaRepository<Inquiry, Long> {
 
     Optional<Inquiry> findByIdAndAuthorId(Long id, Long authorId);
 
+    boolean existsByIdAndAuthorId(Long id, Long authorId);
+
 }

@@ -20,6 +20,7 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryReadServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryAnswerServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryDeleteServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryByMerchantResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListByMerchantResponse;
@@ -157,6 +158,19 @@ class InquiryControllerTest extends ControllerTestSupport {
                 .content(jsonToString))
                 .hasStatus(HttpStatus.NO_CONTENT)
                 .apply(print());
+    }
+
+    @TestMember
+    @DisplayName("문의 내용을 삭제한다")
+    @Test
+    void delete() {
+
+        assertThat(mvcTester.delete().uri("/shops/{shopId}/inquiries/{inquiryId}", 1L, 1L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .hasStatus(HttpStatus.NO_CONTENT)
+                .apply(print());
+
+        verify(inquiryCommandService).delete(any(InquiryDeleteServiceRequest.class));
     }
 
 }

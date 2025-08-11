@@ -10,10 +10,12 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.InquiryCommandService;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.InquiryQueryService;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryReadServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryDeleteServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListByMerchantResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -98,6 +100,19 @@ public class InquiryController extends InquiryDocsController {
             @AuthMember Long memberId
     ) {
         inquiryCommandService.modifyAnswer(request.toServiceRequest(shopId, inquiryId, memberId));
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @DeleteMapping("/{shopId}/inquiries/{inquiryId}")
+    public ResponseEntity<Void> delete(
+            @PathVariable Long shopId,
+            @PathVariable Long inquiryId,
+            @AuthMember Long memberId
+    ) {
+        InquiryDeleteServiceRequest request = new InquiryDeleteServiceRequest(shopId, inquiryId, memberId);
+        inquiryCommandService.delete(request);
 
         return ResponseEntity.noContent().build();
     }

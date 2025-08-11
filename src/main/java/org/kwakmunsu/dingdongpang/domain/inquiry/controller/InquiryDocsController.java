@@ -2,6 +2,7 @@ package org.kwakmunsu.dingdongpang.domain.inquiry.controller;
 
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.BAD_REQUEST;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.FORBIDDEN_ANSWER;
+import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.FORBIDDEN_DELETE;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.FORBIDDEN_MODIFY;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.INTERNAL_SERVER_ERROR;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.NOT_FOUND;
@@ -249,6 +250,42 @@ public abstract class InquiryDocsController {
     })
     public abstract ResponseEntity<Void> modifyAnswer(
             InquiryAnswerModifyRequest request,
+            Long shopId,
+            Long inquiryId,
+            Long memberId
+    );
+
+    @Operation(
+            summary = "문의 삭제 API  - JWT O",
+            description = """
+                    ## 매장 관리자 또는 문의 작성자만 삭제 가능합니다.
+                    """
+    )
+    @Parameters(value = {
+            @Parameter(
+                    name = "shopId",
+                    description = " 매장 ID",
+                    in = ParameterIn.PATH,
+                    required = true
+            ),
+            @Parameter(
+                    name = "inquiryId",
+                    description = "문의 ID",
+                    in = ParameterIn.PATH,
+                    required = true
+            )
+    })
+    @ApiResponse(
+            responseCode = "204",
+            description = "문의 삭제 성공"
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            UNAUTHORIZED_ERROR,
+            FORBIDDEN_DELETE,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<Void> delete(
             Long shopId,
             Long inquiryId,
             Long memberId
