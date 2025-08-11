@@ -3,6 +3,9 @@ package org.kwakmunsu.dingdongpang;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kwakmunsu.dingdongpang.domain.auth.controller.AuthController;
 import org.kwakmunsu.dingdongpang.domain.auth.service.AuthCommandService;
+import org.kwakmunsu.dingdongpang.domain.inquiry.controller.InquiryController;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.InquiryCommandService;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.InquiryQueryService;
 import org.kwakmunsu.dingdongpang.domain.member.controller.MemberController;
 import org.kwakmunsu.dingdongpang.domain.member.service.MemberCommandService;
 import org.kwakmunsu.dingdongpang.domain.member.service.MemberQueryService;
@@ -32,7 +35,8 @@ import org.springframework.test.web.servlet.assertj.MockMvcTester;
                 MenuController.class,
                 ShopController.class,
                 MessageController.class,
-                SubscribeController.class
+                SubscribeController.class,
+                InquiryController.class,
         })
 public abstract class ControllerTestSupport {
 
@@ -74,5 +78,11 @@ public abstract class ControllerTestSupport {
 
     @MockitoBean
     protected SubscribeShopQueryService subscribeShopQueryService;
+
+    @MockitoBean
+    protected InquiryCommandService inquiryCommandService;
+
+    @MockitoBean
+    protected InquiryQueryService inquiryQueryService;
 
 }
