@@ -40,4 +40,12 @@ public class InquiryRepository {
                 .orElseThrow(() -> new ForbiddenException(ErrorStatus.FORBIDDEN_INQUIRY_BY_AUTHOR));
     }
 
+    public boolean existsByIdAndAuthorId(Long id, Long authorId) {
+        return inquiryJpaRepository.existsByIdAndAuthorId(id, authorId);
+    }
+
+    public void deleteById(Long id) {
+        inquiryJpaRepository.deleteById(id);
+    }
+
 }

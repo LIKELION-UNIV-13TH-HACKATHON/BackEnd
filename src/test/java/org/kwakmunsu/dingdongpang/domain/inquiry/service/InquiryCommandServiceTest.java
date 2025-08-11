@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.Inquiry;
 import org.kwakmunsu.dingdongpang.domain.inquiry.repository.InquiryRepository;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryAnswerServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryDeleteServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryModifyServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
@@ -172,8 +173,57 @@ record InquiryCommandServiceTest(
         var inquiryId = inquiries.getFirst().getId();
         var inquiryModifyServiceRequest = new InquiryModifyServiceRequest("updateQuestion", inquiryId, 999L);
 
-        assertThatThrownBy(() ->inquiryCommandService.modifyInquiry(inquiryModifyServiceRequest) )
-            .isInstanceOf(ForbiddenException.class);
+        assertThatThrownBy(() -> inquiryCommandService.modifyInquiry(inquiryModifyServiceRequest))
+                .isInstanceOf(ForbiddenException.class);
+    }
+
+    @DisplayName("작성자거나 매장 관리자일 경우 문의를 삭제한다.")
+    @Test
+    void deleteInquiry() {
+        var merchantId = 1L;
+        var author = Member.createMember("email@gmail.com", "nickname", "12345");
+        memberRepository.save(author);
+
+        var shopRegisterServiceRequest = getShopRegisterServiceRequest();
+        var point = GeoFixture.createPoint(1.2, 2.3);
+        shopCommandService.register(shopRegisterServiceRequest, point, merchantId);
+
+        var shop = shopRepository.findByMerchantId(merchantId);
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), author.getId());
+        inquiryCommandService.register(inquiryRegisterServiceRequest);
+
+        List<Inquiry> inquiries = inquiryRepository.findByShopIdAndAuthorId(shop.getId(), author.getId());
+        var inquiryId = inquiries.getFirst().getId();
+
+        var request = new InquiryDeleteServiceRequest(shop.getId(), inquiryId, author.getId()); // merchantId로 해도 통과
+        inquiryCommandService.delete(request);
+
+        // 예외가 던져지면 정상적으로 삭제 완료.
+        assertThatThrownBy(() -> inquiryRepository.findById(inquiryId))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @DisplayName("작성자거나 매장 관리자아닐 경우 예외를 던진다.")
+    @Test
+    void failDeleteInquiry() {
+        var merchantId = 1L;
+        var author = Member.createMember("email@gmail.com", "nickname", "12345");
+        memberRepository.save(author);
+
+        var shopRegisterServiceRequest = getShopRegisterServiceRequest();
+        var point = GeoFixture.createPoint(1.2, 2.3);
+        shopCommandService.register(shopRegisterServiceRequest, point, merchantId);
+
+        var shop = shopRepository.findByMerchantId(merchantId);
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), author.getId());
+        inquiryCommandService.register(inquiryRegisterServiceRequest);
+
+        List<Inquiry> inquiries = inquiryRepository.findByShopIdAndAuthorId(shop.getId(), author.getId());
+        var inquiryId = inquiries.getFirst().getId();
+
+        var request = new InquiryDeleteServiceRequest(shop.getId(), inquiryId, 999L);
+        assertThatThrownBy(() -> inquiryCommandService.delete(request))
+                .isInstanceOf(ForbiddenException.class);
     }
 
     private ShopRegisterServiceRequest getShopRegisterServiceRequest() {
