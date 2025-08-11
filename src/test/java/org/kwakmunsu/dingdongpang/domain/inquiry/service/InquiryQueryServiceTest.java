@@ -96,7 +96,7 @@ record InquiryQueryServiceTest(
         );
         inquires.forEach(inquiryRepository::save);
 
-        InquiryListByMerchantResponse response = inquiryQueryService.getInquiryList(author.getId());
+        InquiryListByMerchantResponse response = inquiryQueryService.getInquiryList(merchantId);
         assertThat(response.responses()).hasSize(3);
     }
 

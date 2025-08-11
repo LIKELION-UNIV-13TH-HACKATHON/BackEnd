@@ -67,4 +67,8 @@ public class Shop extends BaseEntity {
         this.isDeleted = true;
     }
 
+    public boolean isMerchant(Long merchantId) {
+        return this.merchantId.equals(merchantId);
+    }
+
 }
