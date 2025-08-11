@@ -1,6 +1,7 @@
 package org.kwakmunsu.dingdongpang.global.util;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -13,7 +14,7 @@ import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TimeConverter {
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd. a h:mm")
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd a HH:mm")
             .withLocale(Locale.KOREAN);
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             .withLocale(Locale.KOREAN);
@@ -31,6 +32,10 @@ public final class TimeConverter {
         } catch (DateTimeParseException e) {
             throw new BadRequestException(ErrorStatus.INVALID_DATE_FORMAT);
         }
+    }
+
+    public static String dateTimeToString(LocalDateTime localDateTime) {
+        return localDateTime.format(DATE_TIME_FORMATTER);
     }
 
     public static String timeToString(LocalTime localTime) {
