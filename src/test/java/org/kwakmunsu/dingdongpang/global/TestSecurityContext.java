@@ -18,7 +18,7 @@ public class TestSecurityContext implements WithSecurityContextFactory<TestMembe
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + annotation.role());
         String memberId = String.valueOf(annotation.id());
 
-        log.info("memberId: {}, role: {}", memberId, annotation.role());
+        log.info("authorId: {}, role: {}", memberId, annotation.role());
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 memberId,

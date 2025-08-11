@@ -247,15 +247,15 @@ record ShopQueryDslRepositoryTest(
 
         assertThat(response.responses().get(0))
                 .extracting(ShopPreviewResponse::shopName, ShopPreviewResponse::subscribeCount, ShopPreviewResponse::isSubscribe)
-                .containsExactly("대훈이네 곱창", 2L, true);  // memberId=99L이 구독중
+                .containsExactly("대훈이네 곱창", 2L, true);  // authorId=99L이 구독중
 
         assertThat(response.responses().get(1))
                 .extracting(ShopPreviewResponse::shopName, ShopPreviewResponse::subscribeCount, ShopPreviewResponse::isSubscribe)
-                .containsExactly("순재네 막창", 1L, false);  // memberId=99L이 구독안함
+                .containsExactly("순재네 막창", 1L, false);  // authorId=99L이 구독안함
 
         assertThat(response.responses().get(2))
                 .extracting(ShopPreviewResponse::shopName, ShopPreviewResponse::subscribeCount, ShopPreviewResponse::isSubscribe)
-                .containsExactly("문수네 곱창", 0L, false); // memberId=99L이 구독안함
+                .containsExactly("문수네 곱창", 0L, false); // authorId=99L이 구독안함
 
     }
 

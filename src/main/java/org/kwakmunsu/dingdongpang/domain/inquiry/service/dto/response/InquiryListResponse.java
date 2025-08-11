@@ -1,7 +1,8 @@
-package org.kwakmunsu.dingdongpang.domain.inquiry.service.dto;
+package org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryResponse;
 
 @Schema(description = "고객 전용 문의 목록 조회 응답 DTO")
 public record InquiryListResponse(

@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.domain.inquiry.service.dto;
+package org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;

@@ -2,7 +2,7 @@ package org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryRegisterServiceRequest;
 
 @Schema(description = "문의 등록 요청 DTO")
 public record InquiryRegisterRequest(
