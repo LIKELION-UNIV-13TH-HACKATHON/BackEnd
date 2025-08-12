@@ -7,6 +7,9 @@ import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.ShopOperationTimeRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.dto.ShopOperationTimeResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchListResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopReadServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
@@ -33,7 +36,16 @@ public class ShopQueryService {
     }
 
     public ShopListResponse getShopList(ShopReadServiceRequest request) {
-       return shopRepository.getShopList(request.toDomainRequest());
+        return shopRepository.getShopList(request.toDomainRequest());
+    }
+
+    public ShopNearbySearchListResponse getNearbyShops(ShopNearbySearchServiceRequest request) {
+        List<Shop> nearbyShops = shopRepository.findNearbyShops(request.toDomainRequest());
+        List<ShopNearbySearchResponse> searchResponseList = nearbyShops.stream()
+                .map(ShopNearbySearchResponse::of)
+                .toList();
+
+        return new ShopNearbySearchListResponse(searchResponseList);
     }
 
 }

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.SortBy;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopQueryService;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchListResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopReadServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
@@ -43,6 +45,19 @@ public class ShopController extends ShopDocsController {
     ) {
         ShopReadServiceRequest request = new ShopReadServiceRequest(memberId, q, sortBy, lastShopId, lastSubscribeCount, lastDistance, longitude, latitude);
         ShopListResponse response = shopQueryService.getShopList(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping("/nearby")
+    public ResponseEntity<ShopNearbySearchListResponse> getNearbyShops(
+            @RequestParam Double longitude,
+            @RequestParam Double latitude,
+            @RequestParam(defaultValue = "500") int radiusMeters
+    ) {
+        ShopNearbySearchServiceRequest request = new ShopNearbySearchServiceRequest(longitude, latitude, radiusMeters);
+        ShopNearbySearchListResponse response = shopQueryService.getNearbyShops(request);
 
         return ResponseEntity.ok(response);
     }
