@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.SortBy;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
@@ -133,4 +134,52 @@ public abstract class ShopDocsController {
             INTERNAL_SERVER_ERROR
     })
     public abstract ResponseEntity<ShopResponse> getShop(Long shopId, Long memberId);
+
+    @Operation(
+            summary = "주변 매장 조회 - JWT O",
+            description = """
+                    ### 주변 매장 조회 API 안내
+                    - **위도(latitude) 경도(longitude)는 필수값입니다!**
+                    - **반경 범위 내에 서비스에 등록된 매장들을 조회합니다**.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "주변 매장 목록 조회 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ShopNearbySearchListResponse.class)
+            )
+    )
+    @Parameters(value = {
+            @Parameter(
+                    name = "radiusMeters",
+                    required = true,
+                    description = "반경 범위 - M 단위",
+                    example = "500",
+                    schema = @Schema(type = "Integer")
+            ),
+            @Parameter(
+                    name = "longitude",
+                    required = true,
+                    description = "현재 사용자 위치 - 경도",
+                    schema = @Schema(type = "Double", example = "127.213123")
+            ),
+            @Parameter(
+                    name = "latitude",
+                    required = true,
+                    description = "현재 사용자 위치 - 위도",
+                    schema = @Schema(type = "Double", example = "22.2323")
+            )
+    })
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            UNAUTHORIZED_ERROR,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<ShopNearbySearchListResponse> getNearbyShops(
+            Double longitude,
+            Double latitude,
+            int radiusMeters
+    );
 }

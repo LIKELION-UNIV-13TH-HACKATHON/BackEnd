@@ -1,8 +1,10 @@
 package org.kwakmunsu.dingdongpang.domain.shop.repository.shop;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopNearbySearchDomainRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopReadDomainRequest;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
@@ -35,6 +37,10 @@ public class ShopRepository {
 
     public ShopListResponse getShopList(ShopReadDomainRequest request) {
         return shopQueryDslRepository.getShopList(request);
+    }
+
+    public List<Shop> findNearbyShops(ShopNearbySearchDomainRequest request) {
+        return shopJpaRepository.findShopsWithinRadius(request.longitude(), request.latitude(), request.radiusMeters());
     }
 
 }

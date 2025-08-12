@@ -3,8 +3,6 @@ package org.kwakmunsu.dingdongpang.domain.shop.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.List;
@@ -16,15 +14,16 @@ import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceR
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.ShopOperationTimeRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchListResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopRepository;
 import org.kwakmunsu.dingdongpang.global.GeoFixture;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
+import org.kwakmunsu.dingdongpang.infrastructure.geocoding.KakaoGeocodingProvider;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Transactional
@@ -35,13 +34,14 @@ record ShopQueryServiceTest(
         ShopRepository shopRepository,
         ShopImageRepository shopImageRepository,
         ShopOperationTimeRepository shopOperationTimeRepository,
-        SubscribeShopRepository subscribeShopRepository
+        SubscribeShopRepository subscribeShopRepository,
+        KakaoGeocodingProvider kakaoGeocodingProvider
 ) {
 
     @DisplayName("매장 정보를 조회한다.")
     @Test
     void getShop() throws IOException {
-        var registerRequest = getShopRegisterServiceRequest();
+        var registerRequest = getShopRegisterServiceRequest("title", "010-1234-5678","12343","경기도 광주시 경충대로 1480번길");
         var point = GeoFixture.createPoint(1.2, 2.3);
         long merchantId = 1L;
         long memberId = 2L;
@@ -60,32 +60,52 @@ record ShopQueryServiceTest(
                         shop.getShopName(), shop.getShopType(), shop.getAddress(),
                         shop.getShopTellNumber(), shop.getMainImage(), false /*isSubscribe*/
                 );
-        assertThat(response.operationTimeResponses()).hasSize(getShopRegisterServiceRequest().operationTimeRequests().size());
-        assertThat(response.shopImages()).hasSize(getShopRegisterServiceRequest().imageFiles().size());
+        assertThat(response.operationTimeResponses()).hasSize(registerRequest.operationTimeRequests().size());
+        assertThat(response.shopImages()).hasSize(registerRequest.imageFiles().size());
     }
 
     @DisplayName("존재하지 않는 매장을 조회할경우 예외를 던진다.")
     @Test
     void failGetShop() {
-        assertThatThrownBy(() ->shopQueryService.getShop(-99999L, 1L))
-            .isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> shopQueryService.getShop(-99999L, 1L))
+                .isInstanceOf(NotFoundException.class);
     }
 
-    private MockMultipartFile getMockMultipartFile() throws IOException {
-        File image = new File("src/test/resources/test.png");
-        return new MockMultipartFile(
-                "image",                         // 파라미터 이름
-                "test.png",                      // 파일 이름
-                "image/png",                    // Content-Type
-                new FileInputStream(image)
-        );
+    @DisplayName("주어진 반경에 포함되는 매장들을 조회한다.")
+    @Test
+    void getNearbyShops() {
+        var address1 = "경기 광주시 경충대로 1411 투썸플레이스";
+        var address2 = "경기 광주시 역동로63번길 1";
+        var address3 = "경기 광주시 경충대로1481번길 4 1층";
+
+        var registerRequest = getShopRegisterServiceRequest("대훈이네 곱창", "010-1234-5678", "businessNumber1", address1);
+        var registerRequest2 = getShopRegisterServiceRequest("문수네 곱창", "010-1234-5679", "businessNumber2", address2);
+        var registerRequest3 = getShopRegisterServiceRequest("순재네 막창", "010-1234-5690", "businessNumber3", address3);
+
+        var point1 = kakaoGeocodingProvider.transferToGeocode(address1);
+        var point2 = kakaoGeocodingProvider.transferToGeocode(address2);
+        var point3 = kakaoGeocodingProvider.transferToGeocode(address3);
+
+        shopCommandService.register(registerRequest, point1, 1L);
+        shopCommandService.register(registerRequest2, point2, 2L);
+        shopCommandService.register(registerRequest3, point3, 3L);
+
+        var nearbySearchServiceRequest = ShopNearbySearchServiceRequest.builder()
+                .longitude(127.271143598307)
+                .latitude(37.4013921881645)
+                .radiusMeters(1000)
+                .build();
+        ShopNearbySearchListResponse response = shopQueryService.getNearbyShops(nearbySearchServiceRequest);
+
+        assertThat(response.responses()).hasSize(2);
     }
 
-    private ShopRegisterServiceRequest getShopRegisterServiceRequest() throws IOException {
-        MultipartFile mainImage = getMockMultipartFile();
-        MultipartFile image1 = getMockMultipartFile();
-        MultipartFile image2 = getMockMultipartFile();
-
+    private ShopRegisterServiceRequest getShopRegisterServiceRequest(
+            String title,
+            String shopPhoneNumber,
+            String businessNumber,
+            String address
+    ) {
         List<OperationTimeServiceRequest> timeServiceRequests = List.of(
                 getOperationTimeServiceRequest(DayOfWeek.MONDAY, false),
                 getOperationTimeServiceRequest(DayOfWeek.TUESDAY, false),
@@ -97,15 +117,15 @@ record ShopQueryServiceTest(
         );
 
         return new ShopRegisterServiceRequest(
-                "My Shop",                                  // shopName
-                ShopType.FOOD,                              // shopType (예: enum)
-                "010-1234-5678",                            // shopPhoneNumber
-                "경기 광주시 경충대로 1411 투썸플레이스",                 // address
-                "1234567890",                               // businessNumber
-                "홍길동",                                     // ownerName
-                mainImage,                                  // mainImage
-                List.of(image1, image2),                    // imageFiles
-                timeServiceRequests                         // operationTimeRequests
+                title,
+                ShopType.FOOD,
+                shopPhoneNumber,
+                address,
+                businessNumber,
+                "홍길동",
+                null,      // mainImage
+                List.of(), // imageFiles
+                timeServiceRequests
         );
     }
 

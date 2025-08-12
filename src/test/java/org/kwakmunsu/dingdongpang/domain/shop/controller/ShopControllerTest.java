@@ -12,10 +12,16 @@ import org.kwakmunsu.dingdongpang.ControllerTestSupport;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopPreviewResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchListResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
 import org.kwakmunsu.dingdongpang.global.TestMember;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 class ShopControllerTest extends ControllerTestSupport {
 
@@ -70,6 +76,44 @@ class ShopControllerTest extends ControllerTestSupport {
                 .hasPathSatisfying("$.responses[0].isSubscribe", v -> v.assertThat().isEqualTo(response.isSubscribe()))
                 .hasPathSatisfying("$.responses[0].distance", v -> v.assertThat().isEqualTo(response.distance()));
     }
+
+    @DisplayName("주어진 반경 내 주변 매장을 조회한다.")
+    @Test
+    void getNearbyShops() {
+        var searchResponse = new ShopNearbySearchResponse(1L, "shopName", 125.32313, 23.12313);
+        var response = new ShopNearbySearchListResponse(List.of(searchResponse));
+        given(shopQueryService.getNearbyShops(any())).willReturn(response);
+
+        MvcTestResult result = mvcTester.get().uri("/shops/nearby")
+                .param("longitude", "123.231")
+                .param("latitude", "13.1")
+                .param("radius", "100")
+                .contentType(MediaType.APPLICATION_JSON)
+                .exchange();
+        ShopNearbySearchResponse first = response.responses().getFirst();
+
+        assertThat(result)
+                .hasStatusOk()
+                .apply(print())
+                .bodyJson()
+                .hasPathSatisfying("$.responses[0].shopId", v -> v.assertThat().isEqualTo(first.shopId().intValue()))
+                .hasPathSatisfying("$.responses[0].shopName", v -> v.assertThat().isEqualTo(first.shopName()))
+                .hasPathSatisfying("$.responses[0].longitude", v -> v.assertThat().isEqualTo(first.longitude()))
+                .hasPathSatisfying("$.responses[0].latitude", v -> v.assertThat().isEqualTo(first.latitude()));
+    }
+
+    @GetMapping("/nearby")
+    public ResponseEntity<ShopNearbySearchListResponse> getNearbyShops(
+            @RequestParam Double longitude,
+            @RequestParam Double latitude,
+            @RequestParam(defaultValue = "500") int radiusMeters
+    ) {
+        ShopNearbySearchServiceRequest request = new ShopNearbySearchServiceRequest(longitude, latitude, radiusMeters);
+        ShopNearbySearchListResponse response = shopQueryService.getNearbyShops(request);
+
+        return ResponseEntity.ok(response);
+    }
+
 
     private ShopListResponse getShopListResponse() {
         ShopPreviewResponse previewResponse = new ShopPreviewResponse(
