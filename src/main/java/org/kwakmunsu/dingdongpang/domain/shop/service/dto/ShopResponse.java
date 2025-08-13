@@ -16,6 +16,12 @@ public record ShopResponse(
         @Schema(description = "매장 업종", example = "FOOD")
         ShopType shopType,
 
+        @Schema(description = "매장 대표명", example = "곽태풍")
+        String ownerName,
+
+        @Schema(description = "사업자 등록번호", example = "1234209213")
+        String businessNumber,
+
         @Schema(description = "매장 주소", example = "경기도 광주시 경충대로1461번길 12-4 코오롱 세이브 프라자 202호")
         String address,
 
@@ -44,6 +50,8 @@ public record ShopResponse(
         return ShopResponse.builder()
                 .shopName(shop.getShopName())
                 .shopType(shop.getShopType())
+                .ownerName(shop.getOwnerName())
+                .businessNumber(shop.getBusinessNumber())
                 .address(shop.getAddress())
                 .shopTellNumber(shop.getShopTellNumber())
                 .mainImage(shop.getMainImage())

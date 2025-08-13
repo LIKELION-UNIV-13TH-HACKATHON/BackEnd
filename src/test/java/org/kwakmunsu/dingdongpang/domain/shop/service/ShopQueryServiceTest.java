@@ -40,7 +40,7 @@ record ShopQueryServiceTest(
 
     @DisplayName("매장 정보를 조회한다.")
     @Test
-    void getShop() throws IOException {
+    void getShop() {
         var registerRequest = getShopRegisterServiceRequest("title", "010-1234-5678","12343","경기도 광주시 경충대로 1480번길");
         var point = GeoFixture.createPoint(1.2, 2.3);
         long merchantId = 1L;
@@ -53,11 +53,13 @@ record ShopQueryServiceTest(
 
         assertThat(response)
                 .extracting(
-                        ShopResponse::shopName, ShopResponse::shopType, ShopResponse::address,
+                        ShopResponse::shopName, ShopResponse::shopType, ShopResponse::ownerName,
+                        ShopResponse::businessNumber, ShopResponse::address,
                         ShopResponse::shopTellNumber, ShopResponse::mainImage, ShopResponse::isSubscribe
                 )
                 .containsExactly(
-                        shop.getShopName(), shop.getShopType(), shop.getAddress(),
+                        shop.getShopName(), shop.getShopType(), shop.getOwnerName(),
+                        shop.getBusinessNumber(), shop.getAddress(),
                         shop.getShopTellNumber(), shop.getMainImage(), false /*isSubscribe*/
                 );
         assertThat(response.operationTimeResponses()).hasSize(registerRequest.operationTimeRequests().size());
