@@ -71,6 +71,7 @@ public class ShopController extends ShopDocsController {
         return ResponseEntity.ok(response);
     }
 
+    @Override
     @PatchMapping
     public ResponseEntity<Void> updateShop(
             @Valid @RequestPart MerchantUpdateRequest request,
