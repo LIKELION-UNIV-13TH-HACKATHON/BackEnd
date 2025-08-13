@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.domain.member.repository.dto;
+package org.kwakmunsu.dingdongpang.domain.shop.entity.dto;
 
 import lombok.Builder;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
