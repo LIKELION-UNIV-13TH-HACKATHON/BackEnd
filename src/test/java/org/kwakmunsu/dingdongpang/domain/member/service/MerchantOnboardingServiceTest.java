@@ -20,6 +20,8 @@ import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.MerchantUpdateServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopUpdateServiceRequest;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
 import org.kwakmunsu.dingdongpang.infrastructure.openapi.BusinessRegisterProvider;
@@ -91,6 +93,27 @@ record MerchantOnboardingServiceTest(
                 .isInstanceOf(NotFoundException.class);
     }
 
+
+    @DisplayName("매장 정보를 업데이트 한다.")
+    @Test
+    void update() throws IOException {
+        var guest = Member.createGuest("email@naver.com", "nickname", "12345");
+        memberRepository.save(guest);
+        var request = getMerchantRegisterServiceRequest(guest.getId(), "8962801461");
+
+        merchantOnboardingService.register(request);
+
+        var shop = shopRepository.findByMerchantId(guest.getId());
+        var updateServiceRequest = getMerchantUpdateServiceRequest(guest.getId(), "8962801461");
+
+        merchantOnboardingService.update(updateServiceRequest);
+
+        assertThat(shop).extracting(Shop::getShopName,Shop::getMainImage)
+                .containsExactly(updateServiceRequest.shopUpdateServiceRequest().shopName(), null);
+    }
+
+
+
     private MockMultipartFile getMockMultipartFile() throws IOException {
         File image = new File("src/test/resources/test.png");
         return new MockMultipartFile(
@@ -107,6 +130,15 @@ record MerchantOnboardingServiceTest(
                 .businessRegistrationNumber(businessNumber)
                 .memberId(memberId)
                 .shopRegisterServiceRequest(getShopRegisterServiceRequest(businessNumber))
+                .build();
+    }
+
+    private MerchantUpdateServiceRequest getMerchantUpdateServiceRequest(Long memberId, String businessNumber) throws IOException {
+        return MerchantUpdateServiceRequest.builder()
+                .nickname("test")
+                .businessRegistrationNumber(businessNumber)
+                .memberId(memberId)
+                .shopUpdateServiceRequest(getShopUpdateServiceRequest(businessNumber))
                 .build();
     }
 
@@ -139,6 +171,18 @@ record MerchantOnboardingServiceTest(
                 List.of(image1, image2),                    // imageFiles
                 List.of(mondayOperation, tuesdayOperation)  // operationTimeRequests
         );
-
+    }
+    private ShopUpdateServiceRequest getShopUpdateServiceRequest(String businessNumber) throws IOException {
+        return new ShopUpdateServiceRequest(
+                "updateShopName",                                  // shopName
+                ShopType.FOOD,                              // shopType (예: enum)
+                "010-1234-5678",                            // shopPhoneNumber
+                "경기도 광주시 경충대로1461번길 12-4 코오롱 세이브 프라자 202호", // address
+                businessNumber,                               // businessNumber
+                "홍길동",                                     // ownerName
+                null,                                  // mainImage
+                List.of(),                    // imageFiles
+                List.of()  // operationTimeRequests
+        );
     }
 }

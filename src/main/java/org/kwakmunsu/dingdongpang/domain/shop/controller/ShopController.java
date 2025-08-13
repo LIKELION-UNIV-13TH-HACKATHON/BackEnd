@@ -1,6 +1,11 @@
 package org.kwakmunsu.dingdongpang.domain.shop.controller;
 
+import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.kwakmunsu.dingdongpang.domain.member.controller.dto.MerchantRegisterRequest;
+import org.kwakmunsu.dingdongpang.domain.member.service.MerchantOnboardingService;
+import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.MerchantUpdateRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.SortBy;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopQueryService;
@@ -11,10 +16,13 @@ import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/shops")
 @RequiredArgsConstructor
@@ -22,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShopController extends ShopDocsController {
 
     private final ShopQueryService shopQueryService;
+    private final MerchantOnboardingService merchantOnboardingService;
 
     @Override
     @GetMapping("/{shopId}")
@@ -60,6 +69,18 @@ public class ShopController extends ShopDocsController {
         ShopNearbySearchListResponse response = shopQueryService.getNearbyShops(request);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping
+    public ResponseEntity<Void> updateShop(
+            @Valid @RequestPart MerchantUpdateRequest request,
+            @RequestPart(value = "mainImage", required = false) MultipartFile mainImage,
+            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+            @AuthMember Long memberId
+    ) {
+        merchantOnboardingService.update(request.toServiceRequest(mainImage, imageFiles, memberId));
+
+        return ResponseEntity.noContent().build();
     }
 
 }

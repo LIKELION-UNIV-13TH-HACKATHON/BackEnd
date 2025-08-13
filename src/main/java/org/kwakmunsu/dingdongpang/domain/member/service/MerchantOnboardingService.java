@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.MerchantRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.MerchantUpdateServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopUpdateServiceRequest;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
@@ -33,8 +36,8 @@ public class MerchantOnboardingService {
     public void register(MerchantRegisterServiceRequest request) {
         ShopRegisterServiceRequest shopRegisterRequest = request.shopRegisterServiceRequest();
 
-        checkDuplicateRegisterShop(request);
-        validateBusinessNumber(request);
+        checkDuplicateRegisterShop(request.businessRegistrationNumber());
+        validateBusinessNumber(request.businessRegistrationNumber());
 
         Member merchant = memberCommandService.registerMerchant(request.nickname(), request.memberId());
 
@@ -43,14 +46,32 @@ public class MerchantOnboardingService {
         shopCommandService.register(shopRegisterRequest, point, merchant.getId());
     }
 
-    private void checkDuplicateRegisterShop(MerchantRegisterServiceRequest request) {
-        if (shopRepository.existsByBusinessNumber(request.businessRegistrationNumber())) {
+    @Transactional
+    public void update(MerchantUpdateServiceRequest request) {
+        ShopUpdateServiceRequest shopUpdateServiceRequest = request.shopUpdateServiceRequest();
+        Shop shop = shopRepository.findByMerchantId(request.memberId());
+
+        if (shop.isNotEqualToBusinessNumber(request.businessRegistrationNumber())) {
+            validateBusinessNumber(request.businessRegistrationNumber());
+        }
+
+        Member merchant = memberCommandService.updateMerchant(request.nickname(), request.memberId());
+        Point point = shop.getLocation();
+        if (shop.isNotEqualToAddress(shopUpdateServiceRequest.address())) {
+            point = kakaoGeocodingProvider.transferToGeocode(shopUpdateServiceRequest.address());
+        }
+
+        shopCommandService.update(shopUpdateServiceRequest, shop, point, merchant.getId());
+    }
+
+    private void checkDuplicateRegisterShop(String businessRegistrationNumber) {
+        if (shopRepository.existsByBusinessNumber(businessRegistrationNumber)) {
             throw new DuplicationException(ErrorStatus.DUPLICATE_SHOP);
         }
     }
 
-    private void validateBusinessNumber(MerchantRegisterServiceRequest request) {
-        if (businessRegisterProvider.isRegister(request.businessRegistrationNumber())) {
+    private void validateBusinessNumber(String businessRegistrationNumber) {
+        if (businessRegisterProvider.isRegister(businessRegistrationNumber)) {
             return;
         }
         throw new NotFoundException(ErrorStatus.NOT_FOUND_BUSINESS_NUMBER);
