@@ -53,6 +53,10 @@ public class S3Provider {
         return getFileUrl(fileName);
     }
 
+    public void deleteImages(List<String> imageUrls) {
+        imageUrls.forEach(this::deleteImage);
+    }
+
     public void deleteImage(String imageUrl) {
         try {
             DeleteObjectRequest request = DeleteObjectRequest.builder()

@@ -22,4 +22,9 @@ public class ShopImageRepository {
     public List<String> findByShopId(Long shopId) {
         return shopImageJpaRepository.findByShopId(shopId);
     }
+
+    public void deleteByShopId(Long shopId) {
+        shopImageJpaRepository.deleteByShopId(shopId);
+    }
+
 }

@@ -20,4 +20,8 @@ public class ShopOperationTimeRepository {
         return shopOperationTimeJpaRepository.findByShopId(shopId);
     }
 
+    public void deleteByShopId(Long shopId) {
+        shopOperationTimeJpaRepository.deleteByShopId(shopId);
+    }
+
 }

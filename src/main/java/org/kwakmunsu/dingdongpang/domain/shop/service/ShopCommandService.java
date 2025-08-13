@@ -4,12 +4,15 @@ import static org.kwakmunsu.dingdongpang.global.util.TimeConverter.stringToTime;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.kwakmunsu.dingdongpang.domain.member.controller.dto.OperationTimeRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.OperationTimeServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopOperationTime;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.ShopOperationTimeRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.OperationTimeUpdateServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopUpdateServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shopimage.entity.ShopImage;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;
@@ -34,13 +37,35 @@ public class ShopCommandService {
         Shop shop = Shop.create(request.toDomainRequest(merchantId, point, mainImage));
         shopRepository.save(shop);
 
-        if(!request.imageFiles().isEmpty()) {
+        if (!request.imageFiles().isEmpty()) {
             List<String> uploadedImages = s3Provider.uploadImages(request.imageFiles());
             saveShopImages(uploadedImages, shop);
         }
 
         List<OperationTimeServiceRequest> operationTimeRequests = request.operationTimeRequests();
         saveShopOperationTimes(operationTimeRequests, shop);
+    }
+
+    @Transactional
+    public void update(ShopUpdateServiceRequest request, Shop shop, Point point, Long merchantId) {
+        String mainImage = uploadImage(request.mainImage());
+        deleteImage(shop.getMainImage());
+        shop.updateInfo(request.toDomainRequest(merchantId, point, mainImage));
+
+        List<String> shopImages = shopImageRepository.findByShopId(shop.getId());
+        s3Provider.deleteImages(shopImages);
+        shopImageRepository.deleteByShopId(shop.getId());
+
+        if (!request.imageFiles().isEmpty()) {
+            List<String> uploadedImages = s3Provider.uploadImages(request.imageFiles());
+            saveShopImages(uploadedImages, shop);
+        }
+
+        List<OperationTimeServiceRequest> operationTimeRequests = request.operationTimeRequests();
+        shopOperationTimeRepository.deleteByShopId(shop.getId());
+        shopOperationTimeRepository.findByShopId(shop.getId());
+        saveShopOperationTimes(operationTimeRequests, shop);
+
     }
 
     private void saveShopImages(List<String> uploadedImages, Shop shop) {
@@ -67,6 +92,13 @@ public class ShopCommandService {
             return null;
         }
         return s3Provider.uploadImage(image);
+    }
+
+    private void deleteImage(String image) {
+        if (image == null || image.isEmpty()) {
+            return;
+        }
+        s3Provider.deleteImage(image);
     }
 
 }

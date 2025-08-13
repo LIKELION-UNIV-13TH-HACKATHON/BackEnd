@@ -14,4 +14,7 @@ public interface ShopOperationTimeJpaRepository extends JpaRepository<ShopOperat
             "from ShopOperationTime ot where ot.shopId = :shopId"
     )
     List<ShopOperationTimeResponse> findByShopId(@Param("shopId") Long shopId);
+
+    void deleteByShopId(Long shopId);
+
 }

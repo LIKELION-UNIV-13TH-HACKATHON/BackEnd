@@ -47,6 +47,18 @@ public class MemberCommandService {
         return merchant;
     }
 
+    @Transactional
+    public Member updateMerchant(String nickname, Long memberId) {
+        Member merchant = memberRepository.findById(memberId);
+
+        if (merchant.isNotEqualsNickname(nickname)) {
+            checkDuplicateNickname(nickname);
+            merchant.updateNickname(nickname);
+        }
+
+        return merchant;
+    }
+
     private void checkDuplicateNickname(String nickname) {
         if (memberRepository.existsByNickname(nickname)) {
             throw new DuplicationException(ErrorStatus.DUPLICATE_NICKNAME);

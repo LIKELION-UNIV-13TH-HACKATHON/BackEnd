@@ -10,4 +10,7 @@ public interface ShopImageJpaRepository extends JpaRepository<ShopImage, Long> {
 
     @Query("select image from ShopImage where shopId = :shopId")
     List<String> findByShopId(@Param("shopId") Long shopId);
+
+    void deleteByShopId(Long shopId);
+
 }
