@@ -9,6 +9,8 @@ import org.kwakmunsu.dingdongpang.domain.member.service.MemberCommandService;
 import org.kwakmunsu.dingdongpang.domain.member.service.MemberQueryService;
 import org.kwakmunsu.dingdongpang.domain.member.service.MerchantOnboardingService;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.CheckNicknameResponse;
+import org.kwakmunsu.dingdongpang.domain.member.service.dto.CustomerProfileResponse;
+import org.kwakmunsu.dingdongpang.domain.member.service.dto.MerchantProfileResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +59,20 @@ public class MemberController extends MemberDocsController {
     @GetMapping("/check-nickname")
     public ResponseEntity<CheckNicknameResponse> checkNameDuplicate(@RequestParam String nickname) {
         CheckNicknameResponse response = memberQueryService.isExistsNickname(nickname);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/merchants/me")
+    public ResponseEntity<MerchantProfileResponse> getMerchantProfile(@AuthMember Long memberId) {
+        MerchantProfileResponse response = memberQueryService.getMerchantProfile(memberId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/customers/me")
+    public ResponseEntity<CustomerProfileResponse> getCustomerProfile(@AuthMember Long memberId) {
+        CustomerProfileResponse response = memberQueryService.getCustomerProfile(memberId);
 
         return ResponseEntity.ok(response);
     }

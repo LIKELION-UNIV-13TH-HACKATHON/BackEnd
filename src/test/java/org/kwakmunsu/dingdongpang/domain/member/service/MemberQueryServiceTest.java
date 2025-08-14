@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
+import org.kwakmunsu.dingdongpang.domain.member.service.dto.CustomerProfileResponse;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,28 @@ record MemberQueryServiceTest(MemberQueryService memberQueryService, MemberRepos
 
         var response2 = memberQueryService.isExistsNickname("nickname");
         assertThat(response2.isExistsNickname()).isTrue();
+    }
+
+
+    @DisplayName("고객 모드일 때 내 정보를 조회한다.")
+    @Test
+    void getCustomerProfile() {
+        var customer = Member.createMember("email", "nickname", "1234");
+        memberRepository.save(customer);
+
+        CustomerProfileResponse response = memberQueryService.getCustomerProfile(customer.getId());
+
+        assertThat(response)
+                .extracting(
+                        CustomerProfileResponse::customerId,
+                        CustomerProfileResponse::nickname,
+                        CustomerProfileResponse::profileImage
+                )
+                .containsExactly(
+                        customer.getId(),
+                        customer.getNickname(),
+                        customer.getProfileUrl()
+                );
     }
 
 }
