@@ -18,9 +18,14 @@ import java.util.List;
 import org.kwakmunsu.dingdongpang.domain.member.controller.dto.CustomerRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.member.controller.dto.MerchantRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.CheckNicknameResponse;
+import org.kwakmunsu.dingdongpang.domain.member.service.dto.CustomerProfileResponse;
+import org.kwakmunsu.dingdongpang.domain.member.service.dto.MerchantProfileResponse;
+import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
+import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Member API", description = "회원 관련 API 문서입니다.")
@@ -123,4 +128,42 @@ public abstract class MemberDocsController {
     })
     public abstract ResponseEntity<CheckNicknameResponse> checkNameDuplicate(String nickname);
 
+    @Operation(
+            summary = "상인 모드 내 정보 도회 - JWT O"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "내 정보 확인 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = MerchantProfileResponse.class)
+            )
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            UNAUTHORIZED_ERROR,
+            NOT_FOUND,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<MerchantProfileResponse> getMerchantProfile(@AuthMember Long memberId);
+
+
+    @Operation(
+            summary = "고객 모드 내 정보 도회 - JWT O"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "내 정보 확인 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = CustomerProfileResponse.class)
+            )
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            UNAUTHORIZED_ERROR,
+            NOT_FOUND,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<CustomerProfileResponse> getCustomerProfile(@AuthMember Long memberId);
 }

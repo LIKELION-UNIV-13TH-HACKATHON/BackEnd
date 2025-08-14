@@ -63,6 +63,7 @@ public class MemberController extends MemberDocsController {
         return ResponseEntity.ok(response);
     }
 
+    @Override
     @GetMapping("/merchants/me")
     public ResponseEntity<MerchantProfileResponse> getMerchantProfile(@AuthMember Long memberId) {
         MerchantProfileResponse response = memberQueryService.getMerchantProfile(memberId);
@@ -70,6 +71,7 @@ public class MemberController extends MemberDocsController {
         return ResponseEntity.ok(response);
     }
 
+    @Override
     @GetMapping("/customers/me")
     public ResponseEntity<CustomerProfileResponse> getCustomerProfile(@AuthMember Long memberId) {
         CustomerProfileResponse response = memberQueryService.getCustomerProfile(memberId);
