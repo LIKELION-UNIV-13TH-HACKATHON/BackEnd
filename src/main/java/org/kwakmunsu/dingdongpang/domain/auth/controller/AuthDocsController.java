@@ -3,6 +3,7 @@ package org.kwakmunsu.dingdongpang.domain.auth.controller;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.BAD_REQUEST;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.INTERNAL_SERVER_ERROR;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.INVALID_TOKEN;
+import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.NOT_FOUND;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.NOT_FOUND_TOKEN;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.UNAUTHORIZED_ERROR;
 
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.kwakmunsu.dingdongpang.domain.auth.controller.dto.ReissueTokenRequest;
 import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInResponse;
+import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
@@ -76,5 +78,20 @@ public abstract class AuthDocsController {
             INTERNAL_SERVER_ERROR
     })
     public abstract ResponseEntity<TokenResponse> reissue(ReissueTokenRequest request);
+
+    @Operation(
+            summary = "로그아웃 요청 - JWT O",
+            description = "로그아웃시 서버는 FCM 토큰과 RefreshToken을 초기화합니다. 프론트는 저장한 AccessToken과 RefreshToken을 제거해주세요."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "로그아웃 성공"
+    )
+    @ApiExceptions(values = {
+            INVALID_TOKEN,
+            NOT_FOUND,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<Void> signOut(@AuthMember Long memberId);
 
 }

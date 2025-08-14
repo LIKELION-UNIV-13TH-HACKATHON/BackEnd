@@ -44,6 +44,13 @@ public class AuthCommandService {
         return response;
     }
 
+    @Transactional
+    public void signOut(Long memberId) {
+        Member member = memberRepository.findById(memberId);
+        member.updateRefreshToken(null);
+        //TODO: 추후 FCM 토큰도 초기화, blacklist 추가
+    }
+
     private SignInResponse signInAsExistingMember(Member member, OAuth2UserInfo oAuth2UserInfo) {
         member.updateEmail(oAuth2UserInfo.getEmail());
 
@@ -62,5 +69,4 @@ public class AuthCommandService {
 
         return new SignInResponse(true /*isNewMember*/, tokenResponse);
     }
-
 }
