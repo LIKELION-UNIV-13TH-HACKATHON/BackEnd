@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.auth.controller.dto.ReissueTokenRequest;
 import org.kwakmunsu.dingdongpang.domain.auth.service.AuthCommandService;
 import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInResponse;
+import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,13 @@ public class AuthController extends AuthDocsController {
         SignInResponse response = authCommandService.signIn(socialAccessToken);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/sing-out")
+    public ResponseEntity<Void> signOut(@AuthMember Long memberId) {
+        authCommandService.signOut(memberId);
+
+        return ResponseEntity.ok().build();
     }
 
     @Override
