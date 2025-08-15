@@ -54,6 +54,9 @@ public enum ErrorStatus {
     AWS_S3_ERROR           (500, "ERROR - AWS S3 내부 에러"),
     FAILED_TO_UPLOAD_FILE  (500, "ERROR - 파일 업로드에 실패하였습니다."),
 
+    // FIREBASE
+    FAIL_FIREBASE_INITIALIZE(500, "ERROR - Firebase 초기화에 실패하였습니다."),
+
     // ETC
     BAD_REQUEST_ARGUMENT   (400, "ERROR - 유효하지 않은 인자입니다."),
     UNAUTHORIZED_ERROR     (401, "ERROR - 인증되지 않은 사용자입니다."),

@@ -66,6 +66,9 @@ dependencies {
 
     // 위도 경도 자료형 POINT 에 대한 MySql - Spring 연동 라이브러리 : 하이버네이트버전이랑 맞춰주어야함
     implementation 'org.hibernate:hibernate-spatial:6.6.22.Final'
+
+    // firebase
+    implementation 'com.google.firebase:firebase-admin:9.5.0'
 }
 
 tasks.named('test') {
