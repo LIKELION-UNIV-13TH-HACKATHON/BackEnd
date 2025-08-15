@@ -2,10 +2,9 @@ package org.kwakmunsu.dingdongpang.domain.shop.service.dto;
 
 import java.util.List;
 import lombok.Builder;
-import org.kwakmunsu.dingdongpang.domain.member.controller.dto.OperationTimeRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.OperationTimeServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.shop.entity.dto.ShopRegisterDomainRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
+import org.kwakmunsu.dingdongpang.domain.shop.entity.dto.ShopRegisterDomainRequest;
 import org.locationtech.jts.geom.Point;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -3,7 +3,6 @@ package org.kwakmunsu.dingdongpang.domain.shop.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,6 @@
 package org.kwakmunsu.dingdongpang.domain.shop.controller;
 
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.BAD_REQUEST;
-import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.DUPLICATE;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.INTERNAL_SERVER_ERROR;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.NOT_FOUND;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.UNAUTHORIZED_ERROR;
@@ -14,20 +13,15 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import java.util.List;
-import org.kwakmunsu.dingdongpang.domain.member.controller.dto.MerchantRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.MerchantUpdateRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.SortBy;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
-import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Shop API", description = "매장 관련 API 문서입니다.")
