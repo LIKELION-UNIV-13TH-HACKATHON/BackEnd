@@ -21,11 +21,9 @@ import org.kwakmunsu.dingdongpang.domain.member.service.dto.CheckNicknameRespons
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.CustomerProfileResponse;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.MerchantProfileResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
-import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Member API", description = "회원 관련 API 문서입니다.")

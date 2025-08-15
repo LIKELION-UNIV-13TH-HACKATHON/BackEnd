@@ -3,7 +3,6 @@ package org.kwakmunsu.dingdongpang.domain.shop.controller;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.kwakmunsu.dingdongpang.domain.member.controller.dto.MerchantRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.MerchantOnboardingService;
 import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.MerchantUpdateRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.SortBy;

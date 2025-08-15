@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import lombok.Builder;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.MerchantRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.MerchantUpdateServiceRequest;
 import org.springframework.web.multipart.MultipartFile;
 
