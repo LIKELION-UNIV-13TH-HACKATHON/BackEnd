@@ -1,5 +1,6 @@
 package org.kwakmunsu.dingdongpang.domain.subscribeshop.repository;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.entity.SubscribeShop;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopListResponse;
@@ -27,6 +28,14 @@ public class SubscribeShopRepository {
 
     public SubscribeShopListResponse getSubscribeShop(SubscribeShopReadDomainRequest request) {
         return subscribeShopQueryDslRepository.getSubscribedShopList(request);
+    }
+
+    public List<SubscribeShop> findByShopId(Long shopId) {
+        return subscribeShopJpaRepository.findByShopId(shopId);
+    }
+
+    public List<String> findFcmTokensByShopId(Long shopId) {
+        return subscribeShopJpaRepository.findFcmTokensByShopId(shopId);
     }
 
 }
