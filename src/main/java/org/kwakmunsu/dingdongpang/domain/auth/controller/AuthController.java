@@ -23,8 +23,11 @@ public class AuthController extends AuthDocsController {
 
     @Override
     @PostMapping("/sign-in")
-    public ResponseEntity<SignInResponse> signIn(@RequestHeader("Authorization") String socialAccessToken) {
-        SignInResponse response = authCommandService.signIn(socialAccessToken);
+    public ResponseEntity<SignInResponse> signIn(
+            @RequestHeader("Authorization") String socialAccessToken,
+            @RequestHeader(value = "FCM-Token", required = false) String fcmToken
+    ) {
+        SignInResponse response = authCommandService.signIn(socialAccessToken, fcmToken);
 
         return ResponseEntity.ok(response);
     }

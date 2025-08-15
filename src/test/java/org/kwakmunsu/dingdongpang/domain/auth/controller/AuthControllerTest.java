@@ -24,9 +24,10 @@ class AuthControllerTest extends ControllerTestSupport {
     void signIn() {
         var tokenResponse = new TokenResponse("accessToken", "refreshToken");
         var signInResponse = new SignInResponse(true /*isNewMember*/, tokenResponse);
-        given(authCommandService.signIn(anyString())).willReturn(signInResponse);
+        given(authCommandService.signIn(anyString(), anyString())).willReturn(signInResponse);
         var result = mvcTester.post().uri("/auth/sign-in")
                 .header("Authorization", "Bearer accessToken")
+                .header("FCM-Token", "FCM-Token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .exchange();
 
@@ -44,8 +45,9 @@ class AuthControllerTest extends ControllerTestSupport {
     void failSignIn() {
         var tokenResponse = new TokenResponse("accessToken", "refreshToken");
         var signInResponse = new SignInResponse(true /*isNewMember*/, tokenResponse);
-        given(authCommandService.signIn(anyString())).willReturn(signInResponse);
+        given(authCommandService.signIn(anyString(), anyString())).willReturn(signInResponse);
         var result = mvcTester.post().uri("/auth/sign-in")
+                .header("FCM-Token", "FCM-Token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .exchange();
 
@@ -55,10 +57,11 @@ class AuthControllerTest extends ControllerTestSupport {
     @DisplayName("로그인 시 유효하지 않은 카카오 AccessToken 값을 보낸다면 에러를 던진다.")
     @Test
     void failSignInToUnAuthentication() {
-        given(authCommandService.signIn(anyString())).willThrow(
+        given(authCommandService.signIn(anyString(), anyString())).willThrow(
                 new UnAuthenticationException(ErrorStatus.INVALID_TOKEN));
         var result = mvcTester.post().uri("/auth/sign-in")
                 .header("Authorization", "Bearer accessToken")
+                .header("FCM-Token", "FCM-Token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .exchange();
 
