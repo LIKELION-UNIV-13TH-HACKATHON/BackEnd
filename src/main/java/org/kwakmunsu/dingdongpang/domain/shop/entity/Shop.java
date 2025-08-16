@@ -48,6 +48,9 @@ public class Shop extends BaseEntity {
 
     private boolean isDeleted;
 
+    @Column(nullable = false)
+    private Long viewCount;
+
     public static Shop create(ShopRegisterDomainRequest request) {
         return Shop.builder()
                 .merchantId(request.merchantId())
@@ -60,7 +63,12 @@ public class Shop extends BaseEntity {
                 .location(request.location())
                 .mainImage(request.mainImage())
                 .isDeleted(false)
+                .viewCount(0L)
                 .build();
+    }
+
+    public void incrementViewCount() {
+        this.viewCount++;
     }
 
     public void delete() {
