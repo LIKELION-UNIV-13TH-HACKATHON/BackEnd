@@ -54,6 +54,14 @@ public class NotificationController extends NotificationDocsController {
     }
 
     @Override
+    @GetMapping("/notifications/{shopId}/latest")
+    public ResponseEntity<String> getLatestNotification(@PathVariable Long shopId) {
+        String latestMessage =  notificationQueryService.getTodayLatestNotification(shopId);
+
+        return ResponseEntity.ok(latestMessage);
+    }
+
+    @Override
     @GetMapping("/notifications/{notificationId}")
     public ResponseEntity<NotifyDetailResponse> getNotification(@PathVariable Long notificationId) {
         NotifyDetailResponse response = notificationQueryService.getNotification(notificationId);

@@ -1,6 +1,7 @@
 package org.kwakmunsu.dingdongpang.domain.notification.service;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.notification.entity.Notification;
 import org.kwakmunsu.dingdongpang.domain.notification.repository.NotificationImageRepository;
@@ -46,5 +47,10 @@ public class NotificationQueryService {
         return new NotifyListResponse(notifyPreviewResponses);
     }
 
+    public String getTodayLatestNotification(Long shopId) {
+        Optional<Notification> optionalNotification = notificationRepository.findTodayLatestByShopId(shopId);
 
+        return optionalNotification.map(Notification::getMessage)
+                .orElse(null);
+    }
 }
