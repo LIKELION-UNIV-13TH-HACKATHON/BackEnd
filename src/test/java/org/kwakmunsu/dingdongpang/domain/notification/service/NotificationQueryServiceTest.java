@@ -42,5 +42,26 @@ record NotificationQueryServiceTest(
         assertThat(response.responses()).hasSize(2);
     }
 
+    @DisplayName("매장에 대한 알림을 가져온다.")
+    @Test
+    void getNotificationByShop() {
+        var memberId = 1L;
+        var notification = Notification.createImmediate(1L, "testMessage");
+        var notification2 = Notification.createImmediate(1L, "testMessage2");
+        var notification3 = Notification.createScheduled(1L, "testMessage3", LocalDateTime.now().plusHours(10));
+        notificationRepository.save(notification);
+        notificationRepository.save(notification2);
+        notificationRepository.save(notification3);
+
+        var receiver = NotificationReceiver.create(notification.getId(), memberId);
+        var receiver1 = NotificationReceiver.create(notification2.getId(), memberId);
+        var receiver2 = NotificationReceiver.create(notification3.getId(), memberId);
+        notificationReceiverRepository.save(receiver);
+        notificationReceiverRepository.save(receiver1);
+        notificationReceiverRepository.save(receiver2);
+
+        var response = notificationQueryService.getNotificationsByShop(1L);
+        assertThat(response.responses()).hasSize(2);
+    }
 
 }

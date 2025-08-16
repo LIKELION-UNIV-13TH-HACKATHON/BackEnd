@@ -20,13 +20,21 @@ public class NotificationQueryService {
         List<Long> notificationIdList = notificationReceiverRepository.findByReceiverId(receiverId);
         List<Notification> notifications = notificationRepository.findByIdInAndIsSentTrue(notificationIdList);
 
+        return getNotifyListResponse(notifications);
+    }
+
+    public NotifyListResponse getNotificationsByShop(Long shopId) {
+        List<Notification> notifications = notificationRepository.findByShopIdInAndIsSentTrue(shopId);
+
+        return getNotifyListResponse(notifications);
+    }
+
+    private NotifyListResponse getNotifyListResponse(List<Notification> notifications) {
         List<NotifyPreviewResponse> notifyPreviewResponses = notifications.stream()
                 .map(NotifyPreviewResponse::from)
                 .toList();
-
-        return NotifyListResponse.builder()
-                .responses(notifyPreviewResponses)
-                .build();
+        return new NotifyListResponse(notifyPreviewResponses);
     }
+
 
 }
