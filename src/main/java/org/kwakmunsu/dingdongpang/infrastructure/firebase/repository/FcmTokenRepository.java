@@ -1,5 +1,6 @@
 package org.kwakmunsu.dingdongpang.infrastructure.firebase.repository;
 
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.infrastructure.firebase.entity.FcmToken;
@@ -19,4 +20,7 @@ public class FcmTokenRepository {
         return fcmTokenJpaRepository.findByMemberIdAndToken(memberId, token);
     }
 
+    public List<FcmToken> findByMemberId(Long memberId) {
+        return fcmTokenJpaRepository.findByMemberId(memberId);
+    }
 }

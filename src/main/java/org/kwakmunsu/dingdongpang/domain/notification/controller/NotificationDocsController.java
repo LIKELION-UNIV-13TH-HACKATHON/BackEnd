@@ -10,17 +10,17 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import org.kwakmunsu.dingdongpang.domain.notification.controller.dto.NotifyAllowRequest;
 import org.kwakmunsu.dingdongpang.domain.notification.controller.dto.NotifyCreateRequest;
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyDetailResponse;
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyListResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = " Notification API", description = "알림 관련 API 문서입니다.")
@@ -168,5 +168,30 @@ public abstract class NotificationDocsController {
             INTERNAL_SERVER_ERROR
     })
     public abstract ResponseEntity<String> getLatestNotification(Long shopId);
+
+    @Operation(
+            summary = "알림 허용 여부  API  - JWT O"
+    )
+    @RequestBody(
+            description = "알림 허용 여부 요청 DTO",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = NotifyAllowRequest.class)
+            )
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "알림 허용 여부 변경 성공"
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            NOT_FOUND,
+            UNAUTHORIZED_ERROR,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<Void> allow(
+            NotifyAllowRequest request,
+            Long memberId
+    );
 
 }

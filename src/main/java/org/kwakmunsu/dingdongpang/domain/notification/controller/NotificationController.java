@@ -3,6 +3,7 @@ package org.kwakmunsu.dingdongpang.domain.notification.controller;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.kwakmunsu.dingdongpang.domain.notification.controller.dto.NotifyAllowRequest;
 import org.kwakmunsu.dingdongpang.domain.notification.controller.dto.NotifyCreateRequest;
 import org.kwakmunsu.dingdongpang.domain.notification.service.NotificationCommandService;
 import org.kwakmunsu.dingdongpang.domain.notification.service.NotificationQueryService;
@@ -11,6 +12,7 @@ import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyListResp
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -56,7 +58,7 @@ public class NotificationController extends NotificationDocsController {
     @Override
     @GetMapping("/notifications/{shopId}/latest")
     public ResponseEntity<String> getLatestNotification(@PathVariable Long shopId) {
-        String latestMessage =  notificationQueryService.getTodayLatestNotification(shopId);
+        String latestMessage = notificationQueryService.getTodayLatestNotification(shopId);
 
         return ResponseEntity.ok(latestMessage);
     }
@@ -67,6 +69,17 @@ public class NotificationController extends NotificationDocsController {
         NotifyDetailResponse response = notificationQueryService.getNotification(notificationId);
 
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @PatchMapping("/notifications/allow")
+    public ResponseEntity<Void> allow(
+            @Valid @RequestPart NotifyAllowRequest request,
+            @AuthMember Long memberId
+    ) {
+        notificationCommandService.allow(request.toServiceRequest(memberId));
+
+        return  ResponseEntity.noContent().build();
     }
 
 }
