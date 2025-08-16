@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.notification.controller.dto.NotifyCreateRequest;
 import org.kwakmunsu.dingdongpang.domain.notification.service.NotificationCommandService;
 import org.kwakmunsu.dingdongpang.domain.notification.service.NotificationQueryService;
+import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyDetailResponse;
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyListResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
@@ -44,9 +45,18 @@ public class NotificationController extends NotificationDocsController {
         return ResponseEntity.ok(response);
     }
 
+    @Override
     @GetMapping("/notifications/{shopId}")
     public ResponseEntity<NotifyListResponse> getNotificationsByShop(@PathVariable Long shopId) {
         NotifyListResponse response = notificationQueryService.getNotificationsByShop(shopId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping("/notifications/{notificationId}")
+    public ResponseEntity<NotifyDetailResponse> getNotification(@PathVariable Long notificationId) {
+        NotifyDetailResponse response = notificationQueryService.getNotification(notificationId);
 
         return ResponseEntity.ok(response);
     }

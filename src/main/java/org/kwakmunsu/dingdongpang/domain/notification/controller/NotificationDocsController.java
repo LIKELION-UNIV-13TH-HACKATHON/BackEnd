@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.kwakmunsu.dingdongpang.domain.notification.controller.dto.NotifyCreateRequest;
+import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyDetailResponse;
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyListResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
@@ -91,6 +92,12 @@ public abstract class NotificationDocsController {
     @Operation(
             summary = "매장 조회 시 알림 목록 조회 API  - JWT O"
     )
+    @Parameter(
+            name = "shopId",
+            description = "매장 id ",
+            in = ParameterIn.PATH,
+            required = true
+    )
     @ApiResponse(
             responseCode = "200",
             description = "매장 조회 시 알림 목록 조회 성공",
@@ -105,5 +112,32 @@ public abstract class NotificationDocsController {
             UNAUTHORIZED_ERROR,
             INTERNAL_SERVER_ERROR
     })
-    public abstract ResponseEntity<NotifyListResponse> getNotificationsByShop(@PathVariable Long shopId);
+    public abstract ResponseEntity<NotifyListResponse> getNotificationsByShop(Long shopId);
+
+
+    @Operation(
+            summary = "알림 상세 조회 API  - JWT O"
+    )
+    @Parameter(
+            name = "notificationId",
+            description = "알림 id ",
+            in = ParameterIn.PATH,
+            required = true
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "알림 상세 조회 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = NotifyDetailResponse.class)
+            )
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            NOT_FOUND,
+            UNAUTHORIZED_ERROR,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<NotifyDetailResponse> getNotification(Long notificationId);
+
 }
