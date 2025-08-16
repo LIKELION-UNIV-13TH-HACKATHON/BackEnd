@@ -32,6 +32,10 @@ public class ShopQueryService {
         List<ShopOperationTimeResponse> operationTimeResponses = shopOperationTimeRepository.findByShopId(shopId);
         List<String> shopImages = shopImageRepository.findByShopId(shopId);
 
+        // 조회수 증가
+        shop.incrementViewCount();
+        shopRepository.save(shop);
+
         return ShopResponse.from(shop, isSubscribe, operationTimeResponses, shopImages);
     }
 
