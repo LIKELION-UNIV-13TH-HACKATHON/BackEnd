@@ -16,4 +16,6 @@ public interface NotificationJpaRepository extends JpaRepository<Notification, L
             @Param("currentTime") LocalDateTime currentTime
     );
 
+    List<Notification> findByIdInAndIsSentTrue(List<Long> notificationIds);
+
 }

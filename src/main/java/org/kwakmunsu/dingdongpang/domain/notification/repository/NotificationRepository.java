@@ -21,4 +21,8 @@ public class NotificationRepository {
         return notificationJpaRepository.findReadyToSendScheduledNotifications(type, scheduledAt);
     }
 
+    public List<Notification> findByIdInAndIsSentTrue(List<Long> ids) {
+        return notificationJpaRepository.findByIdInAndIsSentTrue(ids);
+    }
+
 }
