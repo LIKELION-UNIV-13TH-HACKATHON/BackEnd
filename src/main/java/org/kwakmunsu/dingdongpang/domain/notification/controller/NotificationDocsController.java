@@ -114,7 +114,6 @@ public abstract class NotificationDocsController {
     })
     public abstract ResponseEntity<NotifyListResponse> getNotificationsByShop(Long shopId);
 
-
     @Operation(
             summary = "알림 상세 조회 API  - JWT O"
     )
@@ -139,5 +138,35 @@ public abstract class NotificationDocsController {
             INTERNAL_SERVER_ERROR
     })
     public abstract ResponseEntity<NotifyDetailResponse> getNotification(Long notificationId);
+
+    @Operation(
+            summary = "매장 오늘 기준 가장 최근 알림 조회 API  - JWT O",
+            description = """
+                    ## 마커 클릭 시 오늘 기준 가장 최근 알림을 보여줄 때 사용합니다.
+                    - 존재할 경우 알림 메세지가 전달됩니다.
+                    - 존재하지 않을 경우 null 값이 전달됩니다.
+                    """
+    )
+    @Parameter(
+            name = "shopId",
+            description = "알림 id ",
+            in = ParameterIn.PATH,
+            required = true
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "매장 오늘 기준 가장 최근 알림 조회 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = String.class)
+            )
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            NOT_FOUND,
+            UNAUTHORIZED_ERROR,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<String> getLatestNotification(Long shopId);
 
 }

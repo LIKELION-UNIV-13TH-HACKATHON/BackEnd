@@ -2,6 +2,7 @@ package org.kwakmunsu.dingdongpang.domain.notification.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.notification.entity.Notification;
 import org.kwakmunsu.dingdongpang.domain.notification.entity.NotificationType;
@@ -34,6 +35,10 @@ public class NotificationRepository {
     public Notification findById(Long id) {
         return notificationJpaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_NOTIFICATION));
+    }
+
+    public Optional<Notification> findTodayLatestByShopId(Long shopId) {
+        return notificationJpaRepository.findTodayLatestByShopId(shopId);
     }
 
 }

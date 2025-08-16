@@ -2,6 +2,7 @@ package org.kwakmunsu.dingdongpang.domain.notification.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.kwakmunsu.dingdongpang.domain.notification.entity.Notification;
 import org.kwakmunsu.dingdongpang.domain.notification.entity.NotificationType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,5 +20,13 @@ public interface NotificationJpaRepository extends JpaRepository<Notification, L
     List<Notification> findByIdInAndIsSentTrue(List<Long> notificationIds);
 
     List<Notification> findByShopIdAndIsSentTrue(Long shopId);
+
+
+    @Query("SELECT n FROM Notification n " +
+            "WHERE n.shopId = :shopId " +
+            "AND DATE(n.createdAt) = CURRENT_DATE " +
+            "ORDER BY n.createdAt DESC " +
+            "LIMIT 1")
+    Optional<Notification> findTodayLatestByShopId(@Param("shopId") Long shopId);
 
 }
