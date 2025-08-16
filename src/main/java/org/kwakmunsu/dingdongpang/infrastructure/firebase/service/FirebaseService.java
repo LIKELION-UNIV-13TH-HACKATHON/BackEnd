@@ -40,7 +40,7 @@ public class FirebaseService {
     public void sendMessage(List<PushMessage> pushMessages) {
         List<Message> messages = pushMessages.stream()
                 .map(this::createMessage).toList();
-        ApiFuture<BatchResponse> future = FirebaseMessaging.getInstance().sendEachAsync(messages, true);
+        ApiFuture<BatchResponse> future = FirebaseMessaging.getInstance().sendEachAsync(messages);
 
         // 콜백으로 결과 처리
         future.addListener(() -> {
@@ -61,6 +61,8 @@ public class FirebaseService {
             List<SendResponse> responses = response.getResponses();
             for (int i = 0; i < responses.size(); i++) {
                 if (!responses.get(i).isSuccessful()) {
+                    log.error(responses.get(i).getException().getMessage());
+                    log.error(responses.get(i).getException().getErrorCode().toString());
                     log.warn("FCM 전송 실패 토큰: {}", messages.get(i).toString());
                 }
             }

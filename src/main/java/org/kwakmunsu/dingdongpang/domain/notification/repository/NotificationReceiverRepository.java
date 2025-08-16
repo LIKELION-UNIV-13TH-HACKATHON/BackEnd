@@ -19,4 +19,8 @@ public class NotificationReceiverRepository {
         notificationReceiverJpaRepository.saveAll(receivers);
     }
 
+    public List<Long> findByReceiverId(Long memberId) {
+        return notificationReceiverJpaRepository.findByReceiverId(memberId);
+    }
+
 }

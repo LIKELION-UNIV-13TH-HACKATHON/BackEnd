@@ -21,14 +21,6 @@ public record NotifyCreateRequest(
         LocalDateTime scheduledAt // 예약 발송 시간
 ) {
 
-    @AssertTrue(message = "예약 발송 시 scheduledAt은 필수입니다")
-    public boolean isValidScheduledAt() {
-        if (sendType == SendType.SCHEDULED) {
-            return scheduledAt != null && scheduledAt.isAfter(LocalDateTime.now());
-        }
-        return true;
-    }
-
     public NotifyCreateServiceRequest toServiceRequest(List<MultipartFile> images, Long shopId, Long memberId) {
         return NotifyCreateServiceRequest.builder()
                 .message(message)
