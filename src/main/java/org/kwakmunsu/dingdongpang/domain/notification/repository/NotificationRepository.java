@@ -5,6 +5,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.notification.entity.Notification;
 import org.kwakmunsu.dingdongpang.domain.notification.entity.NotificationType;
+import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
+import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -27,6 +29,11 @@ public class NotificationRepository {
 
     public List<Notification> findByShopIdInAndIsSentTrue(Long shopId) {
         return notificationJpaRepository.findByShopIdAndIsSentTrue(shopId);
+    }
+
+    public Notification findById(Long id) {
+        return notificationJpaRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_NOTIFICATION));
     }
 
 }
