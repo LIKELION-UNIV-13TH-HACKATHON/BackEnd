@@ -44,4 +44,11 @@ public class NotificationController extends NotificationDocsController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/notifications/{shopId}")
+    public ResponseEntity<NotifyListResponse> getNotificationsByShop(@PathVariable Long shopId) {
+        NotifyListResponse response = notificationQueryService.getNotificationsByShop(shopId);
+
+        return ResponseEntity.ok(response);
+    }
+
 }

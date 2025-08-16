@@ -25,4 +25,8 @@ public class NotificationRepository {
         return notificationJpaRepository.findByIdInAndIsSentTrue(ids);
     }
 
+    public List<Notification> findByShopIdInAndIsSentTrue(Long shopId) {
+        return notificationJpaRepository.findByShopIdAndIsSentTrue(shopId);
+    }
+
 }

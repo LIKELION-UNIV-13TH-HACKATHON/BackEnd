@@ -18,6 +18,8 @@ import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyListResp
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = " Notification API", description = "알림 관련 API 문서입니다.")
@@ -86,4 +88,22 @@ public abstract class NotificationDocsController {
     })
     public abstract ResponseEntity<NotifyListResponse> getNotifications(Long memberId);
 
+    @Operation(
+            summary = "매장 조회 시 알림 목록 조회 API  - JWT O"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "매장 조회 시 알림 목록 조회 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = NotifyListResponse.class)
+            )
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            NOT_FOUND,
+            UNAUTHORIZED_ERROR,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<NotifyListResponse> getNotificationsByShop(@PathVariable Long shopId);
 }

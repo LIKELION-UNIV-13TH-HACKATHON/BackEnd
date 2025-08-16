@@ -18,4 +18,6 @@ public interface NotificationJpaRepository extends JpaRepository<Notification, L
 
     List<Notification> findByIdInAndIsSentTrue(List<Long> notificationIds);
 
+    List<Notification> findByShopIdAndIsSentTrue(Long shopId);
+
 }
