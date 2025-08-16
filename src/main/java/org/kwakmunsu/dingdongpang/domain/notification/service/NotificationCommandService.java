@@ -12,11 +12,14 @@ import org.kwakmunsu.dingdongpang.domain.notification.entity.NotificationReceive
 import org.kwakmunsu.dingdongpang.domain.notification.repository.NotificationImageRepository;
 import org.kwakmunsu.dingdongpang.domain.notification.repository.NotificationReceiverRepository;
 import org.kwakmunsu.dingdongpang.domain.notification.repository.NotificationRepository;
+import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyAllowServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyCreateServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.entity.SubscribeShop;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopRepository;
+import org.kwakmunsu.dingdongpang.infrastructure.firebase.entity.FcmToken;
+import org.kwakmunsu.dingdongpang.infrastructure.firebase.repository.FcmTokenRepository;
 import org.kwakmunsu.dingdongpang.infrastructure.firebase.service.dto.FcmSendEvent;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;
 import org.springframework.context.ApplicationEventPublisher;
@@ -33,6 +36,7 @@ public class NotificationCommandService {
     private final NotificationReceiverRepository notificationReceiverRepository;
     private final NotificationImageRepository notificationImageRepository;
     private final SubscribeShopRepository subscribeShopRepository;
+    private final FcmTokenRepository fcmTokenRepository;
     private final ShopRepository shopRepository;
     private final S3Provider s3Provider;
     private final ApplicationEventPublisher eventPublisher;
@@ -50,6 +54,12 @@ public class NotificationCommandService {
         }
         // 예약 발송
         registerScheduledNotification(request);
+    }
+
+    @Transactional
+    public void allow(NotifyAllowServiceRequest request) {
+        List<FcmToken> fcmTokens = fcmTokenRepository.findByMemberId(request.memberId());
+        fcmTokens.forEach(fcmToken -> fcmToken.updateEnabled(request.isAllow()));
     }
 
     private void registerByShop(NotifyCreateServiceRequest request) {

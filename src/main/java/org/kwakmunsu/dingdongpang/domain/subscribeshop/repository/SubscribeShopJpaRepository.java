@@ -14,7 +14,8 @@ public interface SubscribeShopJpaRepository extends JpaRepository<SubscribeShop,
     @Query("SELECT f.token " +
             "FROM SubscribeShop s " +
             "JOIN FcmToken f ON s.memberId = f.memberId " +
-            "WHERE s.shopId = :shopId "
+            "WHERE s.shopId = :shopId " +
+            "AND f.isEnabled = true"
     )
     List<String> findFcmTokensByShopId(Long shopId);
 
