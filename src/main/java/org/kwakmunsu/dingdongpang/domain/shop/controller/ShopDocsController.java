@@ -17,11 +17,14 @@ import java.util.List;
 import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.MerchantUpdateRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.SortBy;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopDashboardResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Shop API", description = "매장 관련 API 문서입니다.")
@@ -229,4 +232,35 @@ public abstract class ShopDocsController {
             Long memberId
     );
 
+    @Operation(
+            summary = "매장 요약 대시보드 조회 API  - JWT O",
+            description = """
+                    ## 매장 요약 대시보드를 합니다.
+                    - 오늘 알림 발송 수
+                    - 매장 조회수
+                    - 신규 구독자 수
+                    - 총 구독자 수
+                    """
+    )
+    @Parameter(
+            name = "shopId",
+            description = "매장 id ",
+            in = ParameterIn.PATH,
+            required = true
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "매장 요약 대시보드 조회 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ShopDashboardResponse.class)
+            )
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            NOT_FOUND,
+            UNAUTHORIZED_ERROR,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<ShopDashboardResponse> getDashboard(Long shopId);
 }

@@ -41,4 +41,8 @@ public class NotificationRepository {
         return notificationJpaRepository.findTodayLatestByShopId(shopId);
     }
 
+    public Long getTodayNotificationSentCountByShop(Long shopId) {
+        return notificationJpaRepository.getTodayNotificationSentCountByShop(shopId);
+    }
+
 }

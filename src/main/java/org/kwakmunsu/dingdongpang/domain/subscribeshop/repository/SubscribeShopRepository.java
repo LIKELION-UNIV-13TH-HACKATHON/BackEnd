@@ -1,5 +1,7 @@
 package org.kwakmunsu.dingdongpang.domain.subscribeshop.repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.entity.SubscribeShop;
@@ -36,6 +38,14 @@ public class SubscribeShopRepository {
 
     public List<String> findFcmTokensByShopId(Long shopId) {
         return subscribeShopJpaRepository.findFcmTokensByShopId(shopId);
+    }
+
+    public Long countByShopIdAndCreatedAtBetween(Long shopId, LocalDateTime startOfDay, LocalDateTime endOfDay) {
+        return subscribeShopJpaRepository.countByShopIdAndCreatedAtBetween(shopId, startOfDay, endOfDay);
+    }
+
+    public Long countByShopId(Long shopId) {
+        return subscribeShopJpaRepository.countByShopId(shopId);
     }
 
 }
