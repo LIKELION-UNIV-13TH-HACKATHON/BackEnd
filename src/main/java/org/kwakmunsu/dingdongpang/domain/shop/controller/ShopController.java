@@ -8,6 +8,7 @@ import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.MerchantUpdateReque
 import org.kwakmunsu.dingdongpang.domain.shop.entity.SortBy;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopQueryService;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopDashboardResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopReadServiceRequest;
@@ -81,6 +82,14 @@ public class ShopController extends ShopDocsController {
         merchantOnboardingService.update(request.toServiceRequest(mainImage, imageFiles, memberId));
 
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @GetMapping("{shopId}/dashboard")
+    public ResponseEntity<ShopDashboardResponse> getDashboard(@PathVariable Long shopId) {
+        ShopDashboardResponse response = shopQueryService.getDashboard(shopId);
+
+        return ResponseEntity.ok(response);
     }
 
 }

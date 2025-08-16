@@ -1,12 +1,16 @@
 package org.kwakmunsu.dingdongpang.domain.shop.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.kwakmunsu.dingdongpang.domain.notification.repository.NotificationRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.ShopOperationTimeRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.dto.ShopOperationTimeResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopDashboardResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchServiceRequest;
@@ -24,6 +28,7 @@ public class ShopQueryService {
     private final ShopOperationTimeRepository shopOperationTimeRepository;
     private final ShopImageRepository shopImageRepository;
     private final SubscribeShopRepository subscribeShopRepository;
+    private final NotificationRepository notificationRepository;
 
     // TODO: 그냥 한방 쿼리로 할까....
     public ShopResponse getShop(Long shopId, Long memberId) {
@@ -50,6 +55,23 @@ public class ShopQueryService {
                 .toList();
 
         return new ShopNearbySearchListResponse(searchResponseList);
+    }
+
+    public ShopDashboardResponse getDashboard(Long shopId) {
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+        Long todayNotificationSentCount = notificationRepository.getTodayNotificationSentCountByShop(shopId);
+        Long shopViewCount = shopRepository.findById(shopId).getViewCount();
+        Long todaySubscribedCount = subscribeShopRepository.countByShopIdAndCreatedAtBetween(shopId, startOfDay, endOfDay);
+        Long totalSubscribedCount = subscribeShopRepository.countByShopId(shopId);
+
+        return ShopDashboardResponse.builder()
+                .todayNotificationSentCount(todayNotificationSentCount)
+                .shopViewCount(shopViewCount)
+                .todaySubscribedCount(todaySubscribedCount)
+                .totalSubscribedCount(totalSubscribedCount)
+                .build();
     }
 
 }

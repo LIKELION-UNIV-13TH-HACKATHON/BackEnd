@@ -1,5 +1,6 @@
 package org.kwakmunsu.dingdongpang.domain.subscribeshop.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.entity.SubscribeShop;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +21,11 @@ public interface SubscribeShopJpaRepository extends JpaRepository<SubscribeShop,
     List<String> findFcmTokensByShopId(Long shopId);
 
     List<SubscribeShop> findByShopId(Long shopId);
+
+    // 특정 매장의 오늘 신규 구독자 수
+    Long countByShopIdAndCreatedAtBetween(Long shopId, LocalDateTime start, LocalDateTime end);
+
+    // 특정 매장의 전체 구독자 수
+    Long countByShopId(Long shopId);
 
 }

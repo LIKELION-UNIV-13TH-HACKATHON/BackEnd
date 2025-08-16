@@ -29,4 +29,10 @@ public interface NotificationJpaRepository extends JpaRepository<Notification, L
             "LIMIT 1")
     Optional<Notification> findTodayLatestByShopId(@Param("shopId") Long shopId);
 
+    @Query("SELECT COUNT(n) FROM Notification n " +
+            "WHERE n.shopId = :shopId " +
+            "AND n.isSent = true " +
+            "AND DATE(n.createdAt) = CURRENT_DATE")
+    Long getTodayNotificationSentCountByShop(@Param("shopId") Long shopId);
+
 }
