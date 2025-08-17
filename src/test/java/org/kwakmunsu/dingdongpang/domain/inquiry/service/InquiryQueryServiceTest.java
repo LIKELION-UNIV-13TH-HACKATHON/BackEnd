@@ -15,8 +15,7 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryLis
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListResponse;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
+import org.kwakmunsu.dingdongpang.domain.shop.ShopFixture;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
 import org.kwakmunsu.dingdongpang.global.GeoFixture;
@@ -42,9 +41,9 @@ record InquiryQueryServiceTest(
         memberRepository.save(author);
 
         List<Inquiry> inquires = List.of(
-                Inquiry.create(1L, author, "testQuestion1"),
-                Inquiry.create(1L, author, "testQuestion2"),
-                Inquiry.create(1L, author, "testQuestion3")
+                Inquiry.create(1L, author, "testTitle", "testQuestion1"),
+                Inquiry.create(1L, author, "testTitle", "testQuestion2"),
+                Inquiry.create(1L, author, "testTitle", "testQuestion3")
         );
         inquires.forEach(inquiryRepository::save);
 
@@ -64,9 +63,9 @@ record InquiryQueryServiceTest(
         memberRepository.save(author2);
 
         List<Inquiry> inquires = List.of(
-                Inquiry.create(1L, author, "testQuestion1"),
-                Inquiry.create(1L, author, "testQuestion2"),
-                Inquiry.create(1L, author2, "testQuestion3")
+                Inquiry.create(1L, author, "testTitle", "testQuestion1"),
+                Inquiry.create(1L, author, "testTitle", "testQuestion2"),
+                Inquiry.create(1L, author2, "testTitle", "testQuestion3")
         );
         inquires.forEach(inquiryRepository::save);
 
@@ -81,7 +80,7 @@ record InquiryQueryServiceTest(
     @Test
     void getInquiryListByMerchants() {
         var merchantId = 1L;
-        var shopRegisterServiceRequest = getShopRegisterServiceRequest();
+        var shopRegisterServiceRequest = ShopFixture.getShopRegisterServiceRequest();
         var point = GeoFixture.createPoint(1.2, 2.3);
         shopCommandService.register(shopRegisterServiceRequest, point, merchantId);
 
@@ -90,9 +89,9 @@ record InquiryQueryServiceTest(
 
         var shop = shopRepository.findByMerchantId(merchantId);
         List<Inquiry> inquires = List.of(
-                Inquiry.create(shop.getId(), author, "testQuestion1"),
-                Inquiry.create(shop.getId(), author, "testQuestion2"),
-                Inquiry.create(shop.getId(), author, "testQuestion3")
+                Inquiry.create(shop.getId(), author, "testTitle", "testQuestion1"),
+                Inquiry.create(shop.getId(), author, "testTitle", "testQuestion2"),
+                Inquiry.create(shop.getId(), author, "testTitle", "testQuestion3")
         );
         inquires.forEach(inquiryRepository::save);
 
@@ -108,9 +107,9 @@ record InquiryQueryServiceTest(
         memberRepository.save(author);
 
         List<Inquiry> inquires = List.of(
-                Inquiry.create(1L, author, "testQuestion1"),
-                Inquiry.create(1L, author, "testQuestion2"),
-                Inquiry.create(1L, author, "testQuestion3")
+                Inquiry.create(1L, author, "testTitle", "testQuestion1"),
+                Inquiry.create(1L, author, "testTitle", "testQuestion2"),
+                Inquiry.create(1L, author, "testTitle", "testQuestion3")
         );
         inquires.forEach(inquiryRepository::save);
 
@@ -128,17 +127,4 @@ record InquiryQueryServiceTest(
         assertThat(response.responses()).isEmpty();
     }
 
-    private ShopRegisterServiceRequest getShopRegisterServiceRequest() {
-        return new ShopRegisterServiceRequest(
-                "My Shop",                                  // shopName
-                ShopType.FOOD,                              // shopType (예: enum)
-                "010-1234-5678",                            // shopPhoneNumber
-                "서울특별시 강남구 역삼동 123-45",                 // address
-                "1234567890",                               // businessNumber
-                "홍길동",                                     // ownerName
-                null,                                     // mainImage
-                List.of(),                    // imageFiles
-                List.of()  // operationTimeRequests
-        );
-    }
 }

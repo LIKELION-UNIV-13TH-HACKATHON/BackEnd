@@ -28,7 +28,7 @@ public class InquiryCommandService {
         shopRepository.findById(request.shopId());
         Member author = memberRepository.findById(request.memberId());
 
-        Inquiry inquiry = Inquiry.create(request.shopId(), author, request.question());
+        Inquiry inquiry = Inquiry.create(request.shopId(), author, request.title(), request.question());
         inquiryRepository.save(inquiry);
     }
 
