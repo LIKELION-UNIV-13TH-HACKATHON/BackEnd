@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.ShopRegisterRequest;
-import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.MerchantUpdateRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.ShopUpdateRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.SortBy;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.response.ShopDashboardResponse;
@@ -240,7 +240,7 @@ public abstract class ShopDocsController {
             description = """
                     ## 매장 정보를 수정 합니다.
                     **안내 사항**
-                     - MerchantUpdateRequest, 매장 대표 이미지, 매장 이미지는 FormData로 보내주세요.
+                     - ShopUpdateRequest, 매장 대표 이미지, 매장 이미지는 FormData로 보내주세요.
                     """
     )
     @ApiResponse(
@@ -258,9 +258,9 @@ public abstract class ShopDocsController {
                     required = true,
                     content = @Content(
                             mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                            schema = @Schema(implementation = MerchantUpdateRequest.class))
+                            schema = @Schema(implementation = ShopUpdateRequest.class))
             )
-            MerchantUpdateRequest request,
+            ShopUpdateRequest request,
             @Parameter(
                     description = "매장 대표 이미지",
                     content = @Content(
