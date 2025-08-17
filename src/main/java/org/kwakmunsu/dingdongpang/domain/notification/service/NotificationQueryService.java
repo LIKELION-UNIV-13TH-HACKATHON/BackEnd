@@ -10,6 +10,7 @@ import org.kwakmunsu.dingdongpang.domain.notification.repository.NotificationRep
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyDetailResponse;
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyListResponse;
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyPreviewResponse;
+import org.kwakmunsu.dingdongpang.domain.notification.service.dto.TodayLatestNotificationResponse;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -47,10 +48,15 @@ public class NotificationQueryService {
         return new NotifyListResponse(notifyPreviewResponses);
     }
 
-    public String getTodayLatestNotification(Long shopId) {
+    public TodayLatestNotificationResponse getTodayLatestNotification(Long shopId) {
         Optional<Notification> optionalNotification = notificationRepository.findTodayLatestByShopId(shopId);
 
-        return optionalNotification.map(Notification::getMessage)
-                .orElse(null);
+        if (optionalNotification.isPresent()) {
+            Notification notification = optionalNotification.get();
+            return new TodayLatestNotificationResponse(notification.getId(), notification.getMessage());
+        }
+
+        return null;
     }
+
 }

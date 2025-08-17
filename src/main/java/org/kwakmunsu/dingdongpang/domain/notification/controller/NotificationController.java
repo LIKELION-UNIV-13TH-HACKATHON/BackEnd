@@ -9,6 +9,7 @@ import org.kwakmunsu.dingdongpang.domain.notification.service.NotificationComman
 import org.kwakmunsu.dingdongpang.domain.notification.service.NotificationQueryService;
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyDetailResponse;
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyListResponse;
+import org.kwakmunsu.dingdongpang.domain.notification.service.dto.TodayLatestNotificationResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,10 +58,10 @@ public class NotificationController extends NotificationDocsController {
 
     @Override
     @GetMapping("/notifications/{shopId}/latest")
-    public ResponseEntity<String> getLatestNotification(@PathVariable Long shopId) {
-        String latestMessage = notificationQueryService.getTodayLatestNotification(shopId);
+    public ResponseEntity<TodayLatestNotificationResponse> getLatestNotification(@PathVariable Long shopId) {
+        TodayLatestNotificationResponse response = notificationQueryService.getTodayLatestNotification(shopId);
 
-        return ResponseEntity.ok(latestMessage);
+        return ResponseEntity.ok(response);
     }
 
     @Override

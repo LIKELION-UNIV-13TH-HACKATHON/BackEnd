@@ -18,6 +18,7 @@ import org.kwakmunsu.dingdongpang.domain.notification.controller.dto.NotifyAllow
 import org.kwakmunsu.dingdongpang.domain.notification.controller.dto.NotifyCreateRequest;
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyDetailResponse;
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyListResponse;
+import org.kwakmunsu.dingdongpang.domain.notification.service.dto.TodayLatestNotificationResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -143,13 +144,12 @@ public abstract class NotificationDocsController {
             summary = "매장 오늘 기준 가장 최근 알림 조회 API  - JWT O",
             description = """
                     ## 마커 클릭 시 오늘 기준 가장 최근 알림을 보여줄 때 사용합니다.
-                    - 존재할 경우 알림 메세지가 전달됩니다.
                     - 존재하지 않을 경우 null 값이 전달됩니다.
                     """
     )
     @Parameter(
             name = "shopId",
-            description = "알림 id ",
+            description = "매장 id ",
             in = ParameterIn.PATH,
             required = true
     )
@@ -158,7 +158,7 @@ public abstract class NotificationDocsController {
             description = "매장 오늘 기준 가장 최근 알림 조회 성공",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(implementation = String.class)
+                    schema = @Schema(implementation = TodayLatestNotificationResponse.class)
             )
     )
     @ApiExceptions(values = {
@@ -167,7 +167,7 @@ public abstract class NotificationDocsController {
             UNAUTHORIZED_ERROR,
             INTERNAL_SERVER_ERROR
     })
-    public abstract ResponseEntity<String> getLatestNotification(Long shopId);
+    public abstract ResponseEntity<TodayLatestNotificationResponse> getLatestNotification(Long shopId);
 
     @Operation(
             summary = "알림 허용 여부  API  - JWT O"
