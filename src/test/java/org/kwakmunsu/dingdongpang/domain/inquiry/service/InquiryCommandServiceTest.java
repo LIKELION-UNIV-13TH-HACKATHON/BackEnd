@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.Inquiry;
+import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryStatus;
 import org.kwakmunsu.dingdongpang.domain.inquiry.repository.InquiryRepository;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryAnswerServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryDeleteServiceRequest;
@@ -97,6 +98,7 @@ record InquiryCommandServiceTest(
 
         var inquiry = inquiryRepository.findById(inquiryId);
         assertThat(inquiry.getAnswer()).isEqualTo(answerServiceRequest.answer());
+        assertThat(inquiry.getStatus()).isEqualTo(InquiryStatus.COMPLETED);
     }
 
     @DisplayName("답변 등록시 해당 답변에 대한 문의가 존재하지 않는다.")
