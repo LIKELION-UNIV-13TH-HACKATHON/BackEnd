@@ -17,14 +17,14 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryAnswerReq
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryModifyRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryReadServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryAnswerServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryDeleteServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryReadServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryByMerchantResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListByMerchantResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListResponse;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryResponse;
 import org.kwakmunsu.dingdongpang.global.TestMember;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -114,7 +114,8 @@ class InquiryControllerTest extends ControllerTestSupport {
                 .createdAt(dateTimeToString(LocalDateTime.now()))
                 .build();
         var inquiryListResponse = new InquiryListByMerchantResponse(List.of(inquiryByMerchantResponse));
-        given(inquiryQueryService.getInquiryList(any(Long.class))).willReturn(inquiryListResponse);
+
+        given(inquiryQueryService.getInquiryListByMerchant(any())).willReturn(inquiryListResponse);
 
         MvcTestResult result = mvcTester.get().uri("/shops/inquiries/merchants", 1L)
                 .contentType(MediaType.APPLICATION_JSON)

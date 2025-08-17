@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.domain.inquiry.service.dto;
+package org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request;
 
 import lombok.Builder;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;

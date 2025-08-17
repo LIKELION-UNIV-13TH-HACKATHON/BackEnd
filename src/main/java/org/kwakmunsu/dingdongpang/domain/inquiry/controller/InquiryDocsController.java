@@ -22,11 +22,13 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryAnswerReq
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryModifyRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
+import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryStatus;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListByMerchantResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Inquiry API", description = "문의 관련 API 문서입니다.")
 public abstract class InquiryDocsController {
@@ -113,6 +115,12 @@ public abstract class InquiryDocsController {
                     ## 싱인 모드일 때 매장에 대한 문의 목록을 조회합니다.
                     """
     )
+    @Parameter(
+            name = "status",
+            description = "문의 필터 ",
+            in = ParameterIn.QUERY,
+            required = true
+    )
     @ApiResponse(
             responseCode = "200",
             description = "상인 전용 문의 목록 조회 성공",
@@ -126,7 +134,7 @@ public abstract class InquiryDocsController {
             UNAUTHORIZED_ERROR,
             INTERNAL_SERVER_ERROR
     })
-    public abstract ResponseEntity<InquiryListByMerchantResponse> getInquiryListByMerchant(Long memberId);
+    public abstract ResponseEntity<InquiryListByMerchantResponse> getInquiryListByMerchant(Long memberId, InquiryStatus status);
 
     @Operation(
             summary = "문의 답변 등록 API  - JWT O",
