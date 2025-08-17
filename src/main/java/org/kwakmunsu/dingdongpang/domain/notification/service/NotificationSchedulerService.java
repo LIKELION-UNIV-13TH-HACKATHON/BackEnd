@@ -49,7 +49,7 @@ public class NotificationSchedulerService {
         String message = notification.getMessage();
         Long notificationId = notification.getId();
 
-        Shop shop = shopRepository.findById(notification.getShopId());
+        Shop shop = shopRepository.findById(notification.getShop().getId());
         List<String> notificationImages = notificationImageRepository.findByNotificationId(notificationId);
 
         notification.markAsSent();

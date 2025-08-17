@@ -151,7 +151,7 @@ record InquiryCommandServiceTest(
         // 수정 전 확인
         assertThat(inquiries.getFirst().getQuestion()).isEqualTo(inquiryRegisterServiceRequest.question());
 
-        var inquiryModifyServiceRequest = new InquiryModifyServiceRequest("updateQuestion", inquiryId, author.getId());
+        var inquiryModifyServiceRequest = new InquiryModifyServiceRequest("updateTitle", "updateQuestion", inquiryId, author.getId());
         inquiryCommandService.modifyInquiry(inquiryModifyServiceRequest);
 
         var inquiry = inquiryRepository.findById(inquiryId);
@@ -175,7 +175,7 @@ record InquiryCommandServiceTest(
 
         List<Inquiry> inquiries = inquiryRepository.findByShopIdAndAuthorId(shop.getId(), author.getId());
         var inquiryId = inquiries.getFirst().getId();
-        var inquiryModifyServiceRequest = new InquiryModifyServiceRequest("updateQuestion", inquiryId, 999L);
+        var inquiryModifyServiceRequest = new InquiryModifyServiceRequest("updateTitle", "updateQuestion", inquiryId, 999L);
 
         assertThatThrownBy(() -> inquiryCommandService.modifyInquiry(inquiryModifyServiceRequest))
                 .isInstanceOf(ForbiddenException.class);

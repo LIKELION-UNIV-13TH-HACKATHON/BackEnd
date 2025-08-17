@@ -65,7 +65,7 @@ public class NotificationCommandService {
     private void registerByShop(NotifyCreateServiceRequest request) {
         Shop shop = shopRepository.findById(request.shopId());
 
-        Long notificationId = createNotification(request);
+        Long notificationId = createNotification(request, shop);
 
         createNotificationReceivers(notificationId, request.shopId());
 
@@ -78,7 +78,7 @@ public class NotificationCommandService {
     private void registerScheduledNotification(NotifyCreateServiceRequest request) {
         Shop shop = shopRepository.findById(request.shopId());
 
-        Long notificationId = createNotification(request);
+        Long notificationId = createNotification(request, shop);
 
         createNotificationReceivers(notificationId, shop.getId());
         saveNotificationImages(request.images(), notificationId);
@@ -86,12 +86,12 @@ public class NotificationCommandService {
         log.info("예약 알림 저장: notificationId={}, scheduledAt={}", notificationId, request.scheduledAt());
     }
 
-    private Long createNotification(NotifyCreateServiceRequest request) {
+    private Long createNotification(NotifyCreateServiceRequest request, Shop shop) {
         Notification notification;
         if (request.sendType().equals(IMMEDIATE)) {
-            notification = Notification.createImmediate(request.shopId(), request.message());
+            notification = Notification.createImmediate(shop, request.message());
         } else {
-            notification = Notification.createScheduled(request.shopId(), request.message(), request.scheduledAt());
+            notification = Notification.createScheduled(shop, request.message(), request.scheduledAt());
         }
         return notificationRepository.save(notification);
     }

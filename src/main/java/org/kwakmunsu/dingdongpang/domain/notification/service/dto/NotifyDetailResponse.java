@@ -29,7 +29,7 @@ public record NotifyDetailResponse(
     public static NotifyDetailResponse of(Notification notification, List<String> images) {
         return NotifyDetailResponse.builder()
                 .notificationId(notification.getId())
-                .shopId(notification.getShopId())
+                .shopId(notification.getShop().getId())
                 .message(notification.getMessage())
                 .images(images)
                 .sentAt(dateTimeToString(notification.getUpdatedAt()))
