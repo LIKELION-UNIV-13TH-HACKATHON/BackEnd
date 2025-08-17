@@ -22,7 +22,7 @@ public class NotificationQueryService {
 
     public NotifyListResponse getNotifications(Long receiverId) {
         List<Long> notificationIdList = notificationReceiverRepository.findByReceiverId(receiverId);
-        List<Notification> notifications = notificationRepository.findByIdInAndIsSentTrue(notificationIdList);
+        List<Notification> notifications = notificationRepository.findSentNotificationsWithShopByIds(notificationIdList);
 
         return getNotifyListResponse(notifications);
     }

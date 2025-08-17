@@ -151,7 +151,7 @@ class InquiryControllerTest extends ControllerTestSupport {
     @DisplayName("문의 내용을 수정한다.")
     @Test
     void modifyInquiry() throws JsonProcessingException {
-        var request = new InquiryModifyRequest("updateQuestion");
+        var request = new InquiryModifyRequest("updateTitle", "updateQuestion");
         String jsonToString = objectMapper.writeValueAsString(request);
 
         assertThat(mvcTester.patch().uri("/shops/inquiries/{inquiryId}", 1L)

@@ -12,6 +12,9 @@ public record NotifyPreviewResponse(
         @Schema(description = "매장 id", example = "1")
         Long shopId,
 
+        @Schema(description = "매장 이름", example = "대훈이네 곱창")
+        String shopName,
+
         @Schema(description = "알림 메세지", example = "알림 메세지입니다")
         String message,
 
@@ -21,7 +24,8 @@ public record NotifyPreviewResponse(
 
     public static NotifyPreviewResponse from(Notification notification) {
         return NotifyPreviewResponse.builder()
-                .shopId(notification.getShopId())
+                .shopId(notification.getShop().getId())
+                .shopName(notification.getShop().getShopName())
                 .message(notification.getMessage())
                 .sentAt(dateTimeToString(notification.getUpdatedAt()))
                 .build();

@@ -13,6 +13,11 @@ import org.kwakmunsu.dingdongpang.domain.notification.repository.NotificationIma
 import org.kwakmunsu.dingdongpang.domain.notification.repository.NotificationReceiverRepository;
 import org.kwakmunsu.dingdongpang.domain.notification.repository.NotificationRepository;
 import org.kwakmunsu.dingdongpang.domain.notification.service.dto.NotifyDetailResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.ShopFixture;
+import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
+import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
+import org.kwakmunsu.dingdongpang.global.GeoFixture;
+import org.locationtech.jts.geom.Point;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,16 +27,22 @@ record NotificationQueryServiceTest(
         NotificationQueryService notificationQueryService,
         NotificationRepository notificationRepository,
         NotificationReceiverRepository notificationReceiverRepository,
-        NotificationImageRepository notificationImageRepository
+        NotificationImageRepository notificationImageRepository,
+        ShopRepository shopRepository
 ) {
 
     @DisplayName("회원에 대한 알림 목록")
     @Test
     void getNotifications() {
         var memberId = 1L;
-        var notification = Notification.createImmediate(1L, "testMessage");
-        var notification2 = Notification.createImmediate(2L, "testMessage2");
-        var notification3 = Notification.createScheduled(3L, "testMessage3", LocalDateTime.now().plusHours(10));
+        Point point = GeoFixture.createPoint(1.2, 2.3);
+        var domainRequest = ShopFixture.getShopRegisterServiceRequest().toDomainRequest(1L, point, "string");
+        Shop shop = Shop.create(domainRequest);
+        shopRepository.save(shop);
+
+        var notification = Notification.createImmediate(shop, "testMessage");
+        var notification2 = Notification.createImmediate(shop, "testMessage2");
+        var notification3 = Notification.createScheduled(shop, "testMessage3", LocalDateTime.now().plusHours(10));
         notificationRepository.save(notification);
         notificationRepository.save(notification2);
         notificationRepository.save(notification3);
@@ -51,9 +62,13 @@ record NotificationQueryServiceTest(
     @Test
     void getNotificationByShop() {
         var memberId = 1L;
-        var notification = Notification.createImmediate(1L, "testMessage");
-        var notification2 = Notification.createImmediate(1L, "testMessage2");
-        var notification3 = Notification.createScheduled(1L, "testMessage3", LocalDateTime.now().plusHours(10));
+        Point point = GeoFixture.createPoint(1.2, 2.3);
+        var domainRequest = ShopFixture.getShopRegisterServiceRequest().toDomainRequest(1L, point, "string");
+        Shop shop = Shop.create(domainRequest);
+        shopRepository.save(shop);
+        var notification = Notification.createImmediate(shop, "testMessage");
+        var notification2 = Notification.createImmediate(shop, "testMessage2");
+        var notification3 = Notification.createScheduled(shop, "testMessage3", LocalDateTime.now().plusHours(10));
         notificationRepository.save(notification);
         notificationRepository.save(notification2);
         notificationRepository.save(notification3);
@@ -65,14 +80,19 @@ record NotificationQueryServiceTest(
         notificationReceiverRepository.save(receiver1);
         notificationReceiverRepository.save(receiver2);
 
-        var response = notificationQueryService.getNotificationsByShop(1L);
+        var response = notificationQueryService.getNotificationsByShop(shop.getId());
         assertThat(response.responses()).hasSize(2);
     }
 
     @DisplayName("알림 상세 조회를 한다.")
     @Test
     void getNotification() {
-        var notification = Notification.createImmediate(1L, "testMessage");
+        Point point = GeoFixture.createPoint(1.2, 2.3);
+        var domainRequest = ShopFixture.getShopRegisterServiceRequest().toDomainRequest(1L, point, "string");
+        Shop shop = Shop.create(domainRequest);
+        shopRepository.save(shop);
+
+        var notification = Notification.createImmediate(shop, "testMessage");
         notificationRepository.save(notification);
         var notificationImage = NotificationImage.create(notification.getId(), "image");
         notificationImageRepository.save(notificationImage);
@@ -89,7 +109,7 @@ record NotificationQueryServiceTest(
                 )
                 .containsExactly(
                         notification.getId(),
-                        notification.getShopId(),
+                        notification.getShop().getId(),
                         notification.getMessage(),
                         dateTimeToString(notification.getUpdatedAt())
                 );
