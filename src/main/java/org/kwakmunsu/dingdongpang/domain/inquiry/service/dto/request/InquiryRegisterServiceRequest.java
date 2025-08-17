@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record InquiryRegisterServiceRequest(
+        String title,
         String question,
         Long shopId,
         Long memberId

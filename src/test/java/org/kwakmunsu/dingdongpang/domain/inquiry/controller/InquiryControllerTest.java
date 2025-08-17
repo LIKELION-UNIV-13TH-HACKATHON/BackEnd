@@ -37,7 +37,7 @@ class InquiryControllerTest extends ControllerTestSupport {
     @DisplayName("문의 등록을 한다.")
     @Test
     void register() throws JsonProcessingException {
-        var request = new InquiryRegisterRequest("testQuestion");
+        var request = new InquiryRegisterRequest("testTitle", "testQuestion");
         String jsonToString = objectMapper.writeValueAsString(request);
 
         assertThat(mvcTester.post().uri("/shops/{shopId}/inquiries", 1L)
@@ -53,7 +53,7 @@ class InquiryControllerTest extends ControllerTestSupport {
     @DisplayName("문의 내용 없이 요청 시 예외를 반환한다.")
     @Test
     void failRegister() throws JsonProcessingException {
-        var request = new InquiryRegisterRequest("");
+        var request = new InquiryRegisterRequest("", "");
         String jsonToString = objectMapper.writeValueAsString(request);
 
         assertThat(mvcTester.post().uri("/shops/{shopId}/inquiries", 1L)

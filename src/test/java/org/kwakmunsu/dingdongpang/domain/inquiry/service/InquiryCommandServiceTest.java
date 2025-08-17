@@ -14,10 +14,10 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryModi
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.global.GeoFixture;
 import org.kwakmunsu.dingdongpang.global.exception.ForbiddenException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
@@ -45,7 +45,7 @@ record InquiryCommandServiceTest(
         shopCommandService.register(shopRegisterServiceRequest, point, 1L);
 
         var shop = shopRepository.findByMerchantId(1L);
-        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), author.getId());
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testTitle", "testQuestion", shop.getId(), author.getId());
 
         inquiryCommandService.register(inquiryRegisterServiceRequest);
         List<Inquiry> inquiries = inquiryRepository.findByShopId(shop.getId());
@@ -53,11 +53,13 @@ record InquiryCommandServiceTest(
         assertThat(inquiries).hasSize(1);
         assertThat(inquiries.getFirst())
                 .extracting(
+                        Inquiry::getTitle,
                         Inquiry::getQuestion,
                         Inquiry::getShopId,
                         Inquiry::getAuthor
                 )
                 .containsExactly(
+                        inquiryRegisterServiceRequest.title(),
                         inquiryRegisterServiceRequest.question(),
                         inquiryRegisterServiceRequest.shopId(),
                         author
@@ -67,7 +69,7 @@ record InquiryCommandServiceTest(
     @DisplayName("문의를 등록할 매장이 존재하지 않을 경우 예외를 반환한다.")
     @Test
     void failRegister() {
-        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", -999L, 1L);
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testTitle", "testQuestion", -999L, 1L);
 
         assertThatThrownBy(() -> inquiryCommandService.register(inquiryRegisterServiceRequest))
                 .isInstanceOf(NotFoundException.class);
@@ -84,7 +86,7 @@ record InquiryCommandServiceTest(
         shopCommandService.register(shopRegisterServiceRequest, point, merchantId);
 
         var shop = shopRepository.findByMerchantId(merchantId);
-        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), author.getId());
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testTitle", "testQuestion", shop.getId(), author.getId());
         inquiryCommandService.register(inquiryRegisterServiceRequest);
 
         List<Inquiry> inquiries = inquiryRepository.findByShopIdAndAuthorId(shop.getId(), author.getId());
@@ -117,7 +119,7 @@ record InquiryCommandServiceTest(
         shopCommandService.register(shopRegisterServiceRequest, point, merchantId);
 
         var shop = shopRepository.findByMerchantId(merchantId);
-        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), author.getId());
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testTitle", "testQuestion", shop.getId(), author.getId());
         inquiryCommandService.register(inquiryRegisterServiceRequest);
 
         List<Inquiry> inquiries = inquiryRepository.findByShopIdAndAuthorId(shop.getId(), author.getId());
@@ -139,7 +141,7 @@ record InquiryCommandServiceTest(
         shopCommandService.register(shopRegisterServiceRequest, point, 1L);
 
         var shop = shopRepository.findByMerchantId(1L);
-        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), author.getId());
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testTitle", "testQuestion", shop.getId(), author.getId());
         inquiryCommandService.register(inquiryRegisterServiceRequest);
 
         List<Inquiry> inquiries = inquiryRepository.findByShopIdAndAuthorId(shop.getId(), author.getId());
@@ -166,7 +168,7 @@ record InquiryCommandServiceTest(
         shopCommandService.register(shopRegisterServiceRequest, point, 1L);
 
         var shop = shopRepository.findByMerchantId(1L);
-        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), author.getId());
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testTitle", "testQuestion", shop.getId(), author.getId());
         inquiryCommandService.register(inquiryRegisterServiceRequest);
 
         List<Inquiry> inquiries = inquiryRepository.findByShopIdAndAuthorId(shop.getId(), author.getId());
@@ -189,7 +191,7 @@ record InquiryCommandServiceTest(
         shopCommandService.register(shopRegisterServiceRequest, point, merchantId);
 
         var shop = shopRepository.findByMerchantId(merchantId);
-        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), author.getId());
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testTitle", "testQuestion", shop.getId(), author.getId());
         inquiryCommandService.register(inquiryRegisterServiceRequest);
 
         List<Inquiry> inquiries = inquiryRepository.findByShopIdAndAuthorId(shop.getId(), author.getId());
@@ -215,7 +217,7 @@ record InquiryCommandServiceTest(
         shopCommandService.register(shopRegisterServiceRequest, point, merchantId);
 
         var shop = shopRepository.findByMerchantId(merchantId);
-        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testQuestion", shop.getId(), author.getId());
+        var inquiryRegisterServiceRequest = new InquiryRegisterServiceRequest("testTitle", "testQuestion", shop.getId(), author.getId());
         inquiryCommandService.register(inquiryRegisterServiceRequest);
 
         List<Inquiry> inquiries = inquiryRepository.findByShopIdAndAuthorId(shop.getId(), author.getId());

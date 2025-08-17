@@ -27,16 +27,20 @@ public class Inquiry extends BaseEntity {
     @JoinColumn(name = "author_id")
     private Member author;
 
+    @Column(nullable = false)
+    private String title;
+
     @Column(columnDefinition = "TEXT", nullable = false)
     private String question;
 
     @Column(columnDefinition = "TEXT")
     private String answer;
 
-    public static Inquiry create(Long shopId, Member author, String question) {
+    public static Inquiry create(Long shopId, Member author, String title, String question) {
         return Inquiry.builder()
                 .shopId(shopId)
                 .author(author)
+                .title(title)
                 .question(question)
                 .build();
     }
@@ -49,6 +53,9 @@ public class Inquiry extends BaseEntity {
         this.answer = answer;
     }
 
+    public void updateTitle(String title) {
+        this.title = title;
+    }
     public void updateQuestion(String question) {
         this.question = question;
     }
