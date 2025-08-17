@@ -2,6 +2,8 @@ package org.kwakmunsu.dingdongpang.domain.inquiry.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -36,12 +38,17 @@ public class Inquiry extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String answer;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private InquiryStatus status;
+
     public static Inquiry create(Long shopId, Member author, String title, String question) {
         return Inquiry.builder()
                 .shopId(shopId)
                 .author(author)
                 .title(title)
                 .question(question)
+                .status(InquiryStatus.PADDING)
                 .build();
     }
 
@@ -56,8 +63,13 @@ public class Inquiry extends BaseEntity {
     public void updateTitle(String title) {
         this.title = title;
     }
+
     public void updateQuestion(String question) {
         this.question = question;
+    }
+
+    public void updateStatusToCompleted() {
+        this.status = InquiryStatus.COMPLETED;
     }
 
 }

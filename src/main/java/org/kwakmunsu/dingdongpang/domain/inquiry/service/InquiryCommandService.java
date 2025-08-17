@@ -39,6 +39,7 @@ public class InquiryCommandService {
 
         if (shop.isMerchant(request.merchantId())) {
             inquiry.registerAnswer(request.answer());
+            inquiry.updateStatusToCompleted();
             return;
         }
         throw new ForbiddenException(ErrorStatus.FORBIDDEN_ANSWER);
