@@ -150,7 +150,7 @@ class InquiryControllerTest extends ControllerTestSupport {
     @TestMember
     @DisplayName("문의 내용을 수정한다.")
     @Test
-    void modifyQuestion() throws JsonProcessingException {
+    void modifyInquiry() throws JsonProcessingException {
         var request = new InquiryModifyRequest("updateQuestion");
         String jsonToString = objectMapper.writeValueAsString(request);
 

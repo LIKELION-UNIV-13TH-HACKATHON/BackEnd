@@ -28,7 +28,6 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryLis
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Inquiry API", description = "문의 관련 API 문서입니다.")
 public abstract class InquiryDocsController {
@@ -210,7 +209,7 @@ public abstract class InquiryDocsController {
             FORBIDDEN_MODIFY,
             INTERNAL_SERVER_ERROR
     })
-    public abstract ResponseEntity<Void> modifyQuestion(
+    public abstract ResponseEntity<Void> modifyInquiry(
             InquiryModifyRequest request,
             Long inquiryId,
             Long memberId
