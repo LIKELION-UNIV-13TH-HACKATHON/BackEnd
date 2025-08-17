@@ -1,82 +1,77 @@
 package org.kwakmunsu.dingdongpang.infrastructure;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
-import java.util.List;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.kwakmunsu.dingdongpang.domain.auth.service.dto.FcmTokenServiceRequest;
+import org.kwakmunsu.dingdongpang.global.exception.BadRequestException;
+import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.kwakmunsu.dingdongpang.infrastructure.firebase.entity.FcmToken;
 import org.kwakmunsu.dingdongpang.infrastructure.firebase.repository.FcmTokenRepository;
 import org.kwakmunsu.dingdongpang.infrastructure.firebase.service.FirebaseService;
-import org.kwakmunsu.dingdongpang.infrastructure.firebase.service.dto.PushMessage;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@Transactional
-@SpringBootTest
-record FirebaseServiceTest(
-        FirebaseService firebaseService,
-        FcmTokenRepository fcmTokenRepository
-) {
+@ExtendWith(MockitoExtension.class)
+class FirebaseServiceTest {
 
-    @DisplayName("Fcm 저장")
+    @Mock
+    private FcmTokenRepository fcmTokenRepository;
+
+    @Mock
+    private FirebaseMessaging firebaseMessaging;
+
+    @InjectMocks
+    private FirebaseService firebaseService;
+
+    @DisplayName("FcmToken을 저장한다.")
     @Test
-    void save() {
-        var memberId = 1L;
-        var fcmToken = "test-fcm-token";
-        firebaseService.save(memberId, fcmToken);
-        Optional<FcmToken> existingToken = fcmTokenRepository.findByMemberIdAndToken(memberId, fcmToken);
+    void updateFcmToken() throws FirebaseMessagingException {
+        var request = new FcmTokenServiceRequest("test-fcm-token", 1L);
+        var fcmToken = FcmToken.create(request.memberId(), request.fcmToken());
+        given(fcmTokenRepository.findByMemberIdAndToken(any(), any())).willReturn(Optional.of(fcmToken));
+        given(firebaseMessaging.send(any(), any(Boolean.class))).willReturn("mock_message_id");
 
-        assertThat(existingToken.isPresent()).isTrue();
+        firebaseService.updateFcmToken(request);
+        Optional<FcmToken> existingToken = fcmTokenRepository.findByMemberIdAndToken(request.memberId(), request.fcmToken());
+
         assertThat(existingToken.get())
-                .extracting(FcmToken::getToken, FcmToken:: getMemberId)
-                .containsExactly(fcmToken, memberId);
+                .extracting(FcmToken::getToken, FcmToken::getMemberId)
+                .containsExactly(request.fcmToken(), request.memberId());
     }
-    
+
+    @DisplayName("유효하지 않은 fcmToken일 경우 예외를 반환한다.")
+    @Test
+    void failUpdateFcmToken() throws FirebaseMessagingException {
+        var request = new FcmTokenServiceRequest("test-fcm-token", 1L);
+        given(firebaseMessaging.send(any(), any(Boolean.class)))
+                .willThrow(new BadRequestException(ErrorStatus.INVALID_FCM_TOKEN));
+
+        assertThatThrownBy(() -> firebaseService.updateFcmToken(request))
+                .isInstanceOf(BadRequestException.class);
+    }
+
     @DisplayName("fcm이 존재할 경우 최근 사용일자만 Update")
     @Test
     void updateLastUsed() {
-        var memberId = 1L;
-        var fcmToken = "test-fcm-token";
-        firebaseService.save(memberId, fcmToken);
-        Optional<FcmToken> updatedBeforeFcm = fcmTokenRepository.findByMemberIdAndToken(memberId, fcmToken);
-        var updatedBeforeAt = updatedBeforeFcm.get().getLastUsedAt();
+        var request = new FcmTokenServiceRequest("test-fcm-token", 1L);
+        var fcmToken = FcmToken.create(request.memberId(), request.fcmToken());
+        given(fcmTokenRepository.findByMemberIdAndToken(any(), any())).willReturn(Optional.of(fcmToken));
 
-        firebaseService.save(memberId, fcmToken);
-        Optional<FcmToken> existingToken = fcmTokenRepository.findByMemberIdAndToken(memberId, fcmToken);
+        firebaseService.updateFcmToken(request);
 
-        var token = existingToken.get();
-        assertThat(token.getLastUsedAt()).isAfter(updatedBeforeAt);
+        verify(fcmTokenRepository, never()).save(any(FcmToken.class));
     }
-    
-    @DisplayName("fcm 전송 테스트")
-    @Test
-    void sendMessage() throws InterruptedException {
-        var pushMessage = PushMessage.builder()
-                .fcmToken("5tWJZKLEJxDHq_cZM_mhtj")
-                .message("test-message")
-                .shopId(1L)
-                .shopName("shop-name")
-                .shopMainImage("https:dkadd")
-                .url("/shops/1")
-                .notificationId(2L)
-                .images(List.of("1234", "1234"))
-                .build();
-        var pushMessages = List.of(pushMessage);
-        // 비동기 완료 대기용
-        CountDownLatch latch = new CountDownLatch(1);
-
-        // when
-        firebaseService.sendMessage(pushMessages);
-
-        // then
-        // 최대 5초 대기
-        boolean completed = latch.await(5, TimeUnit.SECONDS);
-        assertThat(completed).isTrue();
-    }
-
 
 }

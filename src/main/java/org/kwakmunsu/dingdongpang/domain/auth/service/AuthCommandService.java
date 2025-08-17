@@ -5,12 +5,12 @@ import static org.kwakmunsu.dingdongpang.domain.member.entity.Role.ROLE_MEMBER;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInResponse;
+import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.auth.service.kakao.KakaoOauthManager;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
 import org.kwakmunsu.dingdongpang.global.jwt.JwtProvider;
 import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
-import org.kwakmunsu.dingdongpang.infrastructure.firebase.service.FirebaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,13 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthCommandService {
 
     private final KakaoOauthManager kakaoOauthManager;
-    private final FirebaseService firebaseService;
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
 
     @Transactional
-    public SignInResponse signIn(String socialAccessToken, String fcmToken) {
-        OAuth2UserInfo oAuth2UserInfo = kakaoOauthManager.getOAuth2UserInfo(socialAccessToken);
+    public SignInResponse signIn(SignInServiceRequest request) {
+        OAuth2UserInfo oAuth2UserInfo = kakaoOauthManager.getOAuth2UserInfo(request.socialAccessToken());
         Optional<Member> optionalMember = memberRepository.findBySocialIdAndRole(oAuth2UserInfo.getSocialId(), ROLE_MEMBER);
 
         Member member;
@@ -41,9 +40,9 @@ public class AuthCommandService {
             isNewMember = true;
         }
 
-        firebaseService.save(member.getId(), fcmToken);
+        TokenResponse tokenResponse = createTokens(member);
 
-        return createSignInResponse(member, isNewMember);
+        return new SignInResponse(isNewMember, member.getId(), tokenResponse);
     }
 
     @Transactional
@@ -63,11 +62,11 @@ public class AuthCommandService {
         //TODO: 추후 FCM 토큰도 초기화, blacklist 추가
     }
 
-    private SignInResponse createSignInResponse(Member member, boolean isNewMember) {
+    private TokenResponse createTokens(Member member) {
         TokenResponse tokenResponse = jwtProvider.createTokens(member.getId(), member.getRole());
         member.updateRefreshToken(tokenResponse.refreshToken());
 
-        return new SignInResponse(isNewMember, tokenResponse);
+        return tokenResponse;
     }
 
     private Member registerNewGuestMember(OAuth2UserInfo oAuth2UserInfo) {

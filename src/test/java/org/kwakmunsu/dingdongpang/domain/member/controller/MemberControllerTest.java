@@ -14,6 +14,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.ControllerTestSupport;
+import org.kwakmunsu.dingdongpang.domain.auth.controller.dto.FcmTokenRequest;
 import org.kwakmunsu.dingdongpang.domain.member.controller.dto.CustomerRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.member.controller.dto.MerchantRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.member.controller.dto.OperationTimeRequest;
@@ -142,6 +143,21 @@ class MemberControllerTest extends ControllerTestSupport {
         ).getMvcResult();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(409);
+    }
+
+    @TestMember
+    @DisplayName("fcm-token을 업데이트 한다.")
+    @Test
+    void updateFcmToken() throws JsonProcessingException {
+        var fcmTokenRequest = new FcmTokenRequest("fcm-token");
+        var jsonToString = objectMapper.writeValueAsString(fcmTokenRequest);
+
+        assertThat(mvcTester.post().uri("/members/fcm-token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonToString))
+                .hasStatusOk()
+                .apply(print());
+
     }
 
     private ShopRegisterRequest getShopRegisterRequest() {

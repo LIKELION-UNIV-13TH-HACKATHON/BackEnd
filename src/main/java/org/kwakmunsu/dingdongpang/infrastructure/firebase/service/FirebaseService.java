@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.core.ApiFuture;
 import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import com.google.firebase.messaging.SendResponse;
@@ -12,10 +13,14 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.kwakmunsu.dingdongpang.domain.auth.service.dto.FcmTokenServiceRequest;
+import org.kwakmunsu.dingdongpang.global.exception.BadRequestException;
+import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.kwakmunsu.dingdongpang.infrastructure.firebase.entity.FcmToken;
 import org.kwakmunsu.dingdongpang.infrastructure.firebase.repository.FcmTokenRepository;
 import org.kwakmunsu.dingdongpang.infrastructure.firebase.service.dto.PushMessage;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,10 +28,16 @@ import org.springframework.stereotype.Service;
 public class FirebaseService {
 
     private final FcmTokenRepository fcmTokenRepository;
+    private final FirebaseMessaging firebaseMessaging;
 
-    public void save(Long memberId, String token) {
+    @Transactional
+    public void updateFcmToken(FcmTokenServiceRequest request) {
+        Long memberId = request.memberId();
+        String token = request.fcmToken();
+        // dry_run = true로 실제 메시지를 보내지 않고 토큰만 검증
+        validateFcmToken(token);
+
         Optional<FcmToken> existingToken = fcmTokenRepository.findByMemberIdAndToken(memberId, token);
-
         if (existingToken.isPresent()) {
             // 기존 토큰의 마지막 사용 시간만 업데이트
             existingToken.get().updateLastUsed();
@@ -101,6 +112,19 @@ public class FirebaseService {
         }
 
         return messageBuilder.build();
+    }
+
+    private void validateFcmToken(String fcmToken) {
+        try {
+            Message message = Message.builder()
+                    .setToken(fcmToken)
+                    .build();
+
+            firebaseMessaging.send(message, true /*dry_run*/);
+        } catch (FirebaseMessagingException e) {
+            // InvalidRegistration, NotRegistered 등의 에러 발생 시 무효한 토큰
+            throw new BadRequestException(ErrorStatus.INVALID_FCM_TOKEN);
+        }
     }
 
 }
