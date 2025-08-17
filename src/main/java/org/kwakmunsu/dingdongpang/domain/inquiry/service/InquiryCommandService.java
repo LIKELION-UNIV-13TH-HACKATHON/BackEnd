@@ -48,6 +48,7 @@ public class InquiryCommandService {
     @Transactional
     public void modifyInquiry(InquiryModifyServiceRequest request) {
         Inquiry inquiry = inquiryRepository.findByIdAndAuthorId(request.inquiryId(), request.authorId());
+        inquiry.updateTitle(request.title());
         inquiry.updateQuestion(request.question());
     }
 

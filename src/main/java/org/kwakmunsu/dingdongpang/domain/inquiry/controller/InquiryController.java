@@ -88,7 +88,7 @@ public class InquiryController extends InquiryDocsController {
 
     @Override
     @PatchMapping("/inquiries/{inquiryId}")
-    public ResponseEntity<Void> modifyQuestion(
+    public ResponseEntity<Void> modifyInquiry(
             @Valid @RequestBody InquiryModifyRequest request,
             @PathVariable Long inquiryId,
             @AuthMember Long memberId
