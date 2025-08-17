@@ -7,10 +7,12 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryAnswerReq
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryModifyRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.controller.dto.InquiryRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
+import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryStatus;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.InquiryCommandService;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.InquiryQueryService;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryReadServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryDeleteServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryReadByMerchantServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryReadServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListByMerchantResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
@@ -73,8 +75,13 @@ public class InquiryController extends InquiryDocsController {
 
     @Override
     @GetMapping("/inquiries/merchants")
-    public ResponseEntity<InquiryListByMerchantResponse> getInquiryListByMerchant(@AuthMember Long memberId) {
-        InquiryListByMerchantResponse response = inquiryQueryService.getInquiryList(memberId);
+    public ResponseEntity<InquiryListByMerchantResponse> getInquiryListByMerchant(
+            @AuthMember Long memberId,
+            @RequestParam(defaultValue = "GENERAL") InquiryStatus status
+    ) {
+        InquiryReadByMerchantServiceRequest request = new InquiryReadByMerchantServiceRequest(
+                memberId, status);
+        InquiryListByMerchantResponse response = inquiryQueryService.getInquiryListByMerchant(request);
 
         return ResponseEntity.ok(response);
     }

@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.Inquiry;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.InquiryFilter;
 import org.kwakmunsu.dingdongpang.domain.inquiry.repository.InquiryRepository;
-import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.InquiryReadServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryReadByMerchantServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryReadServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryByMerchantResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListByMerchantResponse;
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response.InquiryListResponse;
@@ -30,9 +31,9 @@ public class InquiryQueryService {
         return new InquiryListResponse(responses);
     }
 
-    public InquiryListByMerchantResponse getInquiryList(Long merchantId) {
-        Shop shop = shopRepository.findByMerchantId(merchantId);
-        List<Inquiry> inquiries = inquiryRepository.findByShopIdForMerchant(shop.getId());
+    public InquiryListByMerchantResponse getInquiryListByMerchant(InquiryReadByMerchantServiceRequest request) {
+        Shop shop = shopRepository.findByMerchantId(request.merchantId());
+        List<Inquiry> inquiries = inquiryRepository.findByShopIdAndStatusForMerchant(shop.getId(), request.status());
 
         List<InquiryByMerchantResponse> responses = inquiries.stream()
                 .map(InquiryByMerchantResponse::of)
