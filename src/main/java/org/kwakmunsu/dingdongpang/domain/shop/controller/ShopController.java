@@ -3,16 +3,16 @@ package org.kwakmunsu.dingdongpang.domain.shop.controller;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.MerchantUpdateRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.ShopRegisterRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.ShopUpdateRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.SortBy;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopOnboardingService;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopQueryService;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.response.ShopDashboardResponse;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.response.ShopNearbySearchListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopNearbySearchServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopReadServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.response.ShopDashboardResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.response.ShopNearbySearchListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.response.ShopResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +46,7 @@ public class ShopController extends ShopDocsController {
 
         return ResponseEntity.ok().build();
     }
+
     @Override
     @GetMapping("/{shopId}")
     public ResponseEntity<ShopResponse> getShop(@PathVariable Long shopId, @AuthMember Long memberId) {
@@ -88,12 +89,12 @@ public class ShopController extends ShopDocsController {
     @Override
     @PatchMapping
     public ResponseEntity<Void> updateShop(
-            @Valid @RequestPart MerchantUpdateRequest request,
+            @Valid @RequestPart ShopUpdateRequest request,
             @RequestPart(value = "mainImage", required = false) MultipartFile mainImage,
             @RequestPart(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
             @AuthMember Long memberId
     ) {
-        shopOnboardingService.update(request.toServiceRequest(mainImage, imageFiles, memberId));
+        shopOnboardingService.update(request.toServiceRequest(memberId, mainImage, imageFiles));
 
         return ResponseEntity.noContent().build();
     }

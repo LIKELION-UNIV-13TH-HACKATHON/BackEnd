@@ -3,10 +3,9 @@ package org.kwakmunsu.dingdongpang.domain.shop.service;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.service.MemberCommandService;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.MerchantUpdateServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopUpdateServiceRequest;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
@@ -45,21 +44,21 @@ public class ShopOnboardingService {
     }
 
     @Transactional
-    public void update(MerchantUpdateServiceRequest request) {
-        ShopUpdateServiceRequest shopUpdateServiceRequest = request.shopUpdateServiceRequest();
-        Shop shop = shopRepository.findByMerchantId(request.memberId());
+    public void update(ShopUpdateServiceRequest request) {
+        Shop shop = shopRepository.findByMerchantId(request.merchantId());
 
-        if (shop.isNotEqualToBusinessNumber(request.businessRegistrationNumber())) {
-            validateBusinessNumber(request.businessRegistrationNumber());
+        if (shop.isNotEqualToBusinessNumber(request.businessNumber())) {
+            validateBusinessNumber(request.businessNumber());
         }
 
-        Member merchant = memberCommandService.updateMerchant(request.nickname(), request.memberId());
+        String nickname = request.ownerName() + request.shopName();
+        Member merchant = memberCommandService.updateMerchant(nickname, request.merchantId());
         Point point = shop.getLocation();
-        if (shop.isNotEqualToAddress(shopUpdateServiceRequest.address())) {
-            point = kakaoGeocodingProvider.transferToGeocode(shopUpdateServiceRequest.address());
+        if (shop.isNotEqualToAddress(request.address())) {
+            point = kakaoGeocodingProvider.transferToGeocode(request.address());
         }
 
-        shopCommandService.update(shopUpdateServiceRequest, shop, point, merchant.getId());
+        shopCommandService.update(request, shop, point, merchant.getId());
     }
 
     private void checkDuplicateRegisterShop(String businessRegistrationNumber) {

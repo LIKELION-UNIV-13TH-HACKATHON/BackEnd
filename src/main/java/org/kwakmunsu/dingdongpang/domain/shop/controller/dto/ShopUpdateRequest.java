@@ -11,8 +11,16 @@ import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopUpdateServ
 import org.springframework.web.multipart.MultipartFile;
 
 @Builder
-@Schema(description = "매장 정보 등록 DTO")
+@Schema(description = "매장 정보 수정 DTO")
 public record ShopUpdateRequest(
+        @NotBlank(message = "사업자 등록 번호는 필수값입니다.")
+        @Schema(description = "사업자 등록 번호", example = "8962801461")
+        String businessNumber,
+
+        @NotBlank(message = "대표자명은 필수값입니다.")
+        @Schema(description = "매장 대표자 명", example = "김계란")
+        String ownerName,
+
         @NotBlank(message = "매장명은 필수값입니다.")
         @Schema(description = "매장 이름", example = "역전할머니맥주")
         String shopName,
@@ -35,7 +43,7 @@ public record ShopUpdateRequest(
         List<OperationTimeRequest> operationTimes
 ) {
 
-    public ShopUpdateServiceRequest toServiceRequest(String businessNumber, String ownerName, MultipartFile mainImage, List<MultipartFile> imageFiles) {
+    public ShopUpdateServiceRequest toServiceRequest(Long merchantId, MultipartFile mainImage, List<MultipartFile> imageFiles) {
         return ShopUpdateServiceRequest.builder()
                 .shopName(shopName)
                 .shopType(shopType)
@@ -43,6 +51,7 @@ public record ShopUpdateRequest(
                 .address(address)
                 .businessNumber(businessNumber)
                 .ownerName(ownerName)
+                .merchantId(merchantId)
                 .mainImage(mainImage)
                 .imageFiles(imageFiles)
                 .operationTimeRequests(

@@ -3,7 +3,7 @@ package org.kwakmunsu.dingdongpang.domain.shop.service.dto.request;
 import java.util.List;
 import lombok.Builder;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
-import org.kwakmunsu.dingdongpang.domain.shop.entity.dto.ShopRegisterDomainRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.entity.dto.ShopUpdateDomainRequest;
 import org.locationtech.jts.geom.Point;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,13 +15,14 @@ public record ShopUpdateServiceRequest(
         String address,
         String businessNumber,
         String ownerName,
+        Long merchantId,
         MultipartFile mainImage,
         List<MultipartFile> imageFiles,
         List<OperationTimeServiceRequest> operationTimeRequests
 ) {
 
-    public ShopRegisterDomainRequest toDomainRequest(Long merchantId, Point location, String mainImage) {
-        return ShopRegisterDomainRequest.builder()
+    public ShopUpdateDomainRequest toDomainRequest(Long merchantId, Point location, String mainImage) {
+        return ShopUpdateDomainRequest.builder()
                 .merchantId(merchantId)
                 .shopName(shopName)
                 .businessNumber(businessNumber)

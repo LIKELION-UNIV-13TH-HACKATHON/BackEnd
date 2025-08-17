@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.BaseEntity;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.dto.ShopRegisterDomainRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.entity.dto.ShopUpdateDomainRequest;
 import org.locationtech.jts.geom.Point;
 
 @Builder
@@ -87,7 +88,7 @@ public class Shop extends BaseEntity {
         return !this.address.equals(address);
     }
 
-    public void updateInfo(ShopRegisterDomainRequest request) {
+    public void updateInfo(ShopUpdateDomainRequest request) {
         this.shopName =       request.shopName();
         this.businessNumber = request.businessNumber();
         this.ownerName =      request.ownerName();
