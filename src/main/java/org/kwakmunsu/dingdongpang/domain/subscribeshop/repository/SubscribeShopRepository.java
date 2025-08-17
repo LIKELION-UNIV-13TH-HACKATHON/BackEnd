@@ -1,6 +1,5 @@
 package org.kwakmunsu.dingdongpang.domain.subscribeshop.repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

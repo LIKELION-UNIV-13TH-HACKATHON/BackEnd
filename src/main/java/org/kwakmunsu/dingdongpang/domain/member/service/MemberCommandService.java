@@ -34,8 +34,8 @@ public class MemberCommandService {
     }
 
     @Transactional
-    public Member registerMerchant(String nickname, Long memberId) {
-        Member merchant = memberRepository.findById(memberId);
+    public Member registerMerchant(String nickname, Long merchantId) {
+        Member merchant = memberRepository.findById(merchantId);
 
         if (merchant.isNotEqualsNickname(nickname)) {
             checkDuplicateNickname(nickname);
