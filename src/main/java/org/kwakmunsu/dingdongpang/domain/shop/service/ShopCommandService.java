@@ -4,13 +4,13 @@ import static org.kwakmunsu.dingdongpang.global.util.TimeConverter.stringToTime;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.OperationTimeServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.OperationTimeServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopOperationTime;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.ShopOperationTimeRepository;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopUpdateServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopUpdateServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shopimage.entity.ShopImage;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;

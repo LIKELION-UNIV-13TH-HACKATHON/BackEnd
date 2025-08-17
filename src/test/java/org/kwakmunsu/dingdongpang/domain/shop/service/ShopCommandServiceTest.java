@@ -10,8 +10,8 @@ import java.time.DayOfWeek;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.OperationTimeServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.OperationTimeServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.ShopOperationTimeRepository;
@@ -74,18 +74,18 @@ record ShopCommandServiceTest(
                 "22:00",
                 false
         );
-
-        return new ShopRegisterServiceRequest(
-                "My Shop",                                  // shopName
-                ShopType.FOOD,                              // shopType (예: enum)
-                "010-1234-5678",                            // shopPhoneNumber
-                "서울특별시 강남구 역삼동 123-45",                 // address
-                "1234567890",                               // businessNumber
-                "홍길동",                                     // ownerName
-                mainImage,                                  // mainImage
-                List.of(image1, image2),                    // imageFiles
-                List.of(mondayOperation, tuesdayOperation)  // operationTimeRequests
-        );
+        return ShopRegisterServiceRequest.builder()
+                .businessNumber("8962801461")    // 사업자 등록 번호
+                .ownerName("김계란")              // 대표자명
+                .shopName("역전할머니맥주")         // 매장명
+                .shopType(ShopType.FASHION)      // 매장 타입 (enum)
+                .shopPhoneNumber("010-8742-1234")// 매장 전화번호
+                .address("경기도 광주시 경충대로1461번길 12-4 코오롱 세이브 프라자 202호")
+                .mainImage(mainImage)
+                .merchantId(1L)
+                .imageFiles(List.of(image1, image2))
+                .operationTimeRequests(List.of(mondayOperation, tuesdayOperation))
+                .build();// 매장 주소
     }
 
 }

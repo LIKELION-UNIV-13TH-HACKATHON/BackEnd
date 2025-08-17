@@ -37,10 +37,10 @@ record ShopOnboardingServiceTest(
         BusinessRegisterProvider businessRegisterProvider
 ) {
 
-    @Disabled("IP 주소 상시 변경으로 비활성화")
-    @DisplayName("상인 회원을 등록한다.")
+//    @Disabled("IP 주소 상시 변경으로 비활성화")
+    @DisplayName("온보딩 매장 관련 정보들을 등록한다.")
     @Test
-    void register() throws IOException {
+    void register() {
         var guest = Member.createGuest("email@naver.com", "nickname", "12345");
         memberRepository.save(guest);
         var request = ShopFixture.getShopRegisterServiceRequest(guest.getId(), "8962801461");
@@ -64,8 +64,8 @@ record ShopOnboardingServiceTest(
                         );
     }
 
-    @Disabled("IP 주소 상시 변경으로 비활성화")
-    @DisplayName("이미 상인으로 등록된 회원일 경우 재등록이 안된다.")
+//    @Disabled("IP 주소 상시 변경으로 비활성화")
+    @DisplayName("이미 매장이 등록되어있다면 재등록이 안된다.")
     @Test
     void failRegister() {
         var guest = Member.createGuest("email@naver.com", "nickname", "12345");
