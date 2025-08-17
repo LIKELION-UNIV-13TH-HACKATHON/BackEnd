@@ -11,8 +11,12 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.entity.Inquiry;
 public record InquiryByMerchantResponse(
         @Schema(description = "문의 id", example = "1")
         Long inquiryId,
+
         @Schema(description = "작성자 닉네임", example = "곽태풍")
         String authorName,
+
+        @Schema(description = "문의 제목", example = "제목")
+        String title,
 
         @Schema(description = "문의 질문", example = "질문이요?")
         String question,

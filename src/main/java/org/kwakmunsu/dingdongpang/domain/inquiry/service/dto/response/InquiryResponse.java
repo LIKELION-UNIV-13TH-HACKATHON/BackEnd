@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.domain.inquiry.service.dto;
+package org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response;
 
 import static org.kwakmunsu.dingdongpang.global.util.TimeConverter.dateTimeToString;
 
@@ -12,7 +12,10 @@ public record InquiryResponse(
         @Schema(description = "문의 id", example = "1")
         Long inquiryId,
 
-        @Schema(description = "문의 질문", example = "질문이요?")
+        @Schema(description = "문의 제목", example = "질문이요?")
+        String title,
+
+        @Schema(description = "문의 내용", example = "질문이요?")
         String question,
 
         @Schema(description = "문의 답변 - 답변이 없는 경우 Null", example = "답변이요")
@@ -25,6 +28,7 @@ public record InquiryResponse(
     public static InquiryResponse of(Inquiry inquiry) {
         return InquiryResponse.builder()
                 .inquiryId(inquiry.getId())
+                .title(inquiry.getTitle())
                 .question(inquiry.getQuestion())
                 .answer(inquiry.getAnswer())
                 .createdAt(dateTimeToString(inquiry.getCreatedAt()))
