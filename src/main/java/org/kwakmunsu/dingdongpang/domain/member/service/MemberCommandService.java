@@ -23,9 +23,10 @@ public class MemberCommandService {
     public void registerCustomer(CustomerRegisterServiceRequest request) {
         Member customer = memberRepository.findById(request.memberId());
 
-        if (customer.isNotEqualsNickname(request.nickname())) {
-            checkDuplicateNickname(request.nickname());
-            customer.updateNickname(request.nickname());
+        String nickname = request.nickname();
+        if (customer.isNotEqualsNickname(nickname)) {
+            checkDuplicateNickname(nickname);
+            customer.updateNickname(nickname);
         }
         customer.upgradeRoleToMember();
 
