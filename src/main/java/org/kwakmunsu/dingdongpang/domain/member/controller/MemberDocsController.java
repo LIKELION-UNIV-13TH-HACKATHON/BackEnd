@@ -15,17 +15,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import org.kwakmunsu.dingdongpang.domain.auth.controller.dto.FcmTokenRequest;
 import org.kwakmunsu.dingdongpang.domain.member.controller.dto.CustomerRegisterRequest;
-import org.kwakmunsu.dingdongpang.domain.member.controller.dto.MerchantRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.CheckNicknameResponse;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.CustomerProfileResponse;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.MerchantProfileResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Member API", description = "회원 관련 API 문서입니다.")
 public abstract class MemberDocsController {
@@ -59,50 +56,6 @@ public abstract class MemberDocsController {
     })
     public abstract ResponseEntity<Void> register(
             CustomerRegisterRequest request,
-            Long memberId
-    );
-
-    @Operation(
-            summary = "상인 회원 요청 API  - JWT O",
-            description = """
-                    ## 상인 등록과 매장 등록을 합니다.
-                    **안내 사항**
-                     - MerchantRegisterRequest, 매장 대표 이미지, 매장 이미지는 FormData로 보내주세요.
-                    """
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "상인 회원 생성 성공"
-    )
-    @ApiExceptions(values = {
-            BAD_REQUEST,
-            NOT_FOUND,
-            DUPLICATE,
-            UNAUTHORIZED_ERROR,
-            INTERNAL_SERVER_ERROR
-    })
-    public abstract ResponseEntity<Void> register(
-            @Parameter(
-                    required = true,
-                    content = @Content(
-                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                            schema = @Schema(implementation = MerchantRegisterRequest.class))
-            )
-            MerchantRegisterRequest request,
-            @Parameter(
-                    description = "매장 대표 이미지",
-                    content = @Content(
-                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                            schema = @Schema(type = "string", format = "binary"))
-            )
-            MultipartFile mainImage,
-            @Parameter(
-                    description = "매장 이미지",
-                    content = @Content(
-                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                            schema = @Schema(type = "string", format = "binary"))
-            )
-            List<MultipartFile> imageFiles,
             Long memberId
     );
 

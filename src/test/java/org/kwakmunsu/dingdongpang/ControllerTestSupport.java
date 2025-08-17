@@ -9,7 +9,6 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.service.InquiryQueryService;
 import org.kwakmunsu.dingdongpang.domain.member.controller.MemberController;
 import org.kwakmunsu.dingdongpang.domain.member.service.MemberCommandService;
 import org.kwakmunsu.dingdongpang.domain.member.service.MemberQueryService;
-import org.kwakmunsu.dingdongpang.domain.member.service.MerchantOnboardingService;
 import org.kwakmunsu.dingdongpang.domain.menu.controller.MenuController;
 import org.kwakmunsu.dingdongpang.domain.menu.service.MenuCommandService;
 import org.kwakmunsu.dingdongpang.domain.menu.service.MenuQueryService;
@@ -17,6 +16,7 @@ import org.kwakmunsu.dingdongpang.domain.message.controller.MessageController;
 import org.kwakmunsu.dingdongpang.domain.message.service.MessageService;
 import org.kwakmunsu.dingdongpang.domain.shop.controller.ShopController;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
+import org.kwakmunsu.dingdongpang.domain.shop.service.ShopOnboardingService;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopQueryService;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.controller.SubscribeController;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.service.SubscribeShopCommandService;
@@ -60,7 +60,7 @@ public abstract class ControllerTestSupport {
     protected MemberQueryService memberQueryService;
 
     @MockitoBean
-    protected MerchantOnboardingService merchantOnboardingService;
+    protected ShopOnboardingService shopOnboardingService;
 
     @MockitoBean
     protected MenuCommandService menuCommandService;
