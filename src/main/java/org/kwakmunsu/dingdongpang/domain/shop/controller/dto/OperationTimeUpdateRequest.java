@@ -3,7 +3,7 @@ package org.kwakmunsu.dingdongpang.domain.shop.controller.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import java.time.DayOfWeek;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.OperationTimeServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.OperationTimeServiceRequest;
 
 @Schema(description = "매장 운영시간")
 public record OperationTimeUpdateRequest(

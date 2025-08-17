@@ -14,7 +14,7 @@ import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryModi
 import org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.request.InquiryRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
@@ -227,17 +227,18 @@ record InquiryCommandServiceTest(
     }
 
     private ShopRegisterServiceRequest getShopRegisterServiceRequest() {
-        return new ShopRegisterServiceRequest(
-                "My Shop",                                  // shopName
-                ShopType.FOOD,                              // shopType (예: enum)
-                "010-1234-5678",                            // shopPhoneNumber
-                "서울특별시 강남구 역삼동 123-45",                 // address
-                "1234567890",                               // businessNumber
-                "홍길동",                                     // ownerName
-                null,                                     // mainImage
-                List.of(),                    // imageFiles
-                List.of()  // operationTimeRequests
-        );
+        return ShopRegisterServiceRequest.builder()
+                .businessNumber("8962801461")    // 사업자 등록 번호
+                .ownerName("김계란")              // 대표자명
+                .shopName("역전할머니맥주")         // 매장명
+                .shopType(ShopType.FASHION)      // 매장 타입 (enum)
+                .shopPhoneNumber("010-8742-1234")// 매장 전화번호
+                .address("경기도 광주시 경충대로1461번길 12-4 코오롱 세이브 프라자 202호")
+                .mainImage(null)
+                .merchantId(1L)
+                .imageFiles(List.of())
+                .operationTimeRequests(List.of())
+                .build();// 매장 주소
     }
 
 }

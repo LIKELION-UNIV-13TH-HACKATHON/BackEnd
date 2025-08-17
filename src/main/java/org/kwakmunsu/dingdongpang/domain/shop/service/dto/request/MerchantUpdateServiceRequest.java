@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.domain.shop.service.dto;
+package org.kwakmunsu.dingdongpang.domain.shop.service.dto.request;
 
 import lombok.Builder;
 

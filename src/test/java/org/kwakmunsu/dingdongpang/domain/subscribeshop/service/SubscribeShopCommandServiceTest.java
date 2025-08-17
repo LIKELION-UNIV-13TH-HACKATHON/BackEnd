@@ -3,14 +3,12 @@ package org.kwakmunsu.dingdongpang.domain.subscribeshop.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.ShopFixture;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
-import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopRepository;
@@ -37,7 +35,7 @@ record SubscribeShopCommandServiceTest(
         var member = Member.createMember("testEmail@gmail.com", "nickname", "1234");
         memberRepository.save(member);
 
-        var shopRegisterServiceRequest = getShopRegisterServiceRequest();
+        var shopRegisterServiceRequest = ShopFixture.getShopRegisterServiceRequest();
         Point point = GeoFixture.createPoint(1.2, 2.3);
         shopCommandService.register(shopRegisterServiceRequest, point, member.getId());
 
@@ -67,7 +65,7 @@ record SubscribeShopCommandServiceTest(
         var member = Member.createMember("testEmail@gmail.com", "nickname", "1234");
         memberRepository.save(member);
 
-        var shopRegisterServiceRequest = getShopRegisterServiceRequest();
+        var shopRegisterServiceRequest = ShopFixture.getShopRegisterServiceRequest();
         Point point = GeoFixture.createPoint(1.2, 2.3);
         shopCommandService.register(shopRegisterServiceRequest, point, member.getId());
 
@@ -84,20 +82,6 @@ record SubscribeShopCommandServiceTest(
         isSubscribed = subscribeShopRepository.existsByMemberIdAndShopId(subscribeMember, shop.getId());
         assertThat(isSubscribed).isFalse();
 
-    }
-
-    private ShopRegisterServiceRequest getShopRegisterServiceRequest() {
-        return new ShopRegisterServiceRequest(
-                "My Shop",                                  // shopName
-                ShopType.FOOD,                              // shopType (예: enum)
-                "010-1234-5678",                            // shopPhoneNumber
-                "서울특별시 강남구 역삼동 123-45",                 // address
-                "1234567890",                               // businessNumber
-                "홍길동",                                     // ownerName
-                null,                                  // mainImage
-                List.of(),                    // imageFiles
-                List.of()                     // operationTimeRequests
-        );
     }
 
 }
