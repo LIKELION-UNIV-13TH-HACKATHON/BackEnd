@@ -1,6 +1,7 @@
 package org.kwakmunsu.dingdongpang.domain.shop.controller;
 
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.BAD_REQUEST;
+import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.DUPLICATE;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.INTERNAL_SERVER_ERROR;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.NOT_FOUND;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.UNAUTHORIZED_ERROR;
@@ -14,21 +15,66 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.ShopRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.controller.dto.MerchantUpdateRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.SortBy;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopDashboardResponse;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchListResponse;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.response.ShopDashboardResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.response.ShopNearbySearchListResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.response.ShopResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Shop API", description = "매장 관련 API 문서입니다.")
 public abstract class ShopDocsController {
+
+    @Operation(
+            summary = "매장 등록 요청 API  - JWT O",
+            description = """
+                    ## 매장 등록을 합니다.
+                    **안내 사항**
+                     - ShopRegisterRequest, 매장 대표 이미지, 매장 이미지는 FormData로 보내주세요.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "매장 등록 성공"
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            NOT_FOUND,
+            DUPLICATE,
+            UNAUTHORIZED_ERROR,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<Void> register(
+            @Parameter(
+                    description = "매장 등록 DTO",
+                    required = true,
+                    content = @Content(
+                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                            schema = @Schema(implementation = ShopRegisterRequest.class))
+            )
+            ShopRegisterRequest request,
+            @Parameter(
+                    description = "매장 대표 이미지",
+                    content = @Content(
+                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                            schema = @Schema(type = "string", format = "binary"))
+            )
+            MultipartFile mainImage,
+            @Parameter(
+                    description = "매장 이미지",
+                    content = @Content(
+                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                            schema = @Schema(type = "string", format = "binary"))
+            )
+            List<MultipartFile> imageFiles,
+            Long memberId
+    );
+
 
     @Operation(
             summary = "매장 목록 조회(정렬 검색 포함) - JWT O",

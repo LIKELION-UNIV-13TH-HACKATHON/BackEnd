@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.domain.member.service.dto;
+package org.kwakmunsu.dingdongpang.domain.shop.service.dto.request;
 
 import java.util.List;
 import lombok.Builder;
@@ -15,6 +15,7 @@ public record ShopRegisterServiceRequest(
         String address,
         String businessNumber,
         String ownerName,
+        Long merchantId,
         MultipartFile mainImage,
         List<MultipartFile> imageFiles,
         List<OperationTimeServiceRequest> operationTimeRequests
