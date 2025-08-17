@@ -3,6 +3,7 @@ package org.kwakmunsu.dingdongpang.domain.member.controller;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.kwakmunsu.dingdongpang.domain.auth.controller.dto.FcmTokenRequest;
 import org.kwakmunsu.dingdongpang.domain.member.controller.dto.CustomerRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.member.controller.dto.MerchantRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.MemberCommandService;
@@ -12,6 +13,7 @@ import org.kwakmunsu.dingdongpang.domain.member.service.dto.CheckNicknameRespons
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.CustomerProfileResponse;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.MerchantProfileResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
+import org.kwakmunsu.dingdongpang.infrastructure.firebase.service.FirebaseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +32,7 @@ public class MemberController extends MemberDocsController {
     private final MemberCommandService memberCommandService;
     private final MemberQueryService memberQueryService;
     private final MerchantOnboardingService merchantOnboardingService;
+    private final FirebaseService firebaseService;
 
     @Override
     @PostMapping("/customers")
@@ -77,6 +80,16 @@ public class MemberController extends MemberDocsController {
         CustomerProfileResponse response = memberQueryService.getCustomerProfile(memberId);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/fcm-token")
+    public ResponseEntity<Void> updateFcmToken(
+            @Valid @RequestBody FcmTokenRequest request,
+            @AuthMember Long memberId
+    ) {
+        firebaseService.updateFcmToken(request.toServiceRequest(memberId));
+
+        return ResponseEntity.ok().build();
     }
 
 }

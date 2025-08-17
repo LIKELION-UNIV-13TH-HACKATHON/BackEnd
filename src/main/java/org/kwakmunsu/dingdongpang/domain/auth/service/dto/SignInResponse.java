@@ -10,6 +10,9 @@ public record SignInResponse(
         @Schema(description = "기존 회원이 로그인할 경우 false, 새로운 회원일 경우 true", example = "true")
         boolean isNewMember, // 기존 회원일 경우 바로 홈, 새로운 회원일 경우 정보 등록
 
+        @Schema(description = "memberId", example = "1")
+        Long memberId,
+
         TokenResponse response
 ) {
 

@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.auth.service.kakao.KakaoOauthManager;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
@@ -19,7 +20,6 @@ import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.kwakmunsu.dingdongpang.global.jwt.JwtProvider;
 import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
-import org.kwakmunsu.dingdongpang.infrastructure.firebase.service.FirebaseService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,9 +32,6 @@ class AuthCommandServiceTest {
 
     @Mock
     MemberRepository memberRepository;
-
-    @Mock
-    FirebaseService firebaseService;
 
     @Mock
     JwtProvider jwtProvider;
@@ -56,7 +53,8 @@ class AuthCommandServiceTest {
         var tokenResponse = new TokenResponse("accessToken","refreshToken");
         given(jwtProvider.createTokens(any(),any())).willReturn(tokenResponse);
 
-        var result = authCommandService.signIn("accessToken", anyString());
+        var signInServiceRequest = new SignInServiceRequest("social-access-token");
+        var result = authCommandService.signIn(signInServiceRequest);
         assertThat(result.isNewMember()).isTrue();
         assertThat(result.response())
                 .extracting(    TokenResponse::accessToken, TokenResponse::refreshToken)
@@ -77,7 +75,8 @@ class AuthCommandServiceTest {
         var tokenResponse = new TokenResponse("accessToken","refreshToken");
         given(jwtProvider.createTokens(any(),any())).willReturn(tokenResponse);
 
-        var result = authCommandService.signIn("accessToken", anyString());
+        var signInServiceRequest = new SignInServiceRequest("social-access-token");
+        var result = authCommandService.signIn(signInServiceRequest);
 
         assertThat(optionalMember.get().getRefreshToken()).isEqualTo(tokenResponse.refreshToken());
         assertThat(result.isNewMember()).isFalse();

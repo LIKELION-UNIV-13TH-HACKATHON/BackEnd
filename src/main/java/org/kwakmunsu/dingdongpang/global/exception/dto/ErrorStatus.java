@@ -55,6 +55,7 @@ public enum ErrorStatus {
     FAILED_TO_UPLOAD_FILE  (500, "ERROR - 파일 업로드에 실패하였습니다."),
 
     // FIREBASE
+    INVALID_FCM_TOKEN   (401, "ERROR - 유효하지 않은 FCM 토큰입니다."),
     FAIL_FIREBASE_INITIALIZE(500, "ERROR - Firebase 초기화에 실패하였습니다."),
 
     // ETC

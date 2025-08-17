@@ -8,14 +8,13 @@ import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.NOT_FO
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.UNAUTHORIZED_ERROR;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.kwakmunsu.dingdongpang.domain.auth.controller.dto.ReissueTokenRequest;
+import org.kwakmunsu.dingdongpang.domain.auth.controller.dto.SignInRequest;
 import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
@@ -29,27 +28,18 @@ public abstract class AuthDocsController {
     @Operation(
             summary = "소셜 로그인 요청  - JWT O",
             description = """
-                    ## 카카오 소셜 서버에서 받은 AccessToken을 Header에 담아 요청 시 검증 후 서버 자체 Access, Refresh Token을 발급합니다.
-                    ## Firebase 에서 받은 디바이스 토큰을 Header에 담습니다.
                     - **기존 회원이 로그인 할 경우**
                       - 홈 화면으로 이동
                     - **새로운 회원이 로그인 할 경우**
                       - 정보 등록 화면으로 이동
                     """
     )
-    @Parameters(value = {
-            @Parameter(
-                    name = "Authorization",
-                    description = "소셜 로그인 액세스 토큰 (Bearer ...)",
-                    required = true,
-                    example = "Bearer eyJ..."
-            ),
-            @Parameter(
-                    name = "Fcm-Token",
-                    description = "fcm 토큰",
-                    required = true,
-                    example = "your-fcm-token"
-            )}
+    @RequestBody(
+            description = "로그인 요청",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = SignInRequest.class)
+            )
     )
     @ApiResponse(
             responseCode = "200",
@@ -61,7 +51,7 @@ public abstract class AuthDocsController {
             UNAUTHORIZED_ERROR,
             INTERNAL_SERVER_ERROR
     })
-    public abstract ResponseEntity<SignInResponse> signIn(String socialAccessToken, String fcmToken);
+    public abstract ResponseEntity<SignInResponse> signIn(SignInRequest signInRequest);
 
     @Operation(
             summary = "Access, Refresh Token 재발급 요청 - JWT O",

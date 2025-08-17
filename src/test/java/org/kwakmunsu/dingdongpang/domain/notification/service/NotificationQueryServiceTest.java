@@ -1,12 +1,9 @@
 package org.kwakmunsu.dingdongpang.domain.notification.service;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.kwakmunsu.dingdongpang.global.util.TimeConverter.dateTimeToString;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kwakmunsu.dingdongpang.domain.notification.entity.Notification;

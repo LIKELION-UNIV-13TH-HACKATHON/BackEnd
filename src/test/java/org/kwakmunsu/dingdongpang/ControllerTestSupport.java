@@ -21,6 +21,7 @@ import org.kwakmunsu.dingdongpang.domain.shop.service.ShopQueryService;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.controller.SubscribeController;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.service.SubscribeShopCommandService;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.service.SubscribeShopQueryService;
+import org.kwakmunsu.dingdongpang.infrastructure.firebase.service.FirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -48,6 +49,9 @@ public abstract class ControllerTestSupport {
 
     @MockitoBean
     protected AuthCommandService authCommandService;
+
+    @MockitoBean
+    protected FirebaseService firebaseService;
 
     @MockitoBean
     protected MemberCommandService memberCommandService;

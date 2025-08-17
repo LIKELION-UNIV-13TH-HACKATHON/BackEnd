@@ -3,6 +3,7 @@ package org.kwakmunsu.dingdongpang.domain.member.controller;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.BAD_REQUEST;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.DUPLICATE;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.INTERNAL_SERVER_ERROR;
+import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.INVALID_TOKEN;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.NOT_FOUND;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.UNAUTHORIZED_ERROR;
 
@@ -15,12 +16,12 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import org.kwakmunsu.dingdongpang.domain.auth.controller.dto.FcmTokenRequest;
 import org.kwakmunsu.dingdongpang.domain.member.controller.dto.CustomerRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.member.controller.dto.MerchantRegisterRequest;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.CheckNicknameResponse;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.CustomerProfileResponse;
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.MerchantProfileResponse;
-import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -143,7 +144,7 @@ public abstract class MemberDocsController {
             NOT_FOUND,
             INTERNAL_SERVER_ERROR
     })
-    public abstract ResponseEntity<MerchantProfileResponse> getMerchantProfile(@AuthMember Long memberId);
+    public abstract ResponseEntity<MerchantProfileResponse> getMerchantProfile(Long memberId);
 
 
     @Operation(
@@ -163,5 +164,34 @@ public abstract class MemberDocsController {
             NOT_FOUND,
             INTERNAL_SERVER_ERROR
     })
-    public abstract ResponseEntity<CustomerProfileResponse> getCustomerProfile(@AuthMember Long memberId);
+    public abstract ResponseEntity<CustomerProfileResponse> getCustomerProfile(Long memberId);
+
+    @Operation(
+            summary = "Fcm 토큰 등록 API  - JWT O",
+            description = """
+                    ## FCM Token 등록 API 입니다.
+                    - **로그인 후 사용자가 알림 허용을 했다면 해당 API를 통해 fcm 등록을 해주세요.**
+                    """
+    )
+    @RequestBody(
+            description = "Fcm 토큰 등록 요청",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = FcmTokenRequest.class)
+            )
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "FCM token 등록 성공 "
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            UNAUTHORIZED_ERROR,
+            INVALID_TOKEN,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<Void> updateFcmToken(
+            FcmTokenRequest request,
+            Long memberId
+    );
 }
