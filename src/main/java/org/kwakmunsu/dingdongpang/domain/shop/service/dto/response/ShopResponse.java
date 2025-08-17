@@ -10,6 +10,9 @@ import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.dto.ShopO
 @Schema(description = "매장 정보 응답 DTO")
 @Builder
 public record ShopResponse(
+        @Schema(description = "매장 id", example = "1")
+        Long shopId,
+
         @Schema(description = "매장 이름", example = "문수네닭발")
         String shopName,
 
@@ -25,13 +28,13 @@ public record ShopResponse(
         @Schema(description = "매장 주소", example = "경기도 광주시 경충대로1461번길 12-4 코오롱 세이브 프라자 202호")
         String address,
 
-        @Schema(description = "매장 이름", example = "010-1234-5678")
+        @Schema(description = "매장 번호", example = "010-1234-5678")
         String shopTellNumber,
 
-        @Schema(description = "매장 이름", example = "https:1231312312313")
+        @Schema(description = "매장 대표 이미지", example = "https:1231312312313")
         String mainImage,
 
-        @Schema(description = "매장 이름", example = "false")
+        @Schema(description = "매장 구독 여부 ", example = "false")
         boolean isSubscribe,
 
         @Schema(description = "매장 운영 시간 응답 DTO - 월~일 총 7개")
@@ -48,6 +51,7 @@ public record ShopResponse(
             List<String> shopImages
     ) {
         return ShopResponse.builder()
+                .shopId(shop.getId())
                 .shopName(shop.getShopName())
                 .shopType(shop.getShopType())
                 .ownerName(shop.getOwnerName())
