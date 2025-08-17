@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.domain.member.controller.dto;
+package org.kwakmunsu.dingdongpang.domain.shop.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -6,18 +6,26 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 import lombok.Builder;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 @Schema(description = "매장 정보 등록 DTO")
 public record ShopRegisterRequest(
+
+        @NotBlank(message = "사업자 등록 번호는 필수값입니다.")
+        @Schema(description = "사업자 등록 번호", example = "8962801461")
+        String businessNumber, // 사업자 등록 번호
+
+        @NotBlank(message = "대표자명은 필수값입니다.")
+        @Schema(description = "매장 대표자 명", example = "김계란")
+        String ownerName,
+
         @NotBlank(message = "매장명은 필수값입니다.")
         @Schema(description = "매장 이름", example = "역전할머니맥주")
         String shopName,
 
-        @NotBlank(message = "매장 타입은 필수값입니다.")
         @Schema(description = "업종 ", example = "FASHION")
         ShopType shopType,
 
@@ -35,7 +43,11 @@ public record ShopRegisterRequest(
         List<OperationTimeRequest> operationTimes
 ) {
 
-    public ShopRegisterServiceRequest toServiceRequest(String businessNumber, String ownerName, MultipartFile mainImage, List<MultipartFile> imageFiles) {
+    public ShopRegisterServiceRequest toServiceRequest(
+            MultipartFile mainImage,
+            List<MultipartFile> imageFiles,
+            Long merchantId
+    ) {
         return ShopRegisterServiceRequest.builder()
                 .shopName(shopName)
                 .shopType(shopType)
@@ -43,6 +55,7 @@ public record ShopRegisterRequest(
                 .address(address)
                 .businessNumber(businessNumber)
                 .ownerName(ownerName)
+                .merchantId(merchantId)
                 .mainImage(mainImage)
                 .imageFiles(imageFiles)
                 .operationTimeRequests(

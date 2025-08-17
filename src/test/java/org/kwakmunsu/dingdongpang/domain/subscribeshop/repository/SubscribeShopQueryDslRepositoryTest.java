@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.entity.SubscribeShop;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopPreviewResponse;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopReadDomainRequest;
@@ -68,7 +68,7 @@ record SubscribeShopQueryDslRepositoryTest(
 
         assertThat(response.responses().get(0))
                 .extracting(
-                        SubscribeShopPreviewResponse:: shopId,
+                        SubscribeShopPreviewResponse::shopId,
                         SubscribeShopPreviewResponse::shopName,
                         SubscribeShopPreviewResponse::subscribeCount
                 )
@@ -84,7 +84,7 @@ record SubscribeShopQueryDslRepositoryTest(
                         SubscribeShopPreviewResponse::shopName,
                         SubscribeShopPreviewResponse::subscribeCount
                 )
-                .containsExactly(shop.getId(), shop.getShopName() ,1L);
+                .containsExactly(shop.getId(), shop.getShopName(), 1L);
     }
 
     @DisplayName("구독한 매장 목록을 조회하는데 빈 값을 반환한다..")
@@ -102,23 +102,23 @@ record SubscribeShopQueryDslRepositoryTest(
         assertThat(response.responses()).isEmpty();
     }
 
-
     private ShopRegisterServiceRequest getShopRegisterServiceRequest(
-            String title,
+            String shopName,
             String shopPhoneNumber,
             String businessNumber,
             String address
     ) {
-        return new ShopRegisterServiceRequest(
-                title,
-                ShopType.FOOD,
-                shopPhoneNumber,
-                address,
-                businessNumber,
-                "홍길동",
-                null,      // mainImage
-                List.of(), // imageFiles
-                List.of()
-        );
+        return ShopRegisterServiceRequest.builder()
+                .shopName(shopName)
+                .shopPhoneNumber(shopPhoneNumber)
+                .businessNumber(businessNumber)
+                .address(address)
+                .ownerName("김계란")
+                .shopType(ShopType.FASHION)
+                .mainImage(null)
+                .merchantId(1L)
+                .imageFiles(List.of())
+                .operationTimeRequests(List.of())
+                .build();// 매장 주소
     }
 }

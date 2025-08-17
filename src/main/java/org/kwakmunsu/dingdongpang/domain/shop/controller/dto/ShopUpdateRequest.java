@@ -6,9 +6,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 import lombok.Builder;
-import org.kwakmunsu.dingdongpang.domain.member.controller.dto.OperationTimeRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopUpdateServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopUpdateServiceRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 @Builder

@@ -1,8 +1,7 @@
-package org.kwakmunsu.dingdongpang.domain.shop.service.dto;
+package org.kwakmunsu.dingdongpang.domain.shop.service.dto.request;
 
 import java.util.List;
 import lombok.Builder;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.OperationTimeServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.dto.ShopRegisterDomainRequest;
 import org.locationtech.jts.geom.Point;

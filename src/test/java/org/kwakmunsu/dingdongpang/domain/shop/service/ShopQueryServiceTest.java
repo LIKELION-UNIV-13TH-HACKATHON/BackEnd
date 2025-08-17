@@ -8,14 +8,14 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.OperationTimeServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.OperationTimeServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.ShopOperationTimeRepository;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchListResponse;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopNearbySearchServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.response.ShopNearbySearchListResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopNearbySearchServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.response.ShopResponse;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopRepository;
 import org.kwakmunsu.dingdongpang.global.GeoFixture;
@@ -102,7 +102,7 @@ record ShopQueryServiceTest(
     }
 
     private ShopRegisterServiceRequest getShopRegisterServiceRequest(
-            String title,
+            String shopName,
             String shopPhoneNumber,
             String businessNumber,
             String address
@@ -117,17 +117,18 @@ record ShopQueryServiceTest(
                 getOperationTimeServiceRequest(DayOfWeek.SUNDAY, true)
         );
 
-        return new ShopRegisterServiceRequest(
-                title,
-                ShopType.FOOD,
-                shopPhoneNumber,
-                address,
-                businessNumber,
-                "홍길동",
-                null,      // mainImage
-                List.of(), // imageFiles
-                timeServiceRequests
-        );
+        return ShopRegisterServiceRequest.builder()
+                .shopName(shopName)
+                .shopPhoneNumber(shopPhoneNumber)
+                .businessNumber(businessNumber)
+                .address(address)
+                .ownerName("김계란")
+                .shopType(ShopType.FASHION)
+                .mainImage(null)
+                .merchantId(1L)
+                .imageFiles(List.of())
+                .operationTimeRequests(timeServiceRequests)
+                .build();// 매장 주소
     }
 
     private OperationTimeServiceRequest getOperationTimeServiceRequest(DayOfWeek dayOfWeek, boolean isClosed) {

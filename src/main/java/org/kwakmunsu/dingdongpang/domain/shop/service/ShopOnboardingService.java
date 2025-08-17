@@ -1,14 +1,13 @@
-package org.kwakmunsu.dingdongpang.domain.member.service;
+package org.kwakmunsu.dingdongpang.domain.shop.service;
 
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.MerchantRegisterServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.member.service.dto.ShopRegisterServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.member.service.MemberCommandService;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
-import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.MerchantUpdateServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.shop.service.dto.ShopUpdateServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.MerchantUpdateServiceRequest;
+import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopUpdateServiceRequest;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
@@ -18,13 +17,12 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// TODO: 이 서비스를 어디에 둘 것인지 고민... 파사드 느낌인데
 /**
  * 상인 등록 시 회원 등록 + 매장 등록이 함꼐 이루어지는 서비스
  **/
 @RequiredArgsConstructor
 @Service
-public class MerchantOnboardingService {
+public class ShopOnboardingService {
 
     private final MemberCommandService memberCommandService;
     private final ShopCommandService shopCommandService;
@@ -33,17 +31,17 @@ public class MerchantOnboardingService {
     private final KakaoGeocodingProvider kakaoGeocodingProvider;
 
     @Transactional
-    public void register(MerchantRegisterServiceRequest request) {
-        ShopRegisterServiceRequest shopRegisterRequest = request.shopRegisterServiceRequest();
+    public void register(ShopRegisterServiceRequest request) {
 
-        checkDuplicateRegisterShop(request.businessRegistrationNumber());
-        validateBusinessNumber(request.businessRegistrationNumber());
+        checkDuplicateRegisterShop(request.businessNumber());
+        validateBusinessNumber(request.businessNumber());
 
-        Member merchant = memberCommandService.registerMerchant(request.nickname(), request.memberId());
+        String nickname = request.ownerName() + request.shopName();
+        Member merchant = memberCommandService.registerMerchant(nickname, request.merchantId());
 
-        Point point = kakaoGeocodingProvider.transferToGeocode(shopRegisterRequest.address());
+        Point point = kakaoGeocodingProvider.transferToGeocode(request.address());
 
-        shopCommandService.register(shopRegisterRequest, point, merchant.getId());
+        shopCommandService.register(request, point, merchant.getId());
     }
 
     @Transactional

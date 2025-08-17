@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.domain.member.service.dto;
+package org.kwakmunsu.dingdongpang.domain.shop.service.dto.request;
 
 import java.time.DayOfWeek;
 import lombok.Builder;
