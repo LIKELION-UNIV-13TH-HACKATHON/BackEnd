@@ -19,20 +19,20 @@ jobs:
 
       - name: Make profile config files
         run: |
-            echo "$PROPERTIES" > src/main/resources/application.yml
-            echo "$PROPERTIES_S3" > src/main/resources/application-s3.yml
-            echo "$PROPERTIES_LOCAL" > src/main/resources/application-local.yml
-            echo "$PROPERTIES_OPENAPI" > src/main/resources/application-openapi.yml
-            echo "$FIREBASE" > src/main/resources/firebase.json
-            echo "$PROPERTIES_KAKAO" > src/main/resources/application-kakao.yml
-          shell: bash
-          env:
-            PROPERTIES_: ${{ secrets.PROPERTIES }}
-            PROPERTIES_S3: ${{ secrets.PROPERTIES_S3 }}
-            PROPERTIES_LOCAL: ${{ secrets.PROPERTIES_LOCAL }}
-            PROPERTIES_OPENAPI: ${{ secrets.PROPERTIES_OPENAPI }}
-            PROPERTIES_KAKAO: ${{ secrets.PROPERTIES_KAKAO }}
-            FIREBASE: ${{ secrets.FIREBASE }}
+          echo "$PROPERTIES" > src/main/resources/application.yml
+          echo "$PROPERTIES_S3" > src/main/resources/application-s3.yml
+          echo "$PROPERTIES_LOCAL" > src/main/resources/application-local.yml
+          echo "$PROPERTIES_OPENAPI" > src/main/resources/application-openapi.yml
+          echo "$FIREBASE" > src/main/resources/firebase.json
+          echo "$PROPERTIES_KAKAO" > src/main/resources/application-kakao.yml
+        shell: bash
+        env:
+          PROPERTIES_: ${{ secrets.PROPERTIES }}
+          PROPERTIES_S3: ${{ secrets.PROPERTIES_S3 }}
+          PROPERTIES_LOCAL: ${{ secrets.PROPERTIES_LOCAL }}
+          PROPERTIES_OPENAPI: ${{ secrets.PROPERTIES_OPENAPI }}
+          PROPERTIES_KAKAO: ${{ secrets.PROPERTIES_KAKAO }}
+          FIREBASE: ${{ secrets.FIREBASE }}
 
       - name: Gradlew 실행 권한 부여
         run: chmod +x gradlew
