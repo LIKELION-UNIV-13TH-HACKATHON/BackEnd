@@ -74,7 +74,7 @@ dependencies {
 processResources.dependsOn('copySecret')
 task copySecret(type: Copy) {
     from './BACKEND-SUBMODILE'
-    include "*.yml"
+    include "*.yml", "*.json"
     into 'src/main/resources'
 
     onlyIf {
