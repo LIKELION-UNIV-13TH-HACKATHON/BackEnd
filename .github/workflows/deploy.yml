@@ -31,7 +31,7 @@ jobs:
           echo "$PROPERTIES_KAKAO" > src/main/resources/application-kakao.yml
         shell: bash
         env:
-          PROPERTIES_: ${{ secrets.PROPERTIES }}
+          PROPERTIES: ${{ secrets.PROPERTIES }}
           PROPERTIES_S3: ${{ secrets.PROPERTIES_S3 }}
           PROPERTIES_LOCAL: ${{ secrets.PROPERTIES_LOCAL }}
           PROPERTIES_OPENAPI: ${{ secrets.PROPERTIES_OPENAPI }}
