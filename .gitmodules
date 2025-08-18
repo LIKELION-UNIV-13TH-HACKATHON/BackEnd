@@ -1,0 +1,3 @@
+[submodule "BACKEND_SUBMODULE"]
+	path = BACKEND_SUBMODULE
+	url = https://github.com/LIKELION-UNIV-13TH-HACKATHON/BACKEND-SUBMODILE.git
