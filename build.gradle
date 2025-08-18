@@ -72,7 +72,7 @@ dependencies {
 }
 tasks.register('copyPrivate', Copy) {
     copy {
-        from './BACKEND_SUBMODULE'
+        from './BACKEND_SUBMODILE'
         include "*.yml"
         into 'src/main/resources'
     }
