@@ -20,4 +20,6 @@ public interface ShopJpaRepository extends JpaRepository<Shop, Long> {
             ") <= :radius",
             nativeQuery = true)
     List<Shop> findShopsWithinRadius(@Param("lon") Double longitude, @Param("lat") Double latitude, @Param("radius") int radius);
+
+    boolean existsByIdAndMerchantId(Long shopId, Long merchantId);
 }

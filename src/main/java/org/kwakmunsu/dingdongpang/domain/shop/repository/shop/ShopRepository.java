@@ -35,6 +35,10 @@ public class ShopRepository {
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_SHOP));
     }
 
+    public boolean existsByIdAndMerchantId(Long shopId, Long merchantId) {
+        return shopJpaRepository.existsByIdAndMerchantId(shopId, merchantId);
+    }
+
     public ShopListResponse getShopList(ShopReadDomainRequest request) {
         return shopQueryDslRepository.getShopList(request);
     }

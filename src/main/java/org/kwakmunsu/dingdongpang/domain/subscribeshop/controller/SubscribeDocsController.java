@@ -2,6 +2,7 @@ package org.kwakmunsu.dingdongpang.domain.subscribeshop.controller;
 
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.ALREADY_SUBSCRIBE_SHOP;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.BAD_REQUEST;
+import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.FORBIDDEN_ERROR;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.INTERNAL_SERVER_ERROR;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.NOT_FOUND;
 import static org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus.UNAUTHORIZED_ERROR;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopListResponse;
+import org.kwakmunsu.dingdongpang.domain.subscribeshop.service.dto.DailySubscriptionListResponse;
 import org.kwakmunsu.dingdongpang.global.swagger.ApiExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -125,4 +127,33 @@ public abstract class SubscribeDocsController {
             Double latitude
     );
 
+    @Operation(
+            summary = "최근 일주일 간 일별 신규 매장 구독자 수 조회 - JWT O ",
+            description = """
+                    ### 최근 일주일 간 일별 신규 매장 구독자 수 API 안내
+                    - 오늘 날짜 포함 일주일 간 데이터를 조회힙니다.
+                    - 오래된 순입니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "최근 일주일 간 구독자 수 조회 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = DailySubscriptionListResponse.class)
+            )
+    )
+    @Parameter(
+            name = "shopId",
+            description = "매장 id ",
+            in = ParameterIn.PATH,
+            required = true
+    )
+    @ApiExceptions(values = {
+            BAD_REQUEST,
+            UNAUTHORIZED_ERROR,
+            FORBIDDEN_ERROR,
+            INTERNAL_SERVER_ERROR
+    })
+    public abstract ResponseEntity<DailySubscriptionListResponse> getWeeklySubscriptions(Long shopId, Long memberId);
 }
