@@ -2,10 +2,7 @@ name: dingdong
 on:
   push:
     branches:
-      - Setting/#70
-  pull_request:
-    branches:
-      - Setting/#70
+      - main
 
 jobs:
   Deploy:
