@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.entity.SubscribeShop;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.DailySubscriptionResponse;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopListResponse;
-import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopReadDomainRequest;
+import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopPreviewResponse;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 public class SubscribeShopRepository {
 
     private final SubscribeShopJpaRepository subscribeShopJpaRepository;
-    private final SubscribeShopQueryDslRepository subscribeShopQueryDslRepository;
 
     public boolean existsByMemberIdAndShopId(Long memberId, Long shopId) {
         return subscribeShopJpaRepository.existsByMemberIdAndShopId(memberId, shopId);
@@ -28,8 +27,13 @@ public class SubscribeShopRepository {
         subscribeShopJpaRepository.deleteByMemberIdAndShopId(memberId, shopId);
     }
 
-    public SubscribeShopListResponse getSubscribeShop(SubscribeShopReadDomainRequest request) {
-        return subscribeShopQueryDslRepository.getSubscribedShopList(request);
+    public SubscribeShopListResponse getSubscribeShop(Long memberId) {
+        List<SubscribeShopPreviewResponse> subscribedShopList = subscribeShopJpaRepository.getSubscribedShopList(memberId);
+
+        return SubscribeShopListResponse.builder()
+                .responses(subscribedShopList)
+                .totalSubscribeCount(subscribedShopList.size())
+                .build();
     }
 
     public List<SubscribeShop> findByShopId(Long shopId) {

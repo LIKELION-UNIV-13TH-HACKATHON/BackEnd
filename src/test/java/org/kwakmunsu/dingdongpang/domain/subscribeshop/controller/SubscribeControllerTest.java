@@ -48,8 +48,6 @@ class SubscribeControllerTest extends ControllerTestSupport {
 
         var response = subscribeShopListResponse.responses().getFirst();
         MvcTestResult result = mvcTester.get().uri("/shops/subscriptions")
-                .param("longitude", "123.231")
-                .param("latitude", "13.1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .exchange();
 
@@ -59,32 +57,24 @@ class SubscribeControllerTest extends ControllerTestSupport {
                 .bodyJson()
                 .hasPathSatisfying("$.responses[0].shopId", v -> v.assertThat().isEqualTo(response.shopId().intValue()))
                 .hasPathSatisfying("$.responses[0].shopName", v -> v.assertThat().isEqualTo(response.shopName()))
-                .hasPathSatisfying("$.responses[0].mainImage", v -> v.assertThat().isEqualTo(response.mainImage()))
-                .hasPathSatisfying("$.responses[0].address", v -> v.assertThat().isEqualTo(response.address()))
-                .hasPathSatisfying("$.responses[0].distance", v -> v.assertThat().isEqualTo(response.distance()));
+                .hasPathSatisfying("$.responses[0].mainImage", v -> v.assertThat().isEqualTo(response.mainImage()));
     }
 
     private SubscribeShopListResponse getSubscribeShopListResponse() {
         SubscribeShopPreviewResponse previewResponse = new SubscribeShopPreviewResponse(
                 1L,
+                1L,
                 "테스트 매장",
-                "https://example.com/image.jpg",
-                "서울시 강남구 테헤란로 123",
-                5L,
-                100.0
+                "https://example.com/image.jpg"
         );
         SubscribeShopPreviewResponse previewResponse2 = new SubscribeShopPreviewResponse(
                 2L,
+                2L,
                 "테스트 매장2",
-                "https://example.com/image.jpg",
-                "서울시 강남구 테헤란로 124",
-                5L,
-                110.0
+                "https://example.com/image.jpg"
         );
         return SubscribeShopListResponse.builder()
                 .responses(List.of(previewResponse, previewResponse2))
-                .hasNext(false)
-                .nextCursorId(null)
                 .build();
     }
 
