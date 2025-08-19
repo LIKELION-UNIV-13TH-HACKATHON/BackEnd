@@ -37,6 +37,9 @@ public record ShopRegisterRequest(
         @Schema(description = "매장 주소", example = "경기도 광주시 경충대로1461번길 12-4 코오롱 세이브 프라자 202호")
         String address,
 
+        @Schema(description = "약관 동의 여부", example = "true")
+        boolean isTermAgreed,
+
         @NotEmpty(message = "운영시간 리스트는 필수값입니다.")
         @Size(min = 7, max = 7, message = "운영시간은 7개여야 합니다.")
         @Schema(description = "매장 운영시간 - 월~일 모두 입력하셔야합니다.")
@@ -55,6 +58,7 @@ public record ShopRegisterRequest(
                 .address(address)
                 .businessNumber(businessNumber)
                 .ownerName(ownerName)
+                .isTermAgreed(isTermAgreed)
                 .merchantId(merchantId)
                 .mainImage(mainImage)
                 .imageFiles(imageFiles)

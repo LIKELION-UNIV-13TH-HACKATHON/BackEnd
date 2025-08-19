@@ -33,7 +33,7 @@ record MemberCommandServiceTest(
 
         assertThat(guest.getRole()).isEqualTo(Role.ROLE_GUEST);
 
-        var request = new CustomerRegisterServiceRequest("new-nickname", guest.getId());
+        var request = new CustomerRegisterServiceRequest("new-nickname", true, guest.getId());
 
         memberCommandService.registerCustomer(request);
         entityManager.flush();
@@ -54,7 +54,7 @@ record MemberCommandServiceTest(
         var duplicateGuest = Member.createGuest("test2-email@gmail.com", "testname2", "12345sada6");
         memberRepository.save(guest);
         memberRepository.save(duplicateGuest);
-        var request = new CustomerRegisterServiceRequest(guest.getNickname(), duplicateGuest.getId());
+        var request = new CustomerRegisterServiceRequest(guest.getNickname(), true, duplicateGuest.getId());
 
         assertThatThrownBy(() -> memberCommandService.registerCustomer(request))
             .isInstanceOf(DuplicationException.class);
@@ -65,14 +65,14 @@ record MemberCommandServiceTest(
     void failRegisterCustomerWhenAlreadyCustomer() {
         var guest = Member.createGuest("test-email@gmail.com", "nickname", "123456");
         memberRepository.save(guest);
-        var request = new CustomerRegisterServiceRequest("new-nickname", guest.getId());
+        var request = new CustomerRegisterServiceRequest("new-nickname", true, guest.getId());
 
         assertThat(guest.getRole()).isEqualTo(Role.ROLE_GUEST);
         // 중복을 위한 사전 등록
         memberCommandService.registerCustomer(request);
         entityManager.flush();
 
-        var request2 = new CustomerRegisterServiceRequest("new-nickname2", guest.getId());
+        var request2 = new CustomerRegisterServiceRequest("new-nickname2", true, guest.getId());
 
         assertThatThrownBy(() ->memberCommandService.registerCustomer(request2) )
             .isInstanceOf(DuplicationException.class);
@@ -86,7 +86,7 @@ record MemberCommandServiceTest(
 
         assertThat(guest.getRole()).isEqualTo(Role.ROLE_GUEST);
 
-        memberCommandService.registerMerchant("new-nickname", guest.getId());
+        memberCommandService.registerMerchant("new-nickname", guest.getId(), true);
         entityManager.flush();
         entityManager.clear();
 

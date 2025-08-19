@@ -21,7 +21,7 @@ class MemberControllerTest extends ControllerTestSupport {
     @DisplayName("고객 등록을 한다.")
     @Test
     void register() throws JsonProcessingException {
-        var request = new CustomerRegisterRequest("new-nickname");
+        var request = new CustomerRegisterRequest("new-nickname", true);
         var requestJson = objectMapper.writeValueAsString(request);
 
         assertThat(mvcTester.post().uri("/members/customers")
@@ -35,7 +35,7 @@ class MemberControllerTest extends ControllerTestSupport {
     @DisplayName("고객 등록 요청 시 닉네임 값이 유효하지 않아 에러를 던진다.")
     @Test
     void failRegisterWhenBadCustomerRegisterRequest() throws JsonProcessingException {
-        var request = new CustomerRegisterRequest("");
+        var request = new CustomerRegisterRequest("", false);
         var requestJson = objectMapper.writeValueAsString(request);
 
         assertThat(mvcTester.post().uri("/members/customers")

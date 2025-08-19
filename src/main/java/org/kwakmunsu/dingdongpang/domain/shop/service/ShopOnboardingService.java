@@ -36,7 +36,7 @@ public class ShopOnboardingService {
         validateBusinessNumber(request.businessNumber());
 
         String nickname = request.ownerName() + request.shopName();
-        Member merchant = memberCommandService.registerMerchant(nickname, request.merchantId());
+        Member merchant = memberCommandService.registerMerchant(nickname, request.merchantId(), request.isTermAgreed());
 
         Point point = kakaoGeocodingProvider.transferToGeocode(request.address());
 

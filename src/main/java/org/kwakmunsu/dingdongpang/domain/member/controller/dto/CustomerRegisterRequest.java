@@ -8,12 +8,16 @@ import org.kwakmunsu.dingdongpang.domain.member.service.dto.CustomerRegisterServ
 public record CustomerRegisterRequest(
         @NotBlank(message = "닉네임은 필수 값입니다.")
         @Schema(description = "닉네임", example = "강대훈")
-        String nickname
+        String nickname,
+
+        @Schema(description = "약관 동의 여부", example = "true")
+        boolean isTermAgreed
 ) {
 
     public CustomerRegisterServiceRequest toServiceRequest(Long memberId) {
         return CustomerRegisterServiceRequest.builder()
                 .nickname(nickname)
+                .isTermAgreed(isTermAgreed)
                 .memberId(memberId)
                 .build();
     }

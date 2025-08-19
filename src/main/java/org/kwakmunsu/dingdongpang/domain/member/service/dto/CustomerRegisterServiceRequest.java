@@ -5,6 +5,7 @@ import lombok.Builder;
 @Builder
 public record CustomerRegisterServiceRequest(
         String nickname,
+        boolean isTermAgreed,
         Long memberId
 ) {
 

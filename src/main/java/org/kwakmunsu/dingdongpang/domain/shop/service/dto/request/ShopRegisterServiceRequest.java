@@ -15,6 +15,7 @@ public record ShopRegisterServiceRequest(
         String address,
         String businessNumber,
         String ownerName,
+        boolean isTermAgreed,
         Long merchantId,
         MultipartFile mainImage,
         List<MultipartFile> imageFiles,
