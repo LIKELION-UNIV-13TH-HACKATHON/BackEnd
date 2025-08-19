@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "상인 정보 응답 DTO")
 public record MerchantProfileResponse(
-        @Schema(description = "상인 id", example = "1")
-        Long merchantId,
+        @Schema(description = "매장 id", example = "1")
+        Long shopId,
 
         @Schema(description = "매장명", example = "대훈이네 곱창")
         String shopName,
