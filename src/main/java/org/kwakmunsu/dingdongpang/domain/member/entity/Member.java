@@ -34,12 +34,15 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private boolean isTermAgreed;
+
     public static Member createGuest(String email, String nickname, String socialId) {
         return Member.builder()
                 .email(email)
                 .nickname(nickname)
                 .socialId(socialId)
                 .role(Role.ROLE_GUEST)
+                .isTermAgreed(false)
                 .build();
     }
 
@@ -70,6 +73,10 @@ public class Member extends BaseEntity {
 
     public boolean isNotEqualsNickname(String nickname) {
         return !this.nickname.equals(nickname);
+    }
+
+    public void updateIsTermAgreed(boolean isTermAgreed) {
+        this.isTermAgreed = isTermAgreed;
     }
 
 }

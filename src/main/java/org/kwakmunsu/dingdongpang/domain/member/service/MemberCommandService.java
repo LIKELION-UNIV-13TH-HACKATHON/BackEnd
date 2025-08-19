@@ -29,12 +29,14 @@ public class MemberCommandService {
             customer.updateNickname(nickname);
         }
         customer.upgradeRoleToMember();
+        customer.updateIsTermAgreed(request.isTermAgreed());
+
 
         registerMemberTypeToCustomer(customer);
     }
 
     @Transactional
-    public Member registerMerchant(String nickname, Long merchantId) {
+    public Member registerMerchant(String nickname, Long merchantId, boolean termAgreed) {
         Member merchant = memberRepository.findById(merchantId);
 
         if (merchant.isNotEqualsNickname(nickname)) {
@@ -42,7 +44,7 @@ public class MemberCommandService {
             merchant.updateNickname(nickname);
         }
         merchant.upgradeRoleToMember();
-
+        merchant.updateIsTermAgreed(termAgreed);
         registerMemberTypeToMerchant(merchant);
 
         return merchant;

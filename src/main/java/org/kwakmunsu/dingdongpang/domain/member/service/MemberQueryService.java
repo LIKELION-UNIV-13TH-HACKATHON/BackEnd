@@ -25,14 +25,15 @@ public class MemberQueryService {
 
     public MerchantProfileResponse getMerchantProfile(Long merchantId) {
         Shop shop = shopRepository.findByMerchantId(merchantId);
+        Member merchant = memberRepository.findById(merchantId);
 
-        return new MerchantProfileResponse(shop.getId(), shop.getShopName(), shop.getAddress(), shop.getMainImage());
+        return MerchantProfileResponse.from(shop, merchant.isTermAgreed());
     }
 
     public CustomerProfileResponse getCustomerProfile(Long customerId) {
         Member customer = memberRepository.findById(customerId);
 
-        return new CustomerProfileResponse(customer.getId(), customer.getNickname(), customer.getProfileUrl());
+        return CustomerProfileResponse.of(customer);
     }
 
 }
