@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -72,7 +73,7 @@ class InquiryControllerTest extends ControllerTestSupport {
                 .inquiryId(1L)
                 .question("question")
                 .answer("answer")
-                .createdAt(LocalDateTime.now())
+                .createdAt(Timestamp.valueOf(LocalDateTime.now()).getTime())
                 .build();
         var inquiryListResponse = new InquiryListResponse(List.of(inquiryPreviewResponse));
         given(inquiryQueryService.getInquiryList(any(InquiryReadServiceRequest.class))).willReturn(inquiryListResponse);
@@ -89,7 +90,7 @@ class InquiryControllerTest extends ControllerTestSupport {
                 .hasPathSatisfying("$.responses[0].inquiryId", v -> v.assertThat().isEqualTo(inquiryPreviewResponse.inquiryId().intValue()))
                 .hasPathSatisfying("$.responses[0].question", v -> v.assertThat().isEqualTo(inquiryPreviewResponse.question()))
                 .hasPathSatisfying("$.responses[0].answer", v -> v.assertThat().isEqualTo(inquiryPreviewResponse.answer()))
-                .hasPathSatisfying("$.responses[0].createdAt", v -> v.assertThat().isEqualTo(inquiryPreviewResponse.createdAt().toString()));
+                .hasPathSatisfying("$.responses[0].createdAt", v -> v.assertThat().isEqualTo(inquiryPreviewResponse.createdAt()));
     }
 
     @TestMember
@@ -111,7 +112,7 @@ class InquiryControllerTest extends ControllerTestSupport {
                 .inquiryId(1L)
                 .question("question")
                 .answer("answer")
-                .createdAt(LocalDateTime.now())
+                .createdAt(Timestamp.valueOf(LocalDateTime.now()).getTime())
                 .build();
         var inquiryListResponse = new InquiryListByMerchantResponse(List.of(inquiryByMerchantResponse));
 
@@ -128,7 +129,7 @@ class InquiryControllerTest extends ControllerTestSupport {
                 .hasPathSatisfying("$.responses[0].inquiryId", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.inquiryId().intValue()))
                 .hasPathSatisfying("$.responses[0].question", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.question()))
                 .hasPathSatisfying("$.responses[0].answer", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.answer()))
-                .hasPathSatisfying("$.responses[0].createdAt", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.createdAt().toString()));
+                .hasPathSatisfying("$.responses[0].createdAt", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.createdAt()));
     }
 
     @TestMember
