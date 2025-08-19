@@ -3,6 +3,7 @@ package org.kwakmunsu.dingdongpang.domain.notification.service.dto;
 import static org.kwakmunsu.dingdongpang.global.util.TimeConverter.dateTimeToString;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import org.kwakmunsu.dingdongpang.domain.notification.entity.Notification;
@@ -19,8 +20,8 @@ public record NotifyDetailResponse(
         @Schema(description = "알림 메세지", example = "알림 메세지입니다.")
         String message,
 
-        @Schema(description = "알림 보낸 시각", example = "2025-07-31 오전 11:20")
-        String sentAt,
+        @Schema(description = "알림 보낸 시각", example = "2025-08-19T12:09:30.123456789")
+        LocalDateTime sentAt,
 
         @Schema(description = "알림 이미지들")
         List<String> images
@@ -32,7 +33,7 @@ public record NotifyDetailResponse(
                 .shopId(notification.getShop().getId())
                 .message(notification.getMessage())
                 .images(images)
-                .sentAt(dateTimeToString(notification.getUpdatedAt()))
+                .sentAt(notification.getUpdatedAt())
                 .build();
     }
 
