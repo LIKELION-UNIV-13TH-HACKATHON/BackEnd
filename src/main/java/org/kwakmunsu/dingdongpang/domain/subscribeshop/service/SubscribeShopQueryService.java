@@ -12,7 +12,6 @@ import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopR
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.DailySubscriptionResponse;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.service.dto.DailySubscriptionListResponse;
-import org.kwakmunsu.dingdongpang.domain.subscribeshop.service.dto.SubscribeShopReadServiceRequest;
 import org.kwakmunsu.dingdongpang.global.exception.ForbiddenException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,8 @@ public class SubscribeShopQueryService {
     private final SubscribeShopRepository subscribeShopRepository;
     private final ShopRepository shopRepository;
 
-    public SubscribeShopListResponse getSubscribedShop(SubscribeShopReadServiceRequest request) {
-        return subscribeShopRepository.getSubscribeShop(request.toDomainRequest());
+    public SubscribeShopListResponse getSubscribedShop(Long memberId) {
+        return subscribeShopRepository.getSubscribeShop(memberId);
     }
 
     public DailySubscriptionListResponse getWeeklySubscriptions(Long shopId, Long merchantId) {

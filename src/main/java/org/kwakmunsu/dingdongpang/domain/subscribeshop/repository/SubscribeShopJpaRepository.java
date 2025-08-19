@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.entity.SubscribeShop;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.DailySubscriptionResponse;
+import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopPreviewResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -44,5 +45,13 @@ public interface SubscribeShopJpaRepository extends JpaRepository<SubscribeShop,
             @Param("endDate") LocalDateTime endDate
     );
 
+    @Query("SELECT new org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopPreviewResponse(" +
+            "ss.id, ss.shopId, s.shopName, s.mainImage) " +
+            "FROM SubscribeShop ss " +
+            "JOIN Shop s ON ss.shopId = s.id " +
+            "WHERE ss.memberId = :memberId " +
+            "ORDER BY ss.id DESC"
+    )
+    List<SubscribeShopPreviewResponse> getSubscribedShopList(@Param("memberId") Long memberId);
 
 }

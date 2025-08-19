@@ -10,11 +10,8 @@ public record SubscribeShopListResponse(
         @Schema(description = "매장 목록 조회 시 보여지는 정보")
         List<SubscribeShopPreviewResponse> responses,
 
-        @Schema(description = "다음 커서 ID, Null 이면 더 이상 데이터가 없음")
-        Long nextCursorId,
-
-        @Schema(description = "다음 페이지가 있는지 여부")
-        boolean hasNext
+        @Schema(description = "구독 매장 수", example = "222")
+        long totalSubscribeCount
 ) {
 
 }
