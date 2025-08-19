@@ -26,7 +26,7 @@ public class MemberQueryService {
     public MerchantProfileResponse getMerchantProfile(Long merchantId) {
         Shop shop = shopRepository.findByMerchantId(merchantId);
 
-        return new MerchantProfileResponse(merchantId, shop.getShopName(), shop.getAddress(), shop.getMainImage());
+        return new MerchantProfileResponse(shop.getId(), shop.getShopName(), shop.getAddress(), shop.getMainImage());
     }
 
     public CustomerProfileResponse getCustomerProfile(Long customerId) {
