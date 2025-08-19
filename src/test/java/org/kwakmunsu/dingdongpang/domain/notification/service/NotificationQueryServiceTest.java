@@ -3,6 +3,7 @@ package org.kwakmunsu.dingdongpang.domain.notification.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.kwakmunsu.dingdongpang.global.util.TimeConverter.dateTimeToString;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -111,7 +112,7 @@ record NotificationQueryServiceTest(
                         notification.getId(),
                         notification.getShop().getId(),
                         notification.getMessage(),
-                        notification.getUpdatedAt()
+                        Timestamp.valueOf(notification.getUpdatedAt()).getTime()
                 );
     }
 

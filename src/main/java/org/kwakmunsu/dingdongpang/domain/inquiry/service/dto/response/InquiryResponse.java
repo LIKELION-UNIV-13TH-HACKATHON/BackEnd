@@ -3,6 +3,7 @@ package org.kwakmunsu.dingdongpang.domain.inquiry.service.dto.response;
 import static org.kwakmunsu.dingdongpang.global.util.TimeConverter.dateTimeToString;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import org.kwakmunsu.dingdongpang.domain.inquiry.entity.Inquiry;
@@ -22,8 +23,8 @@ public record InquiryResponse(
         @Schema(description = "문의 답변 - 답변이 없는 경우 Null", example = "답변이요")
         String answer,
 
-        @Schema(description = "문의 등록 시간", example = "2025-08-11 오후 12:55")
-        LocalDateTime createdAt
+        @Schema(description = "문의 등록 시간 - 단위 Ms ", example = "1724041650123")
+        long createdAt
 ) {
 
     public static InquiryResponse of(Inquiry inquiry) {
@@ -32,7 +33,7 @@ public record InquiryResponse(
                 .title(inquiry.getTitle())
                 .question(inquiry.getQuestion())
                 .answer(inquiry.getAnswer())
-                .createdAt(inquiry.getCreatedAt())
+                .createdAt(Timestamp.valueOf(inquiry.getCreatedAt()).getTime())
                 .build();
     }
 
