@@ -72,7 +72,7 @@ class InquiryControllerTest extends ControllerTestSupport {
                 .inquiryId(1L)
                 .question("question")
                 .answer("answer")
-                .createdAt(dateTimeToString(LocalDateTime.now()))
+                .createdAt(LocalDateTime.now())
                 .build();
         var inquiryListResponse = new InquiryListResponse(List.of(inquiryPreviewResponse));
         given(inquiryQueryService.getInquiryList(any(InquiryReadServiceRequest.class))).willReturn(inquiryListResponse);
@@ -89,7 +89,7 @@ class InquiryControllerTest extends ControllerTestSupport {
                 .hasPathSatisfying("$.responses[0].inquiryId", v -> v.assertThat().isEqualTo(inquiryPreviewResponse.inquiryId().intValue()))
                 .hasPathSatisfying("$.responses[0].question", v -> v.assertThat().isEqualTo(inquiryPreviewResponse.question()))
                 .hasPathSatisfying("$.responses[0].answer", v -> v.assertThat().isEqualTo(inquiryPreviewResponse.answer()))
-                .hasPathSatisfying("$.responses[0].createdAt", v -> v.assertThat().isEqualTo(inquiryPreviewResponse.createdAt()));
+                .hasPathSatisfying("$.responses[0].createdAt", v -> v.assertThat().isEqualTo(inquiryPreviewResponse.createdAt().toString()));
     }
 
     @TestMember
@@ -111,7 +111,7 @@ class InquiryControllerTest extends ControllerTestSupport {
                 .inquiryId(1L)
                 .question("question")
                 .answer("answer")
-                .createdAt(dateTimeToString(LocalDateTime.now()))
+                .createdAt(LocalDateTime.now())
                 .build();
         var inquiryListResponse = new InquiryListByMerchantResponse(List.of(inquiryByMerchantResponse));
 
@@ -128,7 +128,7 @@ class InquiryControllerTest extends ControllerTestSupport {
                 .hasPathSatisfying("$.responses[0].inquiryId", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.inquiryId().intValue()))
                 .hasPathSatisfying("$.responses[0].question", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.question()))
                 .hasPathSatisfying("$.responses[0].answer", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.answer()))
-                .hasPathSatisfying("$.responses[0].createdAt", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.createdAt()));
+                .hasPathSatisfying("$.responses[0].createdAt", v -> v.assertThat().isEqualTo(inquiryByMerchantResponse.createdAt().toString()));
     }
 
     @TestMember

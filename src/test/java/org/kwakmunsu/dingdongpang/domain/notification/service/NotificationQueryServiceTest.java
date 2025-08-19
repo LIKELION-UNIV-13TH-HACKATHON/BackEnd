@@ -111,7 +111,7 @@ record NotificationQueryServiceTest(
                         notification.getId(),
                         notification.getShop().getId(),
                         notification.getMessage(),
-                        dateTimeToString(notification.getUpdatedAt())
+                        notification.getUpdatedAt()
                 );
     }
 
