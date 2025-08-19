@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.service.SubscribeShopCommandService;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.service.SubscribeShopQueryService;
+import org.kwakmunsu.dingdongpang.domain.subscribeshop.service.dto.DailySubscriptionListResponse;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.service.dto.SubscribeShopReadServiceRequest;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,14 @@ public class SubscribeController extends SubscribeDocsController {
         SubscribeShopListResponse response = subscribeShopQueryService.getSubscribedShop(request);
 
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping("/{shopId}/subscriptions/weekly")
+    public ResponseEntity<DailySubscriptionListResponse> getWeeklySubscriptions(@PathVariable Long shopId, @AuthMember Long memberId) {
+        DailySubscriptionListResponse response = subscribeShopQueryService.getWeeklySubscriptions(shopId, memberId);
+
+        return  ResponseEntity.ok(response);
     }
 
 }
