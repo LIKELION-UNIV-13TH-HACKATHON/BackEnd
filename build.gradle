@@ -70,13 +70,18 @@ dependencies {
     // firebase
     implementation 'com.google.firebase:firebase-admin:9.5.0'
 }
-tasks.register('copyPrivate', Copy) {
-    copy {
-        from './BACKEND_SUBMODULE'
-        include "*.yml"
-        into 'src/main/resources'
+
+processResources.dependsOn('copySecret')
+task copySecret(type: Copy) {
+    from './BACKEND-SUBMODILE'
+    include "*.yml", "*.json"
+    into 'src/main/resources'
+
+    onlyIf {
+        file('./BACKEND-SUBMODILE').exists()
     }
 }
+
 tasks.named('test') {
     useJUnitPlatform()
 }
