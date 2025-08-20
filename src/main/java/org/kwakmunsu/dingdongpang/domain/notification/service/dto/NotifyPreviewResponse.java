@@ -1,10 +1,7 @@
 package org.kwakmunsu.dingdongpang.domain.notification.service.dto;
 
-import static org.kwakmunsu.dingdongpang.global.util.TimeConverter.dateTimeToString;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import lombok.Builder;
 import org.kwakmunsu.dingdongpang.domain.notification.entity.Notification;
 
