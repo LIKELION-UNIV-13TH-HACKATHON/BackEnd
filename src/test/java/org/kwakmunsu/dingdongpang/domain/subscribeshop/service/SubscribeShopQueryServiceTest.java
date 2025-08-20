@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
+import com.github.benmanes.caffeine.cache.stats.CacheStats;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,8 @@ import org.kwakmunsu.dingdongpang.global.GeoFixture;
 import org.kwakmunsu.dingdongpang.global.exception.ForbiddenException;
 import org.locationtech.jts.geom.Point;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -29,7 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 record SubscribeShopQueryServiceTest(
         SubscribeShopQueryService subscribeShopQueryService,
         SubscribeShopRepository subscribeShopRepository,
-        ShopRepository shopRepository
+        ShopRepository shopRepository,
+        CacheManager cacheManager
 ) {
 
     @DisplayName("구독한 매장 목록을 조회힌다.")
@@ -95,6 +99,72 @@ record SubscribeShopQueryServiceTest(
                         tuple(today.minusDays(1), 0L),
                         tuple(today, 2L)
                 );
+    }
+
+    @DisplayName("최근 일주일 간 구독자 수를 조회한다.")
+    @Test
+    void getWeeklySubscriptionsByCache() {
+        ShopRegisterServiceRequest request = ShopFixture.getShopRegisterServiceRequest();
+        Point point = GeoFixture.createPoint(1.2, 2.3);
+        Shop shop = Shop.create(request.toDomainRequest(1L, point, null));
+        shopRepository.save(shop);
+
+        SubscribeShop subscribeShop = SubscribeShop.create(1L, shop.getId());
+        SubscribeShop subscribeShop1 = SubscribeShop.create(2L, shop.getId());
+        subscribeShopRepository.save(subscribeShop);
+        subscribeShopRepository.save(subscribeShop1);
+
+        var response = subscribeShopQueryService.getWeeklySubscriptions(shop.getId(), shop.getMerchantId());
+        List<DailySubscriptionResponse> responses = response.responses();
+
+        assertThat(responses).hasSize(7)
+                // 날짜 순서가 오름차순(오래된 → 최신)인지 확인
+                .extracting(DailySubscriptionResponse::date)
+                .isSortedAccordingTo(LocalDate::compareTo);
+
+        LocalDate today = LocalDate.now();
+        assertThat(responses).hasSize(7)
+                .extracting("date", "subscriptionCount")
+                .containsExactly(
+                        tuple(today.minusDays(6), 0L),
+                        tuple(today.minusDays(5), 0L),
+                        tuple(today.minusDays(4), 0L),
+                        tuple(today.minusDays(3), 0L),
+                        tuple(today.minusDays(2), 0L),
+                        tuple(today.minusDays(1), 0L),
+                        tuple(today, 2L)
+                );
+    }
+    @DisplayName("최근 일주일 간 구독자 수 조회 시 처음에는 7번의 쿼리가 나가고 2번째부터는 6번의 hit로 가 터진다.")
+    @Test
+    void testCacheStatistics() {
+        ShopRegisterServiceRequest request = ShopFixture.getShopRegisterServiceRequest();
+        Point point = GeoFixture.createPoint(1.2, 2.3);
+        Shop shop = Shop.create(request.toDomainRequest(1L, point, null));
+        shopRepository.save(shop);
+
+        SubscribeShop subscribeShop = SubscribeShop.create(1L, shop.getId());
+        SubscribeShop subscribeShop1 = SubscribeShop.create(2L, shop.getId());
+        subscribeShopRepository.save(subscribeShop);
+        subscribeShopRepository.save(subscribeShop1);
+        // 첫 번째 호출
+        subscribeShopQueryService.getWeeklySubscriptions(shop.getId(), shop.getMerchantId());
+
+        // 캐시 통계 확인
+        CaffeineCache cache = (CaffeineCache) cacheManager.getCache("weekly-subscriptions");
+        CacheStats stats = cache.getNativeCache().stats();
+
+        System.out.println("Cache hits: " + stats.hitCount());
+        System.out.println("Cache misses: " + stats.missCount());
+
+        // 두 번째 호출
+        subscribeShopQueryService.getWeeklySubscriptions(shop.getId(), shop.getMerchantId());
+
+        stats = cache.getNativeCache().stats();
+        System.out.println("Cache hits after 2nd call: " + stats.hitCount());
+
+        // 캐시 히트 증가 확인
+        assertThat(stats.hitCount()).isGreaterThan(0);
     }
 
     @DisplayName("매장 관리자가 아닐 경우  조회할 수 없다.")
