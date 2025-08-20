@@ -11,7 +11,6 @@ import org.kwakmunsu.dingdongpang.domain.shop.repository.shopoperation.ShopOpera
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.OperationTimeServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopUpdateServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.shopimage.entity.ShopImage;
 import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepository;
 import org.kwakmunsu.dingdongpang.infrastructure.s3.S3Provider;
 import org.locationtech.jts.geom.Point;
@@ -37,7 +36,7 @@ public class ShopCommandService {
 
         if (!request.imageFiles().isEmpty()) {
             List<String> uploadedImages = s3Provider.uploadImages(request.imageFiles());
-            saveShopImages(uploadedImages, shop);
+            shopImageRepository.saveAll(uploadedImages, shop);
         }
 
         List<OperationTimeServiceRequest> operationTimeRequests = request.operationTimeRequests();
@@ -56,7 +55,7 @@ public class ShopCommandService {
 
         if (!request.imageFiles().isEmpty()) {
             List<String> uploadedImages = s3Provider.uploadImages(request.imageFiles());
-            saveShopImages(uploadedImages, shop);
+            shopImageRepository.saveAll(uploadedImages, shop);
         }
 
         List<OperationTimeServiceRequest> operationTimeRequests = request.operationTimeRequests();
@@ -64,13 +63,6 @@ public class ShopCommandService {
         shopOperationTimeRepository.findByShopId(shop.getId());
         saveShopOperationTimes(operationTimeRequests, shop);
 
-    }
-
-    private void saveShopImages(List<String> uploadedImages, Shop shop) {
-        List<ShopImage> images = uploadedImages.stream()
-                .map(image -> ShopImage.create(shop.getId(), image))
-                .toList();
-        shopImageRepository.saveAll(images);
     }
 
     private void saveShopOperationTimes(List<OperationTimeServiceRequest> operationTimeRequests, Shop shop) {
