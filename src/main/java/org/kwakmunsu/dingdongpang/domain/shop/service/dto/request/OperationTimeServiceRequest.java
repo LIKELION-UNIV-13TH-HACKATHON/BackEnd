@@ -5,8 +5,8 @@ import lombok.Builder;
 
 @Builder
 public record OperationTimeServiceRequest(
-        DayOfWeek dayOfWeek, // java.time.DayOfWeek
-        String openTime,     // "HH:mm" 포맷 (필요시 LocalTime으로 후처리)
+        DayOfWeek dayOfWeek,
+        String openTime,
         String closeTime,
         boolean isClosed
 ) {
