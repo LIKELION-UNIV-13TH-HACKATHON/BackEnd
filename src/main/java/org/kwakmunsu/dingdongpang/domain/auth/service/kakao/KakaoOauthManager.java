@@ -6,20 +6,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.kwakmunsu.dingdongpang.domain.auth.service.OAuth2UserInfo;
 import org.kwakmunsu.dingdongpang.global.exception.UnAuthenticationException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class KakaoOauthManager {
 
-    private final RestTemplate restTemplate;
+    private final RestClient restClient;
 
     public OAuth2UserInfo getOAuth2UserInfo(String socialAccessToken) {
         try {
@@ -38,16 +35,11 @@ public class KakaoOauthManager {
     }
 
     private ResponseEntity<?> getMemberInfoFromKakaoServer(String socialAccessToken) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + socialAccessToken);
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-
-        return restTemplate.exchange(
-                "https://kapi.kakao.com/v2/user/me",
-                HttpMethod.GET,
-                entity,
-                Map.class
-        );
+        return restClient.get()
+                .uri("https://kapi.kakao.com/v2/user/me")
+                .header("Authorization", "Bearer " + socialAccessToken)
+                .retrieve()
+                .toEntity(Map.class);
     }
 
 }
