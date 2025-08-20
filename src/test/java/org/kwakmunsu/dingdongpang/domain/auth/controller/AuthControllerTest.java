@@ -12,6 +12,7 @@ import org.kwakmunsu.dingdongpang.ControllerTestSupport;
 import org.kwakmunsu.dingdongpang.domain.auth.controller.dto.ReissueTokenRequest;
 import org.kwakmunsu.dingdongpang.domain.auth.controller.dto.SignInRequest;
 import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInResponse;
+import org.kwakmunsu.dingdongpang.global.TestMember;
 import org.kwakmunsu.dingdongpang.global.exception.UnAuthenticationException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
@@ -75,6 +76,16 @@ class AuthControllerTest extends ControllerTestSupport {
                 .exchange();
 
         assertThat(result).hasStatus(401);
+    }
+
+    @TestMember
+    @DisplayName("로그아웃을 한다.")
+    @Test
+    void singOut() {
+        assertThat(mvcTester.post().uri("/auth/sign-out"))
+                .hasStatusOk()
+                .apply(print())
+                .bodyJson();
     }
 
     @DisplayName("토큰을 재발급한다.")

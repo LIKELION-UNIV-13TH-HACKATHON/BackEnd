@@ -23,6 +23,7 @@ import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class AuthCommandServiceTest {
@@ -50,14 +51,14 @@ class AuthCommandServiceTest {
 
         given(memberRepository.findBySocialIdAndRole(anyString(), any())).willReturn(Optional.empty());
 
-        var tokenResponse = new TokenResponse("accessToken","refreshToken");
-        given(jwtProvider.createTokens(any(),any())).willReturn(tokenResponse);
+        var tokenResponse = new TokenResponse("accessToken", "refreshToken");
+        given(jwtProvider.createTokens(any(), any())).willReturn(tokenResponse);
 
         var signInServiceRequest = new SignInServiceRequest("social-access-token");
         var result = authCommandService.signIn(signInServiceRequest);
         assertThat(result.isNewMember()).isTrue();
         assertThat(result.response())
-                .extracting(    TokenResponse::accessToken, TokenResponse::refreshToken)
+                .extracting(TokenResponse::accessToken, TokenResponse::refreshToken)
                 .containsExactly(tokenResponse.accessToken(), tokenResponse.refreshToken());
     }
 
@@ -72,8 +73,8 @@ class AuthCommandServiceTest {
         Optional<Member> optionalMember = Optional.ofNullable(Member.createMember("email", "nickname", "1234"));
         given(memberRepository.findBySocialIdAndRole(anyString(), any())).willReturn(optionalMember);
 
-        var tokenResponse = new TokenResponse("accessToken","refreshToken");
-        given(jwtProvider.createTokens(any(),any())).willReturn(tokenResponse);
+        var tokenResponse = new TokenResponse("accessToken", "refreshToken");
+        given(jwtProvider.createTokens(any(), any())).willReturn(tokenResponse);
 
         var signInServiceRequest = new SignInServiceRequest("social-access-token");
         var result = authCommandService.signIn(signInServiceRequest);
@@ -81,7 +82,7 @@ class AuthCommandServiceTest {
         assertThat(optionalMember.get().getRefreshToken()).isEqualTo(tokenResponse.refreshToken());
         assertThat(result.isNewMember()).isFalse();
         assertThat(result.response())
-                .extracting(    TokenResponse::accessToken, TokenResponse::refreshToken)
+                .extracting(TokenResponse::accessToken, TokenResponse::refreshToken)
                 .containsExactly(tokenResponse.accessToken(), tokenResponse.refreshToken());
     }
 
@@ -89,9 +90,9 @@ class AuthCommandServiceTest {
     @Test
     void reissue() {
         var member = Member.createMember("email", "nickname", "1234");
-        var tokenResponse = new TokenResponse("new-accessToken","new-refreshToken");
+        var tokenResponse = new TokenResponse("new-accessToken", "new-refreshToken");
         given(memberRepository.findByRefreshToken(any())).willReturn(member);
-        given(jwtProvider.createTokens(any(),any())).willReturn(tokenResponse);
+        given(jwtProvider.createTokens(any(), any())).willReturn(tokenResponse);
 
         TokenResponse result = authCommandService.reissue("refreshToken");
 
@@ -102,13 +103,27 @@ class AuthCommandServiceTest {
         assertThat(member.getRefreshToken()).isEqualTo(tokenResponse.refreshToken());
     }
 
-    @DisplayName("유효하지 않은 RT 요청으로 토큰을 재발급에 실패한다.")
+    @DisplayName("유효하지 않은 RT 요청으로 토큰 재발급에 실패한다.")
     @Test
     void failReissue() {
         given(memberRepository.findByRefreshToken(any())).willThrow(new NotFoundException(ErrorStatus.NOT_FOUND_TOKEN));
 
-        assertThatThrownBy(() ->authCommandService.reissue("refreshToken") )
-            .isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> authCommandService.reissue("refreshToken"))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    // TODO: FCM 토큰도 확인하기
+    @DisplayName("로그아웃을 한다.")
+    @Test
+    void logout() {
+        var member = Member.createMember("email", "nickname", "1234");
+        ReflectionTestUtils.setField(member, "id", 1L);
+
+        given(memberRepository.findById(any())).willReturn(member);
+
+        authCommandService.signOut(member.getId());
+
+        assertThat(member.getRefreshToken()).isNull();
     }
 
 }
