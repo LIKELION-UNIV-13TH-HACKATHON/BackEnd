@@ -31,7 +31,7 @@ public class AuthController extends AuthDocsController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/sing-out")
+    @PostMapping("/sign-out")
     public ResponseEntity<Void> signOut(@AuthMember Long memberId) {
         authCommandService.signOut(memberId);
 
