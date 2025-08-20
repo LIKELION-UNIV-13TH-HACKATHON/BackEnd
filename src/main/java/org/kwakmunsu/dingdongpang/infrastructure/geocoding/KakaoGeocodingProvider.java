@@ -13,12 +13,9 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 @RequiredArgsConstructor
 @Component
@@ -26,7 +23,7 @@ public class KakaoGeocodingProvider {
 
     private static final GeometryFactory GF = new GeometryFactory(new PrecisionModel(), 4326);
     private static final String GEOCODING_URL = "https://dapi.kakao.com/v2/local/search/address.json";
-    private final RestTemplate restTemplate;
+    private final RestClient restClient;
 
     @Value("${kakao.rest.api-key}")
     private String kakaoRestApiKey;
@@ -40,18 +37,13 @@ public class KakaoGeocodingProvider {
     }
 
     private ResponseEntity<?> getGeocodeFromKakaoServer(String address) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "KakaoAK " + kakaoRestApiKey);
-        HttpEntity<?> entity = new HttpEntity<>(headers);
         String url = GEOCODING_URL + "?query=" + address;
 
-        return restTemplate
-                .exchange(
-                        url,
-                        HttpMethod.GET,
-                        entity,
-                        Map.class
-                );
+        return restClient.get()
+                .uri(url)
+                .header("Authorization", "KakaoAK " + kakaoRestApiKey)
+                .retrieve()
+                .toEntity(Map.class);
     }
 
     private Point getLocation(Map<String, Object> attributes) {
