@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.entity.SubscribeShop;
-import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.DailySubscriptionResponse;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.dto.SubscribeShopPreviewResponse;
 import org.springframework.stereotype.Repository;
@@ -52,8 +51,8 @@ public class SubscribeShopRepository {
         return subscribeShopJpaRepository.countByShopId(shopId);
     }
 
-    public List<DailySubscriptionResponse> getWeeklySubscriptions(Long shopId, LocalDateTime startDate, LocalDateTime endDate) {
-        return subscribeShopJpaRepository.getWeeklySubscriptions(shopId, startDate, endDate);
+    public Long getSubscriptionCount(Long shopId, LocalDateTime startOfDay, LocalDateTime endOfDay) {
+        return subscribeShopJpaRepository.countByShopIdAndCreatedAtBetween(shopId, startOfDay, endOfDay);
     }
 
 }
