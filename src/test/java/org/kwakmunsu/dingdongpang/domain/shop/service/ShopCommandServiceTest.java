@@ -41,7 +41,8 @@ record ShopCommandServiceTest(
             Point point = GeoFixture.createPoint(1.2, 2.3);
 
             shopCommandService.register(shopRegisterServiceRequest, point, 1L);
-
+            entityManager.clear();
+            entityManager.flush();
             boolean exists = shopRepository.existsByBusinessNumber(shopRegisterServiceRequest.businessNumber());
 
             assertThat(exists).isTrue();
