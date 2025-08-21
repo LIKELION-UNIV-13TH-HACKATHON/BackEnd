@@ -2,7 +2,7 @@ name: dingdong
 on:
   push:
     branches:
-      - main
+      - Setting/#93
 
 jobs:
   Deploy:
@@ -17,7 +17,7 @@ jobs:
       - name: JDK 설치
         uses: actions/setup-java@v4
         with:
-          distribution: liberica
+          distribution: corretto
           java-version: 21
 
       - name: Gradlew 실행 권한 부여
@@ -49,4 +49,4 @@ jobs:
             docker stop dingdong || true
             docker rm dingdong || true
             docker pull ${{ secrets.DOCKER_USERNAME }}/dingdong:latest
-            docker run -d --name dingdong -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/dingdong:latest
+            docker run -d --name dingdong --network="host" ${{ secrets.DOCKER_USERNAME }}/dingdong:latest
