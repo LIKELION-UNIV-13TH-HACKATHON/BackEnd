@@ -1,4 +1,4 @@
-FROM bellsoft/liberica-openjdk-debian:21
+FROM amazoncorretto:21
 
 ARG JAR_FILE=build/libs/*SNAPSHOT.jar
 
