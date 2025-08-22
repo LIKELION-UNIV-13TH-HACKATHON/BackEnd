@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.infrastructure.resttemplate;
+package org.kwakmunsu.dingdongpang.infrastructure.restclient;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
