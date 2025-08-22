@@ -53,7 +53,7 @@ public class NotificationQueryService {
 
         if (optionalNotification.isPresent()) {
             Notification notification = optionalNotification.get();
-            return new TodayLatestNotificationResponse(notification.getId(), notification.getMessage());
+            return TodayLatestNotificationResponse.from(notification);
         }
 
         return null;
