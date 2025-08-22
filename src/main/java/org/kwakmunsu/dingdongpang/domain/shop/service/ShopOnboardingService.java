@@ -10,8 +10,6 @@ import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopUpdateServ
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
-import org.kwakmunsu.dingdongpang.infrastructure.geocoding.KakaoGeocodingProvider;
-import org.kwakmunsu.dingdongpang.infrastructure.openapi.BusinessRegisterProvider;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +24,8 @@ public class ShopOnboardingService {
     private final MemberCommandService memberCommandService;
     private final ShopCommandService shopCommandService;
     private final ShopRepository shopRepository;
-    private final BusinessRegisterProvider businessRegisterProvider;
-    private final KakaoGeocodingProvider kakaoGeocodingProvider;
+    private final BusinessRegistrationValidator businessRegistrationValidator;
+    private final GeocodingProvider geocodingProvider;
 
     @Transactional
     public void register(ShopRegisterServiceRequest request) {
@@ -38,7 +36,7 @@ public class ShopOnboardingService {
         String nickname = request.ownerName() + request.shopName();
         Member merchant = memberCommandService.registerMerchant(nickname, request.merchantId(), request.isTermAgreed());
 
-        Point point = kakaoGeocodingProvider.transferToGeocode(request.address());
+        Point point = geocodingProvider.transferToGeocode(request.address());
 
         shopCommandService.register(request, point, merchant.getId());
     }
@@ -55,7 +53,7 @@ public class ShopOnboardingService {
         Member merchant = memberCommandService.updateMerchant(nickname, request.merchantId());
         Point point = shop.getLocation();
         if (shop.isNotEqualToAddress(request.address())) {
-            point = kakaoGeocodingProvider.transferToGeocode(request.address());
+            point = geocodingProvider.transferToGeocode(request.address());
         }
 
         shopCommandService.update(request, shop, point, merchant.getId());
@@ -68,7 +66,7 @@ public class ShopOnboardingService {
     }
 
     private void validateBusinessNumber(String businessRegistrationNumber) {
-        if (businessRegisterProvider.isRegister(businessRegistrationNumber)) {
+        if (businessRegistrationValidator.isRegister(businessRegistrationNumber)) {
             return;
         }
         throw new NotFoundException(ErrorStatus.NOT_FOUND_BUSINESS_NUMBER);

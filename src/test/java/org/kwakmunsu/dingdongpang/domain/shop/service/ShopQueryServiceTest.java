@@ -20,7 +20,6 @@ import org.kwakmunsu.dingdongpang.domain.shopimage.repository.ShopImageRepositor
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopRepository;
 import org.kwakmunsu.dingdongpang.global.GeoFixture;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
-import org.kwakmunsu.dingdongpang.infrastructure.geocoding.KakaoGeocodingProvider;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +33,7 @@ record ShopQueryServiceTest(
         ShopImageRepository shopImageRepository,
         ShopOperationTimeRepository shopOperationTimeRepository,
         SubscribeShopRepository subscribeShopRepository,
-        KakaoGeocodingProvider kakaoGeocodingProvider
+        GeocodingProvider geocodingProvider
 ) {
 
     @DisplayName("매장 정보를 조회한다.")
@@ -83,9 +82,9 @@ record ShopQueryServiceTest(
         var registerRequest2 = getShopRegisterServiceRequest("문수네 곱창", "010-1234-5679", "businessNumber2", address2);
         var registerRequest3 = getShopRegisterServiceRequest("순재네 막창", "010-1234-5690", "businessNumber3", address3);
 
-        var point1 = kakaoGeocodingProvider.transferToGeocode(address1);
-        var point2 = kakaoGeocodingProvider.transferToGeocode(address2);
-        var point3 = kakaoGeocodingProvider.transferToGeocode(address3);
+        var point1 = geocodingProvider.transferToGeocode(address1);
+        var point2 = geocodingProvider.transferToGeocode(address2);
+        var point3 = geocodingProvider.transferToGeocode(address3);
 
         shopCommandService.register(registerRequest, point1, 1L);
         shopCommandService.register(registerRequest2, point2, 2L);

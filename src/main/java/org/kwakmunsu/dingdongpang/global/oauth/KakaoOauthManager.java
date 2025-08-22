@@ -1,9 +1,9 @@
-package org.kwakmunsu.dingdongpang.domain.auth.service.kakao;
+package org.kwakmunsu.dingdongpang.global.oauth;
 
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.kwakmunsu.dingdongpang.domain.auth.service.OAuth2UserInfo;
+import org.kwakmunsu.dingdongpang.domain.auth.service.OAuth2Provider;
 import org.kwakmunsu.dingdongpang.global.exception.UnAuthenticationException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +14,11 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class KakaoOauthManager {
+public class KakaoOauthManager implements OAuth2Provider {
 
     private final RestClient restClient;
 
+    @Override
     public OAuth2UserInfo getOAuth2UserInfo(String socialAccessToken) {
         try {
             ResponseEntity<?> response = getMemberInfoFromKakaoServer(socialAccessToken);

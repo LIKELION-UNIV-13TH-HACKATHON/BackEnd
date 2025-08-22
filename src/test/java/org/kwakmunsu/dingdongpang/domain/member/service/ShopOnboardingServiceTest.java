@@ -12,12 +12,12 @@ import org.kwakmunsu.dingdongpang.domain.shop.ShopFixture;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.service.BusinessRegistrationValidator;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopOnboardingService;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopUpdateServiceRequest;
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
-import org.kwakmunsu.dingdongpang.infrastructure.openapi.BusinessRegisterProvider;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +29,7 @@ record ShopOnboardingServiceTest(
         ShopCommandService shopCommandService,
         ShopRepository shopRepository,
         MemberRepository memberRepository,
-        BusinessRegisterProvider businessRegisterProvider
+        BusinessRegistrationValidator businessRegistrationValidator
 ) {
 
 //    @Disabled("IP 주소 상시 변경으로 비활성화")

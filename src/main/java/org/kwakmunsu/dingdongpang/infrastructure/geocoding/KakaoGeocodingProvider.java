@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.kwakmunsu.dingdongpang.domain.shop.service.GeocodingProvider;
 import org.kwakmunsu.dingdongpang.global.exception.InternalServerException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.locationtech.jts.geom.Coordinate;
@@ -19,7 +20,7 @@ import org.springframework.web.client.RestClient;
 
 @RequiredArgsConstructor
 @Component
-public class KakaoGeocodingProvider {
+public class KakaoGeocodingProvider implements GeocodingProvider {
 
     private static final GeometryFactory GF = new GeometryFactory(new PrecisionModel(), 4326);
     private static final String GEOCODING_URL = "https://dapi.kakao.com/v2/local/search/address.json";
@@ -28,6 +29,7 @@ public class KakaoGeocodingProvider {
     @Value("${kakao.rest.api-key}")
     private String kakaoRestApiKey;
 
+    @Override
     public Point transferToGeocode(String address) {
         ResponseEntity<?> response = getGeocodeFromKakaoServer(address);
 

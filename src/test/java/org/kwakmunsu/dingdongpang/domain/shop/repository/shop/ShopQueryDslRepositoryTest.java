@@ -18,6 +18,7 @@ import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.ShopType;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopPreviewResponse;
+import org.kwakmunsu.dingdongpang.domain.shop.service.GeocodingProvider;
 import org.kwakmunsu.dingdongpang.domain.shop.service.ShopCommandService;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.OperationTimeServiceRequest;
 import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopReadServiceRequest;
@@ -25,7 +26,6 @@ import org.kwakmunsu.dingdongpang.domain.shop.service.dto.request.ShopRegisterSe
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.entity.SubscribeShop;
 import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopRepository;
 import org.kwakmunsu.dingdongpang.global.GeoFixture;
-import org.kwakmunsu.dingdongpang.infrastructure.geocoding.KakaoGeocodingProvider;
 import org.locationtech.jts.geom.Point;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +38,7 @@ record ShopQueryDslRepositoryTest(
         ShopRepository shopRepository,
         SubscribeShopRepository subscribeShopRepository,
         ShopQueryDslRepository shopQueryDslRepository,
-        KakaoGeocodingProvider kakaoGeocodingProvider
+        GeocodingProvider geocodingProvider
 ) {
 
     @DisplayName("매장 목록을 조회힌다.")
@@ -52,9 +52,9 @@ record ShopQueryDslRepositoryTest(
         var registerRequest2 = getShopRegisterServiceRequest("문수네 곱창", "010-1234-5679", "businessNumber2", address2);
         var registerRequest3 = getShopRegisterServiceRequest("순재네 막창", "010-1234-5690", "businessNumber3", address3);
 
-        var point1 = kakaoGeocodingProvider.transferToGeocode(address1);
-        var point2 = kakaoGeocodingProvider.transferToGeocode(address2);
-        var point3 = kakaoGeocodingProvider.transferToGeocode(address3);
+        var point1 = geocodingProvider.transferToGeocode(address1);
+        var point2 = geocodingProvider.transferToGeocode(address2);
+        var point3 = geocodingProvider.transferToGeocode(address3);
 
         shopCommandService.register(registerRequest, point1, 1L);
         shopCommandService.register(registerRequest2, point2, 2L);
@@ -113,9 +113,9 @@ record ShopQueryDslRepositoryTest(
         var registerRequest2 = getShopRegisterServiceRequest("문수네 곱창", "010-1234-5679", "businessNumber2", address2);
         var registerRequest3 = getShopRegisterServiceRequest("순재네 막창", "010-1234-5690", "businessNumber3", address3);
 
-        var point1 = kakaoGeocodingProvider.transferToGeocode(address1);
-        var point2 = kakaoGeocodingProvider.transferToGeocode(address2);
-        var point3 = kakaoGeocodingProvider.transferToGeocode(address3);
+        var point1 = geocodingProvider.transferToGeocode(address1);
+        var point2 = geocodingProvider.transferToGeocode(address2);
+        var point3 = geocodingProvider.transferToGeocode(address3);
 
         shopCommandService.register(registerRequest, point1, 1L);
         shopCommandService.register(registerRequest2, point2, 2L);
@@ -175,9 +175,9 @@ record ShopQueryDslRepositoryTest(
         var registerRequest2 = getShopRegisterServiceRequest("문수네 곱창", "010-1234-5679", "businessNumber2", address2);
         var registerRequest3 = getShopRegisterServiceRequest("순재네 막창", "010-1234-5690", "businessNumber3", address3);
 
-        var point1 = kakaoGeocodingProvider.transferToGeocode(address1);
-        var point2 = kakaoGeocodingProvider.transferToGeocode(address2);
-        var point3 = kakaoGeocodingProvider.transferToGeocode(address3);
+        var point1 = geocodingProvider.transferToGeocode(address1);
+        var point2 = geocodingProvider.transferToGeocode(address2);
+        var point3 = geocodingProvider.transferToGeocode(address3);
 
         shopCommandService.register(registerRequest, point1, 1L);
         shopCommandService.register(registerRequest2, point2, 2L);
@@ -215,9 +215,9 @@ record ShopQueryDslRepositoryTest(
         var registerRequest2 = getShopRegisterServiceRequest("문수네 곱창", "010-1234-5679", "businessNumber2", address2);
         var registerRequest3 = getShopRegisterServiceRequest("순재네 막창", "010-1234-5690", "businessNumber3", address3);
 
-        var point1 = kakaoGeocodingProvider.transferToGeocode(address1);
-        var point2 = kakaoGeocodingProvider.transferToGeocode(address2);
-        var point3 = kakaoGeocodingProvider.transferToGeocode(address3);
+        var point1 = geocodingProvider.transferToGeocode(address1);
+        var point2 = geocodingProvider.transferToGeocode(address2);
+        var point3 = geocodingProvider.transferToGeocode(address3);
 
         shopCommandService.register(registerRequest, point1, 1L);
         shopCommandService.register(registerRequest2, point2, 2L);

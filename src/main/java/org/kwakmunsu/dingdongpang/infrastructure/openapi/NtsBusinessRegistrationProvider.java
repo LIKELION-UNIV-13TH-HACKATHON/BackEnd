@@ -5,19 +5,16 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.kwakmunsu.dingdongpang.domain.shop.service.BusinessRegistrationValidator;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class BusinessRegisterProvider {
+public class NtsBusinessRegistrationProvider implements BusinessRegistrationValidator {
 
     private static final String BUSINESS_INFO_URL = "https://api.odcloud.kr/api/nts-businessman/v1/status";
     private final RestClient restClient;
