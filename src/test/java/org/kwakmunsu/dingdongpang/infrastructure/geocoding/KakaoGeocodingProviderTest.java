@@ -7,20 +7,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.kwakmunsu.dingdongpang.domain.shop.service.GeocodingProvider;
 import org.kwakmunsu.dingdongpang.global.exception.InternalServerException;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @Disabled("IP 주소 상시 변경으로 비활성화")
 @Slf4j
 @SpringBootTest
-record KakaoGeocodingProviderTest(KakaoGeocodingProvider kakaoGeocodingProvider) {
+record KakaoGeocodingProviderTest(GeocodingProvider geocodingProvider) {
 
     @DisplayName("주소에 해당하는 위도 경도를 조회힌다.")
     @Test
     void transferToGeocode() {
         var address = "경기도 광주시 경충대로1461번길 12-4 코오롱 세이브 프라자 202호";
 
-        var response = kakaoGeocodingProvider.transferToGeocode(address);
+        var response = geocodingProvider.transferToGeocode(address);
 
         assertThat(response.getCoordinate()).isNotNull();
         log.info("{} {}", response.getCoordinate().getX(), response.getCoordinate().getY());
@@ -31,7 +32,7 @@ record KakaoGeocodingProviderTest(KakaoGeocodingProvider kakaoGeocodingProvider)
     void failTransferToGeocode() {
         var address = "invalid-address";
 
-        assertThatThrownBy(() -> kakaoGeocodingProvider.transferToGeocode(address))
+        assertThatThrownBy(() -> geocodingProvider.transferToGeocode(address))
             .isInstanceOf(InternalServerException.class);
     }
 

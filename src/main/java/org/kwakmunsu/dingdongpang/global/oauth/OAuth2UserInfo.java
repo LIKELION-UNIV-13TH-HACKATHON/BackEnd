@@ -1,4 +1,4 @@
-package org.kwakmunsu.dingdongpang.domain.auth.service;
+package org.kwakmunsu.dingdongpang.global.oauth;
 
 public interface OAuth2UserInfo {
 

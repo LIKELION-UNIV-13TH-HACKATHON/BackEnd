@@ -13,13 +13,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.auth.service.kakao.KakaoOauthManager;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
 import org.kwakmunsu.dingdongpang.global.exception.NotFoundException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.kwakmunsu.dingdongpang.global.jwt.JwtProvider;
 import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
+import org.kwakmunsu.dingdongpang.global.oauth.OAuth2UserInfo;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,7 +29,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 class AuthCommandServiceTest {
 
     @Mock
-    KakaoOauthManager kakaoOauthManager;
+    OAuth2Provider oAuth2Provider;
 
     @Mock
     MemberRepository memberRepository;
@@ -47,7 +47,7 @@ class AuthCommandServiceTest {
         when(mockUserInfo.getSocialId()).thenReturn("123456789");
         when(mockUserInfo.getEmail()).thenReturn("test@email.com");
         when(mockUserInfo.getName()).thenReturn("홍길동");
-        given(kakaoOauthManager.getOAuth2UserInfo(anyString())).willReturn(mockUserInfo);
+        given(oAuth2Provider.getOAuth2UserInfo(anyString())).willReturn(mockUserInfo);
 
         given(memberRepository.findBySocialIdAndRole(anyString(), any())).willReturn(Optional.empty());
 
@@ -68,7 +68,7 @@ class AuthCommandServiceTest {
         var mockUserInfo = mock(OAuth2UserInfo.class);
         when(mockUserInfo.getSocialId()).thenReturn("123456789");
         when(mockUserInfo.getEmail()).thenReturn("test@email.com");
-        given(kakaoOauthManager.getOAuth2UserInfo(anyString())).willReturn(mockUserInfo);
+        given(oAuth2Provider.getOAuth2UserInfo(anyString())).willReturn(mockUserInfo);
 
         Optional<Member> optionalMember = Optional.ofNullable(Member.createMember("email", "nickname", "1234"));
         given(memberRepository.findBySocialIdAndRole(anyString(), any())).willReturn(optionalMember);

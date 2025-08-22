@@ -1,6 +1,5 @@
-package org.kwakmunsu.dingdongpang.domain.auth.service.kakao;
+package org.kwakmunsu.dingdongpang.global.oauth;
 import java.util.Map;
-import org.kwakmunsu.dingdongpang.domain.auth.service.OAuth2UserInfo;
 
 public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
 

@@ -4,17 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.kwakmunsu.dingdongpang.domain.shop.service.BusinessRegistrationValidator;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-record BusinessRegisterProviderTest(BusinessRegisterProvider businessRegisterProvider) {
+record NtsBusinessRegistrationProviderTest(BusinessRegistrationValidator businessRegistrationValidator) {
 
     @DisplayName("사업자 등록 여부를 조회한다.")
     @Test
     void getRegistrationBusiness() {
         var number = "8962801461";
 
-        boolean register = businessRegisterProvider.isRegister(number);
+        boolean register = businessRegistrationValidator.isRegister(number);
 
         assertThat(register).isTrue();
     }
@@ -24,7 +25,7 @@ record BusinessRegisterProviderTest(BusinessRegisterProvider businessRegisterPro
     void failGetRegistrationBusiness() {
         var number = "invalid-number";
 
-        boolean register = businessRegisterProvider.isRegister(number);
+        boolean register = businessRegistrationValidator.isRegister(number);
 
         assertThat(register).isFalse();
     }

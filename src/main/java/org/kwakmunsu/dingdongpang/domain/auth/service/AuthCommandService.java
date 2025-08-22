@@ -6,11 +6,11 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInResponse;
 import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInServiceRequest;
-import org.kwakmunsu.dingdongpang.domain.auth.service.kakao.KakaoOauthManager;
 import org.kwakmunsu.dingdongpang.domain.member.entity.Member;
 import org.kwakmunsu.dingdongpang.domain.member.repository.MemberRepository;
 import org.kwakmunsu.dingdongpang.global.jwt.JwtProvider;
 import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
+import org.kwakmunsu.dingdongpang.global.oauth.OAuth2UserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthCommandService {
 
-    private final KakaoOauthManager kakaoOauthManager;
+    private final OAuth2Provider oauth2Provider;
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
 
     @Transactional
     public SignInResponse signIn(SignInServiceRequest request) {
-        OAuth2UserInfo oAuth2UserInfo = kakaoOauthManager.getOAuth2UserInfo(request.socialAccessToken());
+        OAuth2UserInfo oAuth2UserInfo = oauth2Provider.getOAuth2UserInfo(request.socialAccessToken());
         Optional<Member> optionalMember = memberRepository.findBySocialIdAndRole(oAuth2UserInfo.getSocialId(), ROLE_MEMBER);
 
         Member member;
