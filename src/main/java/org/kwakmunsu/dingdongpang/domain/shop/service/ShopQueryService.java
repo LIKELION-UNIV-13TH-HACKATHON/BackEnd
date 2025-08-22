@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.kwakmunsu.dingdongpang.domain.notification.repository.NotificationRepository;
+import org.kwakmunsu.dingdongpang.domain.notification.service.NotificationQueryService;
+import org.kwakmunsu.dingdongpang.domain.notification.service.dto.TodayLatestNotificationResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.dto.ShopListResponse;
@@ -29,6 +31,7 @@ public class ShopQueryService {
     private final ShopImageRepository shopImageRepository;
     private final SubscribeShopRepository subscribeShopRepository;
     private final NotificationRepository notificationRepository;
+    private final NotificationQueryService notificationQueryService;
 
     // TODO: 그냥 한방 쿼리로 할까....
     public ShopResponse getShop(Long shopId, Long memberId) {
@@ -65,12 +68,14 @@ public class ShopQueryService {
         Long shopViewCount = shopRepository.findById(shopId).getViewCount();
         Long todaySubscribedCount = subscribeShopRepository.countByShopIdAndCreatedAtBetween(shopId, startOfDay, endOfDay);
         Long totalSubscribedCount = subscribeShopRepository.countByShopId(shopId);
+        TodayLatestNotificationResponse response = notificationQueryService.getTodayLatestNotification(shopId);
 
         return ShopDashboardResponse.builder()
                 .todayNotificationSentCount(todayNotificationSentCount)
                 .shopViewCount(shopViewCount)
                 .todaySubscribedCount(todaySubscribedCount)
                 .totalSubscribedCount(totalSubscribedCount)
+                .todayLatestNotificationResponse(response)
                 .build();
     }
 
