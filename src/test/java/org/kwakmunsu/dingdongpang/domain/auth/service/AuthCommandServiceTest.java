@@ -49,7 +49,7 @@ class AuthCommandServiceTest {
         when(mockUserInfo.getName()).thenReturn("홍길동");
         given(oAuth2Provider.getOAuth2UserInfo(anyString())).willReturn(mockUserInfo);
 
-        given(memberRepository.findBySocialIdAndRole(anyString(), any())).willReturn(Optional.empty());
+        given(memberRepository.findBySocialId(anyString())).willReturn(Optional.empty());
 
         var tokenResponse = new TokenResponse("accessToken", "refreshToken");
         given(jwtProvider.createTokens(any(), any())).willReturn(tokenResponse);
@@ -71,7 +71,7 @@ class AuthCommandServiceTest {
         given(oAuth2Provider.getOAuth2UserInfo(anyString())).willReturn(mockUserInfo);
 
         Optional<Member> optionalMember = Optional.ofNullable(Member.createMember("email", "nickname", "1234"));
-        given(memberRepository.findBySocialIdAndRole(anyString(), any())).willReturn(optionalMember);
+        given(memberRepository.findBySocialId(anyString())).willReturn(optionalMember);
 
         var tokenResponse = new TokenResponse("accessToken", "refreshToken");
         given(jwtProvider.createTokens(any(), any())).willReturn(tokenResponse);
@@ -81,6 +81,30 @@ class AuthCommandServiceTest {
 
         assertThat(optionalMember.get().getRefreshToken()).isEqualTo(tokenResponse.refreshToken());
         assertThat(result.isNewMember()).isFalse();
+        assertThat(result.response())
+                .extracting(TokenResponse::accessToken, TokenResponse::refreshToken)
+                .containsExactly(tokenResponse.accessToken(), tokenResponse.refreshToken());
+    }
+
+    @DisplayName("사용자가 소셜 로그인 후 고객 또는 상인 등록 전  앱을 리로드 하고 재로그인 할 경우 IsNewMember의 반환값은 true이다.")
+    @Test
+    void signInWithGuestButExisting() {
+        var mockUserInfo = mock(OAuth2UserInfo.class);
+        when(mockUserInfo.getSocialId()).thenReturn("123456789");
+        when(mockUserInfo.getEmail()).thenReturn("test@email.com");
+        given(oAuth2Provider.getOAuth2UserInfo(anyString())).willReturn(mockUserInfo);
+
+        Optional<Member> optionalGuest = Optional.ofNullable(Member.createGuest("email", "nickname", "1234"));
+        given(memberRepository.findBySocialId(anyString())).willReturn(optionalGuest);
+
+        var tokenResponse = new TokenResponse("accessToken", "refreshToken");
+        given(jwtProvider.createTokens(any(), any())).willReturn(tokenResponse);
+
+        var signInServiceRequest = new SignInServiceRequest("social-access-token");
+        var result = authCommandService.signIn(signInServiceRequest);
+
+        assertThat(optionalGuest.get().getRefreshToken()).isEqualTo(tokenResponse.refreshToken());
+        assertThat(result.isNewMember()).isTrue();
         assertThat(result.response())
                 .extracting(TokenResponse::accessToken, TokenResponse::refreshToken)
                 .containsExactly(tokenResponse.accessToken(), tokenResponse.refreshToken());

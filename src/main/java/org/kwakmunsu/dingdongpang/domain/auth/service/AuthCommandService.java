@@ -1,6 +1,6 @@
 package org.kwakmunsu.dingdongpang.domain.auth.service;
 
-import static org.kwakmunsu.dingdongpang.domain.member.entity.Role.ROLE_MEMBER;
+import static org.kwakmunsu.dingdongpang.domain.member.entity.Role.ROLE_GUEST;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -25,24 +25,15 @@ public class AuthCommandService {
     @Transactional
     public SignInResponse signIn(SignInServiceRequest request) {
         OAuth2UserInfo oAuth2UserInfo = oauth2Provider.getOAuth2UserInfo(request.socialAccessToken());
-        Optional<Member> optionalMember = memberRepository.findBySocialIdAndRole(oAuth2UserInfo.getSocialId(), ROLE_MEMBER);
 
-        Member member;
-        boolean isNewMember;
+        MemberSignInResult memberResult = findOrCreateMember(oAuth2UserInfo);
+        TokenResponse tokenResponse = createTokens(memberResult.member());
 
-        // 기존 사용자가 로그인 할 경우 정보 업데이트 후 jwt 발급, 첫 사용자 일 경우 Guest 권한의 회원 생성 후 jwt 발급.
-        if (optionalMember.isPresent()) {
-            member = optionalMember.get();
-            member.updateEmail(oAuth2UserInfo.getEmail());
-            isNewMember = false;
-        } else {
-            member = registerNewGuestMember(oAuth2UserInfo);
-            isNewMember = true;
-        }
-
-        TokenResponse tokenResponse = createTokens(member);
-
-        return new SignInResponse(isNewMember, member.getId(), tokenResponse);
+        return new SignInResponse(
+                memberResult.isNewMember(),
+                memberResult.member().getId(),
+                tokenResponse
+        );
     }
 
     @Transactional
@@ -62,6 +53,24 @@ public class AuthCommandService {
         //TODO: 추후 FCM 토큰도 초기화, blacklist 추가
     }
 
+    private MemberSignInResult findOrCreateMember(OAuth2UserInfo oAuth2UserInfo) {
+        Optional<Member> optionalMember = memberRepository.findBySocialId(oAuth2UserInfo.getSocialId());
+
+        if (optionalMember.isPresent()) {
+            return handleExistingMember(optionalMember.get(), oAuth2UserInfo);
+        }
+
+        Member newMember = registerNewGuestMember(oAuth2UserInfo);
+        return new MemberSignInResult(newMember, true);
+    }
+
+    private MemberSignInResult handleExistingMember(Member member, OAuth2UserInfo oAuth2UserInfo) {
+        member.updateEmail(oAuth2UserInfo.getEmail());
+        boolean isNewMember = (member.getRole() == ROLE_GUEST);
+
+        return new MemberSignInResult(member, isNewMember);
+    }
+
     private TokenResponse createTokens(Member member) {
         TokenResponse tokenResponse = jwtProvider.createTokens(member.getId(), member.getRole());
         member.updateRefreshToken(tokenResponse.refreshToken());
@@ -74,6 +83,10 @@ public class AuthCommandService {
         memberRepository.save(guest);
 
         return guest;
+    }
+
+    private record MemberSignInResult(Member member, boolean isNewMember) {
+
     }
 
 }

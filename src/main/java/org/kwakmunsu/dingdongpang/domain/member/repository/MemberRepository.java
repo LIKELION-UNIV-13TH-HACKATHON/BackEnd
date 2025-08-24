@@ -18,6 +18,10 @@ public class MemberRepository {
         return memberJpaRepository.findBySocialIdAndRole(socialId, role);
     }
 
+    public Optional<Member> findBySocialId(String socialId) {
+        return memberJpaRepository.findBySocialId(socialId);
+    }
+
     public void save(Member member) {
         memberJpaRepository.save(member);
     }
