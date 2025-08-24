@@ -16,8 +16,8 @@ public record ShopResponse(
         @Schema(description = "매장 이름", example = "문수네닭발")
         String shopName,
 
-        @Schema(description = "매장 업종", example = "FOOD")
-        ShopType shopType,
+        @Schema(description = "매장 업종", example = "식료품")
+        String shopType,
 
         @Schema(description = "매장 대표명", example = "곽태풍")
         String ownerName,
@@ -53,7 +53,7 @@ public record ShopResponse(
         return ShopResponse.builder()
                 .shopId(shop.getId())
                 .shopName(shop.getShopName())
-                .shopType(shop.getShopType())
+                .shopType(shop.getShopType().getDescription())
                 .ownerName(shop.getOwnerName())
                 .businessNumber(shop.getBusinessNumber())
                 .address(shop.getAddress())

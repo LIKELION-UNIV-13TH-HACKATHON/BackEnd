@@ -56,7 +56,7 @@ record ShopQueryServiceTest(
                         ShopResponse::shopTellNumber, ShopResponse::mainImage, ShopResponse::isSubscribe
                 )
                 .containsExactly(
-                        shop.getShopName(), shop.getShopType(), shop.getOwnerName(),
+                        shop.getShopName(), shop.getShopType().getDescription(), shop.getOwnerName(),
                         shop.getBusinessNumber(), shop.getAddress(),
                         shop.getShopTellNumber(), shop.getMainImage(), false /*isSubscribe*/
                 );

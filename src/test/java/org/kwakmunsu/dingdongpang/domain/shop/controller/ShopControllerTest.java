@@ -177,7 +177,7 @@ class ShopControllerTest extends ControllerTestSupport {
     private ShopResponse createShopResponse() {
         return ShopResponse.builder()
                 .shopName("shopName")
-                .shopType(ShopType.FASHION)
+                .shopType(ShopType.FASHION.getDescription())
                 .address("shopAddress")
                 .shopTellNumber("010-1234-5678")
                 .mainImage("mainImage")
