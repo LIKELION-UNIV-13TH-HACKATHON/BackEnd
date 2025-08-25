@@ -37,12 +37,12 @@ public class NotificationRepository {
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_NOTIFICATION));
     }
 
-    public Optional<Notification> findTodayLatestByShopId(Long shopId) {
-        return notificationJpaRepository.findTodayLatestByShopId(shopId);
+    public Optional<Notification> findTodayLatestByShopId(Long shopId, LocalDateTime startOfDay, LocalDateTime endOfDay) {
+        return notificationJpaRepository.findTodayLatestByShopId(shopId, startOfDay, endOfDay);
     }
 
-    public Long getTodayNotificationSentCountByShop(Long shopId) {
-        return notificationJpaRepository.getTodayNotificationSentCountByShop(shopId);
+    public Long getTodayNotificationSentCountByShop(Long shopId, LocalDateTime startOfDay, LocalDateTime endOfDay) {
+        return notificationJpaRepository.getTodayNotificationSentCountByShop(shopId, startOfDay, endOfDay);
     }
 
 }

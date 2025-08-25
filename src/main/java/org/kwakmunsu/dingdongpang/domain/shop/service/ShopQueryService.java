@@ -60,11 +60,12 @@ public class ShopQueryService {
         return new ShopNearbySearchListResponse(searchResponseList);
     }
 
-    public ShopDashboardResponse  getDashboard(Long shopId) {
+    public ShopDashboardResponse getDashboard(Long shopId) {
         LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
         LocalDateTime endOfDay = startOfDay.plusDays(1);
 
-        Long todayNotificationSentCount = notificationRepository.getTodayNotificationSentCountByShop(shopId);
+        Long todayNotificationSentCount = notificationRepository.getTodayNotificationSentCountByShop(shopId, startOfDay,
+                endOfDay);
         Long shopViewCount = shopRepository.findById(shopId).getViewCount();
         Long todaySubscribedCount = subscribeShopRepository.countByShopIdAndCreatedAtBetween(shopId, startOfDay, endOfDay);
         Long totalSubscribedCount = subscribeShopRepository.countByShopId(shopId);
