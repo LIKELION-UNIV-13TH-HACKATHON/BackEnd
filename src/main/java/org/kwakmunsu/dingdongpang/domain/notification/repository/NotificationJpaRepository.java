@@ -26,15 +26,22 @@ public interface NotificationJpaRepository extends JpaRepository<Notification, L
 
     @Query("SELECT n FROM Notification n " +
             "WHERE n.shop.id = :shopId " +
-            "AND DATE(n.createdAt) = CURRENT_DATE " +
-            "ORDER BY n.createdAt DESC " +
-            "LIMIT 1")
-    Optional<Notification> findTodayLatestByShopId(@Param("shopId") Long shopId);
+            "AND n.createdAt >= :startOfDay " +
+            "AND n.createdAt < :endOfDay " +
+            "ORDER BY n.createdAt DESC")
+    Optional<Notification> findTodayLatestByShopId(
+            @Param("shopId") Long shopId,
+            @Param("startOfDay") LocalDateTime startOfDay,
+            @Param("endOfDay") LocalDateTime endOfDay);
 
     @Query("SELECT COUNT(n) FROM Notification n " +
             "WHERE n.shop.id = :shopId " +
             "AND n.isSent = true " +
-            "AND DATE(n.createdAt) = CURRENT_DATE")
-    Long getTodayNotificationSentCountByShop(@Param("shopId") Long shopId);
+            "AND n.createdAt >= :startOfDay " +
+            "AND n.createdAt < :endOfDay")
+    Long getTodayNotificationSentCountByShop(
+            @Param("shopId") Long shopId,
+            @Param("startOfDay") LocalDateTime startOfDay,
+            @Param("endOfDay") LocalDateTime endOfDay);
 
 }

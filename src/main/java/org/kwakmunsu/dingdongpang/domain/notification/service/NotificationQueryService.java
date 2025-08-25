@@ -1,5 +1,7 @@
 package org.kwakmunsu.dingdongpang.domain.notification.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +51,9 @@ public class NotificationQueryService {
     }
 
     public TodayLatestNotificationResponse getTodayLatestNotification(Long shopId) {
-        Optional<Notification> optionalNotification = notificationRepository.findTodayLatestByShopId(shopId);
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+        Optional<Notification> optionalNotification = notificationRepository.findTodayLatestByShopId(shopId, startOfDay, endOfDay);
 
         if (optionalNotification.isPresent()) {
             Notification notification = optionalNotification.get();
