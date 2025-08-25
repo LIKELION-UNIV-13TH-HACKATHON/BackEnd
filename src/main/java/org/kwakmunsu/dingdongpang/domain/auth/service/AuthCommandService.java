@@ -47,6 +47,16 @@ public class AuthCommandService {
     }
 
     @Transactional
+    public TokenResponse testReissue(Long memberId) {
+        Member member = memberRepository.findById(memberId);
+
+        TokenResponse response = jwtProvider.createTokens(member.getId(), member.getRole());
+        member.updateRefreshToken(response.refreshToken());
+
+        return response;
+    }
+
+    @Transactional
     public void signOut(Long memberId) {
         Member member = memberRepository.findById(memberId);
         member.updateRefreshToken(null);
