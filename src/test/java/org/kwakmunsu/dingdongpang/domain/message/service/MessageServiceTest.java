@@ -47,7 +47,7 @@ class MessageServiceTest {
 
         given(responseBuilder.chatResponse()).willReturn(null);
 
-        var request = new MessagesSuggestionServiceRequest("test message", MessageType.HUMOR);
+        var request = new MessagesSuggestionServiceRequest("test message");
 
         assertThatThrownBy(() -> messageService.suggestionMessage(request))
                 .isInstanceOf(InternalServerException.class);
