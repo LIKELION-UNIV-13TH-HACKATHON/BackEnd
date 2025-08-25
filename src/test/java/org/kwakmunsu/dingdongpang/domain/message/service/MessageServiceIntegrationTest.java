@@ -26,12 +26,36 @@ record MessageServiceIntegrationTest(
     void getMessage() {
         var message = "오늘 18시까지 사과 박스당 만원!";
 
-        var request = new MessagesSuggestionRequest(message, MessageType.HUMOR);
+        var request = new MessagesSuggestionRequest(message);
         MessagesSuggestionResponse response = messageService.suggestionMessage(request.toServiceRequest());
 
-        response.responses().forEach(log::info);
+        assertThat(response).isNotNull();
+        assertThat(response.getKindMessages()).hasSize(4);
+        assertThat(response.getHumorMessages()).hasSize(4);
+        assertThat(response.getConciseMessages()).hasSize(4);
 
-        assertThat(response.responses()).hasSize(4); // 반환갯수를 4개로 설정함.
+        System.out.println(response);
+        // then - 각 메시지들이 비어있지 않은지 확인
+        assertThat(response.getKindMessages())
+                .allMatch(msg -> msg != null && !msg.isBlank());
+
+        assertThat(response.getHumorMessages())
+                .allMatch(msg -> msg != null && !msg.isBlank());
+
+        assertThat(response.getConciseMessages())
+                .allMatch(msg -> msg != null && !msg.isBlank());
+
+        // then - 로그 출력 (확인용)
+        System.out.println("=== KIND 메시지들 ===");
+        response.getKindMessages().forEach(System.out::println);
+
+        System.out.println("=== HUMOR 메시지들 ===");
+        response.getHumorMessages().forEach(System.out::println);
+
+        System.out.println("=== CONCISE 메시지들 ===");
+        response.getConciseMessages().forEach(System.out::println);
+
+//        assertThat(response.responses()).hasSize(4); // 반환갯수를 4개로 설정함.
     }
 
 }
