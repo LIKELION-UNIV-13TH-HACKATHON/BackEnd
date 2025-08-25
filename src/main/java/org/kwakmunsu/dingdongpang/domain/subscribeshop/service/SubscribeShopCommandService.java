@@ -7,6 +7,7 @@ import org.kwakmunsu.dingdongpang.domain.subscribeshop.repository.SubscribeShopR
 import org.kwakmunsu.dingdongpang.global.exception.DuplicationException;
 import org.kwakmunsu.dingdongpang.global.exception.dto.ErrorStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -27,6 +28,7 @@ public class SubscribeShopCommandService {
         subscribeShopRepository.save(subscribeShop);
     }
 
+    @Transactional
     public void unsubscribe(Long shopId, Long memberId) {
         shopRepository.findById(shopId);
 
