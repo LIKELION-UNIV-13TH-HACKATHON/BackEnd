@@ -8,6 +8,7 @@ import org.kwakmunsu.dingdongpang.domain.member.service.dto.CustomerProfileRespo
 import org.kwakmunsu.dingdongpang.domain.member.service.dto.MerchantProfileResponse;
 import org.kwakmunsu.dingdongpang.domain.shop.entity.Shop;
 import org.kwakmunsu.dingdongpang.domain.shop.repository.shop.ShopRepository;
+import org.kwakmunsu.dingdongpang.domain.shop.service.GeocodingProvider;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class MemberQueryService {
 
     private final MemberRepository memberRepository;
     private final ShopRepository shopRepository;
+    private final GeocodingProvider geocodingProvider;
 
     public CheckNicknameResponse isExistsNickname(String nickname) {
         boolean exists = memberRepository.existsByNickname(nickname);

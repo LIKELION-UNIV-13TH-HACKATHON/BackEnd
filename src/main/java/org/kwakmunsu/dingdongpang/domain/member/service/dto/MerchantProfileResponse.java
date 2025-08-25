@@ -19,6 +19,12 @@ public record MerchantProfileResponse(
         @Schema(description = "매장 메인 이미지", example = "https:sa212313sd")
         String mainImage,
 
+        @Schema(description = "매장 경도", example = "126.213123")
+        Double longitude,
+
+        @Schema(description = "매장 위도", example = "43.314134")
+        Double latitude,
+
         @Schema(description = "약관 동의 여부", example = "true")
         boolean isTermAgreed
 ) {
@@ -29,6 +35,8 @@ public record MerchantProfileResponse(
                 .shopName(shop.getShopName())
                 .address(shop.getAddress())
                 .mainImage(shop.getMainImage())
+                .longitude(shop.getLocation().getX())
+                .latitude(shop.getLocation().getY())
                 .isTermAgreed(termAgreed)
                 .build();
     }
