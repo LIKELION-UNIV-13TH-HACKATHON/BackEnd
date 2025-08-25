@@ -9,6 +9,8 @@ import org.kwakmunsu.dingdongpang.domain.auth.service.dto.SignInResponse;
 import org.kwakmunsu.dingdongpang.global.annotation.AuthMember;
 import org.kwakmunsu.dingdongpang.global.jwt.dto.TokenResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +44,13 @@ public class AuthController extends AuthDocsController {
     @PostMapping("/reissue")
     public ResponseEntity<TokenResponse> reissue(@Valid @RequestBody ReissueTokenRequest request) {
         TokenResponse response = authCommandService.reissue(request.refreshToken());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/test/reissue/{memberId}")
+    public ResponseEntity<TokenResponse> testReissue(@PathVariable Long memberId) {
+        TokenResponse response = authCommandService.testReissue(memberId);
 
         return ResponseEntity.ok(response);
     }
